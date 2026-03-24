@@ -15,6 +15,7 @@ npm start
 2. Then open your browser and go to: http://127.0.0.1:8000/
 
 ## Project structure
+...
 digital-recipe-box/
 │
 ├── controllers/
@@ -75,3 +76,4 @@ digital-recipe-box/
 ├── server.js
 ├── package.json
 └── README.md
+...
