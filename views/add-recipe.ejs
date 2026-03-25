@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Add Recipe</title>
+</head>
+<body>
+
+<h1>Add Recipe</h1>
+
+<form action="/recipe/add" method="POST">
+
+  <input type="text" name="title" placeholder="Title" required><br><br>
+
+  <textarea name="ingredients" placeholder="Ingredients" required></textarea><br><br>
+
+  <textarea name="instructions" placeholder="Instructions" required></textarea><br><br>
+
+  <input type="text" name="image" placeholder="Image path"><br><br>
+
+  <button type="submit">Add</button>
+
+</form>
+
+<a href="/recipe">Back</a>
+
+</body>
+</html>

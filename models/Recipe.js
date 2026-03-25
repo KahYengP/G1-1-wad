@@ -9,11 +9,11 @@ const recipeSchema = new mongoose.Schema({
     image: { type: String, default: "/images/default.jpg" },
     //we really need this because it gives reference on user who created it hence id
     createdBy: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "User",
+    type: String,//reserverd for the email
     required: true,
   },
 });
+
 const Recipe = mongoose.model("Recipe", recipeSchema);
 
 //below are my the database functions for recipe
@@ -33,14 +33,14 @@ exports.createRecipe = (data) =>{
 // i will be using mongooses _id(e.g "_id": "65f1a2b3c4d5e6f7890abc12" ) for this
 // i will be using req.params after this regarding _id anyways
 exports.findById = (id) =>{
-    return Recipe.findbyID(id)
+    return Recipe.findById(id)
 }
 
 // update recipe by id 
 //findByIDAndUpdate(mongoose command) helps to find one document and update it
 //{new: true} makes it so that the data updated are the most recent because i wanna redirect back
 exports.updateById = (id,data) =>{
-    return Recipe.findByIDAndUpdate(id,data,{new:true})
+    return Recipe.findByIdAndUpdate(id,data,{new:true})
 }
 
 // delete recipe by id
