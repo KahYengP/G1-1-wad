@@ -1,0 +1,35 @@
+<!--read page-->
+<h1>Bookmarked Recipes</h1>
+
+<% if (bookmarks.length===0) { %>
+    <p>No bookmarks yet.</p>
+<% } %>
+
+<table border="1">
+    <tr>
+        <th>Recipe</th>
+        <th>Category</th>
+        <th>Note</th>
+        <th>Actions</th>
+    </tr>
+
+    <% bookmarks.forEach(bookmark => { %>
+        <tr>
+            <td><%= bookmark.recipeId.title %></td>
+            <td><%= bookmark.category || "None" %></td>
+            <td><%= bookmark.note || "No note" %></td>
+            <td><a href="/recipes/<%= bookmark.recipeId._id %>">View</a> 
+                |
+                <form action="/bookmark/edit" method="POST">
+                    <input type="hidden" name="bookmarkId" value="<%= bookmark._id %>">
+                    <button>Edit</button>
+                </form> 
+                |
+                <form action="/bookmark/delete" method="POST">
+                    <input type="hidden" name="bookmarkId" value="<%= bookmark._id %>">
+                    <button type="submit">Delete</button>
+                </form>
+            </td>
+        </tr>
+    <% }) %>
+</table>

@@ -1,0 +1,14 @@
+<h1>Edit Bookmark</h1>
+
+<h3><%= bookmark.recipeId.title %></h3>
+
+<form action="/bookmark/update" method="POST">
+    <input type="hidden" name="bookmarkId" value="<%= bookmark._id %>">
+    <label>Category:</label>
+        <input type="text" name="category" value="<%= bookmark.category %>">
+    <br>
+    <label>Note:</label>
+    <textarea name="note" cols="50" rows="5"><%= bookmark.note %></textarea>
+    <br>
+    <button type="submit">Update Bookmark</button>
+</form>
