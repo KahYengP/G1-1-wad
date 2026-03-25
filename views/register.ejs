@@ -1,0 +1,259 @@
+<!-- views/register.ejs -->
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Register</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 600px;
+      margin: 50px auto;
+      padding: 20px;
+      background-color: #f4f4f4;
+    }
+    .container {
+      background: white;
+      padding: 20px;
+      border-radius: 5px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    h1 {
+      text-align: center;
+      color: #333;
+    }
+    input[type="email"], input[type="password"], input[type="text"] {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      box-sizing: border-box;
+    }
+    .password-field {
+      position: relative;
+    }
+    .show-password {
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      cursor: pointer;
+      user-select: none;
+      background: #fff;
+      padding: 0 5px;
+      color: #666;
+    }
+    .question-group {
+      margin-bottom: 15px;
+      border: 1px solid #eee;
+      padding: 10px;
+      border-radius: 4px;
+      background-color: #fafafa;
+    }
+    select {
+      width: 100%;
+      padding: 8px;
+      margin: 5px 0;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+    }
+    button {
+      width: 100%;
+      padding: 10px;
+      background-color: #5cb85c;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 16px;
+      margin-top: 10px;
+    }
+    button:hover {
+      background-color: #4cae4c;
+    }
+    .error {
+      color: red;
+      margin: 10px 0;
+      padding: 10px;
+      background-color: #ffe6e6;
+      border-radius: 4px;
+    }
+    .link {
+      text-align: center;
+      margin-top: 15px;
+    }
+    a {
+      color: #337ab7;
+      text-decoration: none;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+    .checkbox-label {
+      font-size: 14px;
+      margin-top: -5px;
+      display: inline-block;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Register</h1>
+
+    <% if (error) { %>
+      <div class="error"><%= error %></div>
+    <% } %>
+
+    <form action="/register" method="POST" id="registerForm">
+      <input type="text" name="username" placeholder="Username" required>
+      <input type="email" name="email" placeholder="Email" required>
+
+      <!-- Password field with show/hide -->
+      <div class="password-field">
+        <input type="password" name="password" id="password" placeholder="Password" required>
+        <span class="show-password" onclick="togglePassword('password')">👁️</span>
+      </div>
+
+      <!-- Confirm Password field with show/hide -->
+      <div class="password-field">
+        <input type="password" name="confirmPassword" id="confirmPassword" placeholder="Confirm Password" required>
+        <span class="show-password" onclick="togglePassword('confirmPassword')">👁️</span>
+      </div>
+
+      <h3>Security Questions (choose 3 distinct)</h3>
+      <div id="questions-container">
+        <!-- The three question groups will be injected here by JavaScript -->
+      </div>
+
+      <button type="submit">Register</button>
+    </form>
+
+    <div class="link">
+      <a href="/login">Already have an account? Login</a>
+    </div>
+  </div>
+
+  <script>
+    // ==================== PASSWORD SHOW/HIDE ====================
+    function togglePassword(fieldId) {
+      const field = document.getElementById(fieldId);
+      if (field.type === 'password') {
+        field.type = 'text';
+      } else {
+        field.type = 'password';
+      }
+    }
+
+    // ==================== SECURITY QUESTIONS ====================
+    // The questions array is passed from the server
+    const questions = <%- JSON.stringify(questions) %>;
+
+    // Helper to create a question group with a select and answer input
+    function createQuestionGroup(index, selectedValues = []) {
+      const group = document.createElement('div');
+      group.className = 'question-group';
+      
+      // Select dropdown
+      const select = document.createElement('select');
+      select.name = `question${index + 1}`;
+      select.required = true;
+      
+      // Default empty option
+      const defaultOption = document.createElement('option');
+      defaultOption.value = '';
+      defaultOption.textContent = 'Select a question';
+      defaultOption.disabled = true;
+      defaultOption.selected = true;
+      select.appendChild(defaultOption);
+      
+      // Add all questions
+      questions.forEach(q => {
+        const option = document.createElement('option');
+        option.value = q;
+        option.textContent = q;
+        select.appendChild(option);
+      });
+      
+      // Answer input
+      const answerInput = document.createElement('input');
+      answerInput.type = 'text';
+      answerInput.name = `answer${index + 1}`;
+      answerInput.placeholder = 'Your answer';
+      answerInput.required = true;
+      
+      // Label
+      const label = document.createElement('label');
+      label.textContent = `Security Question ${index + 1}:`;
+      
+      group.appendChild(label);
+      group.appendChild(select);
+      group.appendChild(answerInput);
+      
+      // Update disabled options based on current selected values
+      updateDisabledOptions(select, selectedValues);
+      
+      // When selection changes, update all groups
+      select.addEventListener('change', () => updateAllGroups());
+      
+      return group;
+    }
+    
+    // Disable options in a select that are already selected elsewhere
+    function updateDisabledOptions(select, selectedValues) {
+      const options = select.options;
+      // Skip the first (empty) option
+      for (let i = 1; i < options.length; i++) {
+        const value = options[i].value;
+        if (selectedValues.includes(value) && value !== select.value) {
+          options[i].disabled = true;
+        } else {
+          options[i].disabled = false;
+        }
+      }
+    }
+    
+    // Update all dropdowns based on current selections
+    function updateAllGroups() {
+      const selects = document.querySelectorAll('#questions-container select');
+      const selectedValues = Array.from(selects)
+        .map(s => s.value)
+        .filter(v => v !== '');
+      selects.forEach(select => updateDisabledOptions(select, selectedValues));
+    }
+    
+    // Build the three question groups
+    const container = document.getElementById('questions-container');
+    for (let i = 0; i < 3; i++) {
+      container.appendChild(createQuestionGroup(i));
+    }
+    
+    // Initial update to disable any duplicate selections (none yet)
+    updateAllGroups();
+    
+    // Form validation before submission
+    document.getElementById('registerForm').addEventListener('submit', function(e) {
+      // Password match validation
+      const password = document.getElementById('password').value;
+      const confirm = document.getElementById('confirmPassword').value;
+      if (password !== confirm) {
+        e.preventDefault();
+        alert('Passwords do not match.');
+        return;
+      }
+      
+      // Security questions validation
+      const selects = document.querySelectorAll('#questions-container select');
+      const values = Array.from(selects).map(s => s.value);
+      if (values.some(v => v === '')) {
+        e.preventDefault();
+        alert('Please select all three security questions.');
+        return;
+      }
+      if (new Set(values).size !== 3) {
+        e.preventDefault();
+        alert('Please select three distinct security questions.');
+      }
+    });
+  </script>
+</body>
+</html>
