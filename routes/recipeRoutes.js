@@ -27,8 +27,22 @@ router.get("/:id", async (req, res) => {
     const Recipe = require("../models/Recipe")
     const recipe = await Recipe.findById(req.params.id)
 
-    if (!recipe) return res.send("Recipe not found")
-
+    if (!recipe){
+        return res.send("Recipe not found")
+    }
     res.render("recipe-detail", { recipe })
+})
+
+router.get("/recipe/:id", async (req, res) => {
+    try {
+        const recipe = await Recipe.findById(req.params.id)
+        if (!recipe) {
+            return res.send("Recipe not found.")
+        }
+        res.render("recipe-details", { recipe })
+    } catch (error) {
+        console.error(error)
+        res.send("Error loading recipe.")
+    }
 })
 module.exports = router
