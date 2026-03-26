@@ -33,27 +33,35 @@ exports.createRecipes = async (req,res) =>{
         const ingredients = req.body.ingredients
         const instructions = req.body.instructions
         //
-        const createdBy = req.user.email
-        const image = req.body.image || "/images/default.jpg";
+        const User = require("../models/User")
+
+        if (!req.session.userId) {
+            return res.redirect("/login")}
+
+        const user = await User.findById(req.session.userId)
+
+        if (!user) {
+            return res.send("User not found")}
+
+        const createdBy = user.email
 
         const data = {
             title: title,
             ingredients: ingredients,
             instructions: instructions,
-            image: image,
             createdBy: createdBy
         }
 
         //okay this part creates a new recipe to be added 
-        //new recipes will have just the default image 
-        await Recipe.createRecipe(data)
+        const result = await Recipe.createRecipe(data)
+console.log("SAVED:", result)
 
         // 
         return res.redirect("/recipe")
     }
     catch(error){
         console.log(error)
-        return res.render("error", { error: "Error creating recipe" })
+        return res.send("You've got an error");
     }
 }
 
@@ -98,7 +106,10 @@ exports.updateRecipes = async (req,res) => {
 
         //check ownership(havent learn authentication so ill move on )
         // placeholder()
-        if (recipe.createdBy !== req.user.email){
+        const User = require("../models/User")
+        const user = await User.findById(req.session.userId)
+
+        if (recipe.createdBy !== user.email){
             return res.send("Not allowed")
         }
 
@@ -106,14 +117,12 @@ exports.updateRecipes = async (req,res) => {
         const title = req.body.title
         const ingredients = req.body.ingredients
         const instructions = req.body.instructions
-        const image = req.body.image || "/images/default.jpg"
 
         // declare data properly
         const data = {
             title:title,
             ingredients:ingredients,
             instructions:instructions,
-            image:image
         }
 
         //update using mongoose funciton 
@@ -132,8 +141,11 @@ exports.updateRecipes = async (req,res) => {
 exports.deleteRecipes = async (req,res) =>{
     try{
         const id = req.params.id
+        const User = require("../models/User")
+        //gets current userid 
+        const user = await User.findById(req.session.userId)
+        console.log("DELETE ID:", id)
 
-        //  must use await + correct function name
         if (!mongoose.Types.ObjectId.isValid(id)) {
             return res.send("Invalid ID")
         }
@@ -143,18 +155,16 @@ exports.deleteRecipes = async (req,res) =>{
         if (!recipe){
             return res.send("No ID has been found")
         }
-
-        //authenticaiton placeholder
-        if (recipe.createdBy !== req.user.email){
+        //authorisation id 
+        if (recipe.createdBy != user.email){
             return res.send("Not allowed")
         }
-
         await Recipe.deleteById(id);
 
-        // redirects right back to recipe to see changes
         return res.redirect("/recipe");
 
     }catch(error){
-        return res.send("You got an error deleting this recipe")
+        console.log(error)
+        return res.send("Error deleting recipe")
     }
 }

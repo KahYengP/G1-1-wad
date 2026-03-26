@@ -2,7 +2,13 @@ const express = require('express');
 const mongoose = require('mongoose');
 const session = require('express-session');
 const dotenv = require('dotenv');
+
 const authRoute = require('./routes/authRoutes');
+const recipeRoutes = require('./routes/recipeRoutes')
+const bookmarkRoutes = require('./routes/bookmarkRoutes')
+const dashboardRoutes = require('./routes/dashboardRoutes')
+
+
 
 dotenv.config({ path: "./config.env" });
 
@@ -25,9 +31,15 @@ server.use(session({
 server.set('view engine', 'ejs');
 
 // ========== ROUTES (after all middleware) ==========
+server.get("/",(req,res)=>{
+    res.redirect("/login")
+})
+server.use('/dashboard',dashboardRoutes);
+server.use('/recipe', recipeRoutes);
 server.use('/', authRoute);
-
+server.use('/', bookmarkRoutes)
 // ========== DATABASE CONNECTION & SERVER START ==========
+
 async function connectDataBase() {
   try {
     await mongoose.connect(process.env.DB);

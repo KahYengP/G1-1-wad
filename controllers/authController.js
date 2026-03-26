@@ -121,7 +121,8 @@ exports.loginUser = async (req, res) => {
 
     // Save user ID in session
     req.session.userId = user._id;
-    res.redirect('/dashboard');
+    //res.redirect('/dashboard'); dashboard doesnt work now
+    res.redirect('/dashboard')
   } catch (err) {
     console.error(err);
     res.render('login', { error: 'Error logging in: ' + err.message });
