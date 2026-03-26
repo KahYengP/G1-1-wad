@@ -27,6 +27,12 @@
     <!-- FIXED: /recipes → /recipe -->
     <a href="/recipe/edit/<%= recipe._id %>">Edit</a>
 
+    <!-- Save Bookmark -->
+    <form action="/bookmark/create" method="POST">
+      <input type="hidden" name="recipeId" value="<%= recipe._id %>">
+      <button type="submit">Save Bookmark</button>
+    </form>
+
     <!-- FIXED: /recipes → /recipe -->
     <form action="/recipe/delete/<%= recipe._id %>" method="POST">
       <button onclick="return confirm('Delete this recipe?')">
