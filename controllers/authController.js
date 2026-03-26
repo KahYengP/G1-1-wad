@@ -25,12 +25,17 @@ exports.showRegisterForm = (req, res) => {
 // POST /register - process registration
 // controllers/authController.js (partial update)
 
-exports.registerUser = async (req, res) => {
-  try {
-    // Add confirmPassword to destructuring
-    const { username, email, password, confirmPassword, question1, answer1, question2, answer2, question3, answer3 } = req.body;
+// controllers/authController.js
 
-    // Validate required fields
+exports.registerUser = async (req, res) => {
+  try { 
+    const {
+      username, email, password, confirmPassword,
+      question1, answer1, question2, answer2, question3, answer3
+    } = req.body;
+  
+
+    // 1. Required fields
     if (!username || !email || !password || !confirmPassword) {
       return res.render('register', {
         questions: SECURITY_QUESTIONS,
@@ -38,7 +43,7 @@ exports.registerUser = async (req, res) => {
       });
     }
 
-    // Check if passwords match
+    // 2. Password match
     if (password !== confirmPassword) {
       return res.render('register', {
         questions: SECURITY_QUESTIONS,
@@ -46,13 +51,53 @@ exports.registerUser = async (req, res) => {
       });
     }
 
-    // ... rest of your validation (existing user, security questions, etc.)
-    // ... hashing and saving
+    // 3. Security questions validation
+    const selectedQuestions = [question1, question2, question3];
+    if (selectedQuestions.some(q => !q) || new Set(selectedQuestions).size !== 3) {
+      return res.render('register', {
+        questions: SECURITY_QUESTIONS,
+        error: 'Please select three distinct security questions.'
+      });
+    }
+
+    // 4. Check if user already exists
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      return res.render('register', {
+        questions: SECURITY_QUESTIONS,
+        error: 'User already exists.'
+      });
+    }
+
+    // 5. Hash password and answers
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const hashedAnswers = await Promise.all([
+      bcrypt.hash(answer1, 10),
+      bcrypt.hash(answer2, 10),
+      bcrypt.hash(answer3, 10)
+    ]);
+
+    // 6. Create user
+    const user = new User({
+      username,
+      email,
+      password: hashedPassword,
+      security_questions: selectedQuestions,
+      security_answers: hashedAnswers
+    });
+    await user.save();
+
+    // 7. Redirect to login page on success
+    return res.redirect('/login');
   } catch (err) {
-    // error handling
+    console.error('Registration error:', err);
+    // If error, re-render with error message
+    return res.render('register', {
+      questions: SECURITY_QUESTIONS,
+      error: 'Error registering user: ' + err.message
+    });
   }
 };
-
 // ==================== LOGIN ====================
 // GET /login - display login form
 exports.showLoginForm = (req, res) => {
@@ -95,6 +140,14 @@ exports.logoutUser = (req, res) => {
   });
 };
 
+exports.showLogoutPage = (req, res) => {
+  // Optional: redirect to login if user is not logged in
+  if (!req.session.userId) {
+    return res.redirect('/login');
+  }
+  res.render('logout');
+};
+
 // ==================== FORGOT PASSWORD ====================
 // GET /forgot - display email entry form
 exports.showForgotForm = (req, res) => {
@@ -113,12 +166,17 @@ exports.handleForgot = async (req, res) => {
       });
     }
 
-    // Store the user's email and questions in session or pass via hidden fields
-    // For simplicity, we'll use hidden fields in the reset form (see reset-password.ejs)
-    // Alternatively, we could store a temporary token in session.
+    
+    if (!user.security_questions || !Array.isArray(user.security_questions) || user.security_questions.length !== 3) {
+      return res.render('forgot', {
+        error: 'This account does not have security questions set. Please contact support.',
+        message: null
+      });
+    }
+
     res.render('reset-password', {
       email: user.email,
-      userQuestions: user.security_questions,
+      userQuestions: user.security_questions,   // now safe
       error: null
     });
   } catch (err) {

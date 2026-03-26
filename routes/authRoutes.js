@@ -1,28 +1,25 @@
-// routes/authRoutes.js
 const express = require('express');
 const router = express.Router();
 const authController = require('../controllers/authController');
+const authMiddleware = require('../middleware/authMiddleware');   // <-- add this line
 
-// ==================== REGISTRATION ====================
-router.get('/register', authController.showRegisterForm);
+// Public routes (only for guests)
+router.get('/register', authMiddleware.isGuest, authController.showRegisterForm);
 router.post('/register', authController.registerUser);
 
-// ==================== LOGIN ====================
-router.get('/login', authController.showLoginForm);
+router.get('/login', authMiddleware.isGuest, authController.showLoginForm);
 router.post('/login', authController.loginUser);
 
-// ==================== LOGOUT ====================
-router.get('/logout', authController.logoutUser);
+// Logout (requires session)
+router.get('/logout', authController.showLogoutPage);
+router.post('/logout', authController.logoutUser);
 
-// ==================== FORGOT & RESET PASSWORD ====================
+// Forgot / reset (public, but no need to protect)
 router.get('/forgot', authController.showForgotForm);
 router.post('/forgot', authController.handleForgot);
 router.post('/reset-password', authController.resetPassword);
 
-// ==================== UPDATE & DELETE USER ====================
-// For RESTful APIs, use PUT and DELETE. For traditional form submissions, use POST.
-// The examples below use POST for simplicity (since forms typically support GET/POST only).
-// You can adjust based on your form method attribute.
+// User update/delete – you can protect these with isAuthenticated if needed
 router.post('/user/update', authController.updateUser);
 router.post('/user/delete', authController.deleteUser);
 
