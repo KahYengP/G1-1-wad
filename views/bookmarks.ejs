@@ -1,19 +1,22 @@
 <!--read page-->
 <h1>Bookmarked Recipes</h1>
+<a href="/recipes">
+    <button>Add Bookmark</button>
+</a>
 
 <% if (bookmarks.length===0) { %>
     <p>No bookmarks yet.</p>
-<% } %>
+<% } else { %> 
 
-<table border="1">
-    <tr>
-        <th>Recipe</th>
-        <th>Category</th>
-        <th>Note</th>
-        <th>Actions</th>
-    </tr>
+    <table border="1">
+        <tr>
+            <th>Recipe</th>
+            <th>Category</th>
+            <th>Note</th>
+            <th>Actions</th>
+        </tr>
 
-    <% bookmarks.forEach(bookmark => { %>
+        <% bookmarks.forEach(bookmark => { %>
         <tr>
             <td><%= bookmark.recipeId.title %></td>
             <td><%= bookmark.category || "None" %></td>
@@ -32,4 +35,5 @@
             </td>
         </tr>
     <% }) %>
-</table>
+    </table>
+<% } %>
