@@ -11,7 +11,7 @@ router.get("/category", categoryController.showCategory);
 router.get("/categoryAdd", categoryController.showAddForm);
 router.post("/categoryAdd", categoryController.createCategory);
 
-// Define GET/POST route to display all books/edit one category and update result
+// Define GET/POST route to display all category/edit one category and update result
 router.get("/categoryEdit", categoryController.showEditForm);
 router.post("/categoryUpdate", categoryController.updateCategory);
 router.post("/categoryDelete", categoryController.deleteCategory);

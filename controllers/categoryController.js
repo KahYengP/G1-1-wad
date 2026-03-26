@@ -1,4 +1,9 @@
 const Category = require('../models/Category');
+
+
+// use session in routes
+
+
 exports.showCategory = async (req, res) => {
   // fetch category 
   try{
@@ -16,6 +21,16 @@ exports.showAddForm = (req, res) => {
 };
 
 exports.createCategory = async (req, res) => {
+  // check if admin
+    if (!req.session.user) {
+        console.log("User not logged in, redirecting to /login");
+        return res.redirect('/login');
+    }
+    if (req.session.user.role !== "admin") {
+        console.log("Not an admin user, redirecting to /profile");
+        return res.redirect('/profile')
+    };
+
   // save new category 
   const category = req.body.category
   if (!category || category.trim() === "") {
@@ -28,7 +43,7 @@ exports.createCategory = async (req, res) => {
   }
   try {
     let result = await Category.addCategory(CreateCategory); //addCategory model 
-    let msg="Category added!";
+    let msg = "Category added!";
      res.render("add-category", {result:result || null, msg}); 
   } catch (error) {
     let result = null
@@ -48,11 +63,11 @@ exports.showEditForm = async (req, res) => {
 };
 
 exports.updateCategory = async (req, res) => {
-  // get updated data from req.body
-  // update category in DB
+  res.send("not done")
 };
 
 exports.deleteCategory = async (req, res) => {
   // delete category by ID
+  res.send("not done")
 };
 
