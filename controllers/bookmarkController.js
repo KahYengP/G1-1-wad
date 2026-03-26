@@ -43,8 +43,7 @@ exports.readBookmarks = async(req,res) => {
             return res.redirect('/login')
         }
 
-        const bookmarks = await Bookmark.find({userId: userId}).populate('recipeId')
-        //incomplete 
+        const bookmarks = await Bookmark.find({userId: userId}).populate('recipeId') 
         res.render("bookmarks", {bookmarks: bookmarks})
     } catch(error) {
         console.error(error)
