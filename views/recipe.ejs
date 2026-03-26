@@ -8,11 +8,12 @@
 <h1>Recipes</h1>
 
 <!-- FIXED: /recipes → /recipe -->
-<a href="/recipe/add">Add Recipe</a>
+<a href="/recipe/add">Add Recipe</a> <br>
+<a href = "/dashboard">Go back</a>
 
 <% recipes.forEach(recipe => { %>
 
-  <div style="border:1px solid black; margin:10px; padding:10px;">
+  <div style="border:1px solid black; margin:10px; padding:10px;"><!--cuz im cool at css like that-->
 
     <h3><%= recipe.title %></h3>
 
@@ -21,13 +22,21 @@
     <p><strong>Ingredients:</strong> <%= recipe.ingredients %></p>
     <p><strong>Instructions:</strong> <%= recipe.instructions %></p>
 
-    <!-- FIXED: removed .email -->
+
     <p>Created by: <%= recipe.createdBy %></p>
 
-    <!-- FIXED: /recipes → /recipe -->
+
     <a href="/recipe/edit/<%= recipe._id %>">Edit</a>
 
+
+    <!-- Save Bookmark -->
+    <form action="/bookmark/create" method="POST">
+      <input type="hidden" name="recipeId" value="<%= recipe._id %>">
+      <button type="submit">Save Bookmark</button>
+    </form>
+
     <!-- FIXED: /recipes → /recipe -->
+
     <form action="/recipe/delete/<%= recipe._id %>" method="POST">
       <button onclick="return confirm('Delete this recipe?')">
         Delete

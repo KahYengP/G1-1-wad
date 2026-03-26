@@ -5,9 +5,7 @@ const recipeSchema = new mongoose.Schema({
     title: { type: String, required: true },
     ingredients: { type: String, required: true },
     instructions: { type: String, required: true },
-    //if no image is shown then depict default.jpg(its a placeholder)
-    image: { type: String, default: "/images/default.jpg" },
-    //we really need this because it gives reference on user who created it hence id
+    //if no image is shown then depict default.jpg(its a placeholder)    //we really need this because it gives reference on user who created it hence id
     createdBy: {
     type: String,//reserverd for the email
     required: true,

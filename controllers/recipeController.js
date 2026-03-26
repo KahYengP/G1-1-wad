@@ -46,11 +46,10 @@ exports.createRecipes = async (req, res) => {
     await Recipe.createRecipe(data);
 
     //
-
     return res.redirect("/recipe");
   } catch (error) {
     console.log(error);
-    return res.send("Error in loading recipes. Please try again.");
+    return res.send("Error creating recipe. Please try again.");
   }
 };
 
