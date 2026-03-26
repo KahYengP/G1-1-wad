@@ -7,9 +7,9 @@ const dotenv = require("dotenv");
 const authRoutes = require("./routes/authRoutes");
 const recipeRoutes = require("./routes/recipeRoutes");
 const bookmarkRoutes = require("./routes/bookmarkRoutes");
-const categoryRoutes = require("./routes/categoryRoutes");
-const reviewRoutes = require("./routes/reviewRoutes");
-const dashboardRoutes = require("./routes/dashboardRoutes");
+// const categoryRoutes = require("./routes/categoryRoutes");
+// const reviewRoutes = require("./routes/reviewRoutes");
+// const dashboardRoutes = require("./routes/dashboardRoutes");
 
 dotenv.config({ path: "./config.env" });
 

@@ -22,3 +22,5 @@ router.post("/edit/:id", recipeController.updateRecipes);
 //delete, since eveyrhting is happpening in the recipe file
 //no need to get anything for this part
 router.post("/delete/:id", recipeController.deleteRecipes);
+
+module.exports = router;
