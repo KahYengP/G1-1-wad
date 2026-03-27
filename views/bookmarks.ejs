@@ -22,8 +22,11 @@
             <td><%= bookmark.recipeId.title %></td>
             <td><%= bookmark.category || "None" %></td>
             <td><%= bookmark.note || "No note" %></td>
-            <td><a href="/recipe/<%= bookmark.recipeId._id %>">View</a> 
-                <br>
+            <td>
+                <form action="/recipe/view" method="POST">
+                    <input type="hidden" name="recipeId" value="<%= bookmark.recipeId._id %>">
+                    <button type="submit">View</button>
+                </form>
                 <form action="/bookmark/edit" method="POST">
                     <input type="hidden" name="bookmarkId" value="<%= bookmark._id %>">
                     <button>Edit</button>

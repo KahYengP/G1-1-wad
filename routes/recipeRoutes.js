@@ -23,4 +23,18 @@ router.post("/edit/:id", recipeController.updateRecipes);
 //no need to get anything for this part
 router.post("/delete/:id", recipeController.deleteRecipes);
 
+router.post("/view", async(req,res) => {
+    try {
+        const recipeId=req.body.recipeId
+        const recipe=await Recipe.findById(recipeId)
+        if (!recipe) {
+            res.send('Recipe not found.')
+        }
+        res.render('recipe-details', {recipe})
+    } catch(error) {
+        console.error(error)
+        res.send('Error loading recipe.')
+    }
+}) 
+
 module.exports = router;
