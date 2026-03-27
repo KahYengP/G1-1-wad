@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Add a New Book</title>
+</head>
+<body>
+    <h3>Add a new Book</h3>
+    <form action="/add-category" method="POST">
+        <table border="1">
+            <tr>
+                <th>Category:</th><td><input type="text" name="category"></td>
+            </tr>
+        </table>
+        <button type="submit">Add Category</button> 
+    </form>
+<br><br>
+    <% if(msg==""){%>
+        <p>All Fields are required.</p>
+    <% } %>
+    <% if(msg==="Failure"){%>
+        <p>Error adding category</p>
+    <%} else if(result && result.categoryName){ %>
+        <p> Category has been added successfully.</p>
+        Category: <%= result.categoryName %><br>
+    <%} %>
+    
+</body>
+</html>

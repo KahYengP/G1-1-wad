@@ -1,73 +1,86 @@
 const Category = require('../models/Category');
 
-
 // use session in routes
-
-
 exports.showCategory = async (req, res) => {
-  // fetch category 
-  try{
-    let CategoryList = await CategoryList.retrieveAll()
-    res.render("category", { CategoryList });
-  } catch (error) {
-    res.send("Error reading database");
-  }
-};
-
-exports.showAddForm = (req, res) => {
-  // render add category form
-  let submission = ""
-  res.render("add-category", {submission})
-};
-
-exports.createCategory = async (req, res) => {
-  // check if admin
-    if (!req.session.user) {
-        console.log("User not logged in, redirecting to /login");
-        return res.redirect('/login');
+    try {
+        const CategoryList = await Category.getAll();
+        res.render("category", { CategoryList });
+    } catch (error) {
+        res.status(500).send("Error reading database");
     }
-    if (req.session.user.role !== "admin") {
-        console.log("Not an admin user, redirecting to /profile");
-        return res.redirect('/profile')
-    };
-
-  // save new category 
-  const category = req.body.category
-  if (!category || category.trim() === "") {
-    let msg = "Category name is required.";
-    res.render("add-category", { msg }); // show error
-    return;
-  }
-  let CreateCategory = {
-    category : category
-  }
-  try {
-    let result = await Category.addCategory(CreateCategory); //addCategory model 
-    let msg = "Category added!";
-     res.render("add-category", {result:result || null, msg}); 
-  } catch (error) {
-    let result = null
-    let msg = "Failed to add category"
-    res.render('add-category', {result, msg})
-  }
 };
 
-exports.showEditForm = async (req, res) => {
-  // render edit form
+// show form
+exports.showAddForm = (req, res) => {
+    res.render("add-category", { msg: null, result: null });
+};
+
+// create form
+exports.createCategory = async (req, res) => {
+  // admin check
+  if (!req.session.user || req.session.user.role !== "admin") {
+    res.redirect('/profile');
+  }
+  const newcat = req.body.category
+  let newCategory = {
+    categoryName: newcat,
+  }
+
   try {
-    let CategoryList = await CategoryList.retrieveAll()
+    const result = await Category.addCategory(newCategory);
+    let msg = "Success"
+    res.render("add-category", { msg, result});
+  } catch (error) {
+    let msg = "Failure"
+    let result = null
+    res.render("add-category", { msg, result});
+    }
+};
+
+// edit
+exports.showEditForm = async (req, res) => {
+  try {
+    let CategoryList = await Category.getAll();
     res.render("edit-category", { CategoryList });
   } catch (error) {
-    res.send("Error reading database");
+    res.send("Error loading categories");
   }
 };
 
+exports.getCategory = async (req, res) => {
+  const category = req.query.category; // Get category from url
+  try {
+    let result = await Category.findByName(category);// find a book with isbn number
+ 
+    res.render("update-category", {result:result ||null}); 
+  } catch (error) {
+    console.error(error);
+   
+  }
+};
+
+// update
 exports.updateCategory = async (req, res) => {
-  res.send("not done")
+  const oldName = req.body.oldCategory;    // hidden input in form
+  const newName = req.body.category;       // updated value
+
+  try {
+    await Category.updateCategory(oldName, newName);
+    res.send("Category has been successfully updated.");
+  } catch (error) {
+    console.error(error);
+    res.send("Error updating category");
+  }
 };
 
+// delete
 exports.deleteCategory = async (req, res) => {
-  // delete category by ID
-  res.send("not done")
-};
+  const DeleteCategory = req.query.category
 
+  try {
+    let success = await Category.deleteCategory(DeleteCategory)
+    res.send('Success')
+  } catch (error) {
+    res.send("Error deleting category");
+  }
+};

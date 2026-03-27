@@ -1,0 +1,21 @@
+<html>
+<head>
+  <title>Edit Category</title> <!-- Title displayed in the browser tab -->
+</head>
+<body>
+
+  <% if (CategoryList.length === 0) { %>
+    <p>No category yet.</p> 
+  <% } else { %>
+    <h2>Category List</h2>
+    <% CategoryList.forEach(i => { %>
+        <p><strong>Category: <%= i.categoryName %></strong></p>      <!-- Display the book title -->
+        <a href="/update-category?category=<%= i.categoryName %>">Edit</a> |
+      <a href="/delete-category?category=<%= i.categoryName %>">Delete</a>
+      <hr>
+    <% }); %>
+    
+  <% } %>
+     
+</body>
+</html>

@@ -12,7 +12,7 @@
     <h2>Category List</h2>
     <!-- EJS loop to render each category -->
     <% CategoryList.forEach(i => { %>
-        <p><strong>Category: <%= CategoryList.i %></strong></p> 
+        <p><strong>Category: <%= i.categoryName %></strong></p> 
       <hr>
     <% }); %>
   <% } %>

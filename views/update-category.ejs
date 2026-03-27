@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Update Category</title>
+</head>
+<body>
+    <h3>Update Category </h3>
+    <form action="/update-category" method="POST">
+        <table border="1">
+            <tr>
+                <th>Current:</th>
+                <td><%= result.categoryName %></td>
+            </tr>
+            <tr>
+                <th>Updated Category:</th>
+                <td>
+                    <input type="hidden" name="oldCategory" value="<%= result.categoryName %>">
+                    <input type="text" name="category" value="<%= result.categoryName %>">
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2"><button type="submit">Update Category</button></td>
+            </tr>
+        </table>
+    </form>
+
+    <form action="/delete-category" method="POST">
+        <input type="hidden" name="categoryName" value="<%= result.categoryName %>">
+        <button type="submit">Delete Category</button>
+    </form>
+<br><br>
