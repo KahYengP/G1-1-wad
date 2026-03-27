@@ -31,7 +31,7 @@ exports.registerUser = async (req, res) => {
   try { 
     const {
       username, email, password, confirmPassword,
-      question1, answer1, question2, answer2, question3, answer3
+      question1, answer1, question2, answer2, question3, answer3,role
     } = req.body;
   
 
