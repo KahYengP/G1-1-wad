@@ -31,13 +31,11 @@ exports.createRecipes = async (req, res) => {
     const instructions = req.body.instructions;
     //
     const createdBy = req.user.email;
-    const image = req.body.image || "/images/default.jpg";
-
+    
     const data = {
       title: title,
       ingredients: ingredients,
       instructions: instructions,
-      image: image,
       createdBy: createdBy,
     };
 
