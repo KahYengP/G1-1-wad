@@ -1,5 +1,3 @@
-const fs = require("fs/promises")
-
 const Bookmark = require("../models/Bookmark")
 const Recipe = require("../models/Recipe")
 
