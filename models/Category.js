@@ -11,7 +11,7 @@ const categorySchema = new mongoose.Schema({
     }
 });
 
-module.exports = mongoose.model('Category', categorySchema);
+const Category = mongoose.model('Category', categorySchema);
 
 exports.getAll = () =>{
     return Category.find()
@@ -20,14 +20,14 @@ exports.addCategory = function(newCategory) {
   return Category.create(newCategory);
 };
 
-exports.findByName = function(category) {
-  return Category.findOne({ category:category });
+exports.findById = function(id) {
+  return Category.findById(id);
 };
 
-exports.updateCategory = function(oldName, newName) {
-  return Category.updateOne({categoryName: oldName}, {categoryName: newName});
+exports.updateCategory = function(id, newName) {
+  return Category.findByIdAndUpdate(id, {categoryName: newName}, {new:true});
 };
 
-exports.deleteCategory = function(DeleteCategory) {
-  return Category.deleteOne({categoryName: DeleteCategory});
+exports.deleteCategory = function(id) {
+  return Category.findByIdAndDelete(id);
 };

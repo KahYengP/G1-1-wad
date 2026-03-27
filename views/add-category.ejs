@@ -8,15 +8,12 @@
     <form action="/add-category" method="POST">
         <table border="1">
             <tr>
-                <th>Category:</th><td><input type="text" name="category"></td>
+                <th>Category:</th><td><input type="text" name="category" required></td>
             </tr>
         </table>
         <button type="submit">Add Category</button> 
     </form>
 <br><br>
-    <% if(msg==""){%>
-        <p>All Fields are required.</p>
-    <% } %>
     <% if(msg==="Failure"){%>
         <p>Error adding category</p>
     <%} else if(result && result.categoryName){ %>
