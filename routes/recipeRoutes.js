@@ -2,7 +2,7 @@
 const express = require("express");
 const router = express.Router();
 const recipeController = require("../controllers/recipeController");
-
+const Recipe = require("../models/Recipe")
 //Read route(so we can display later)
 router.get("/", recipeController.getRecipes);
 
@@ -26,9 +26,11 @@ router.post("/delete/:id", recipeController.deleteRecipes);
 router.post("/view", async(req,res) => {
     try {
         const recipeId=req.body.recipeId
+
         const recipe=await Recipe.findById(recipeId)
+
         if (!recipe) {
-            res.send('Recipe not found.')
+            return res.send('Recipe not found.')
         }
         res.render('recipe-details', {recipe})
     } catch(error) {
