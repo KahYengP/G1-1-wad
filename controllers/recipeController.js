@@ -99,14 +99,12 @@ exports.updateRecipes = async (req, res) => {
     const title = req.body.title;
     const ingredients = req.body.ingredients;
     const instructions = req.body.instructions;
-    const image = req.body.image || "/images/default.jpg";
-
+    
     // declare data properly
     const data = {
       title: title,
       ingredients: ingredients,
-      instructions: instructions,
-      image: image,
+      instructions: instructions
     };
 
     //update using mongoose funciton
