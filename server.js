@@ -37,7 +37,7 @@ server.set("view engine", "ejs");
 // ========== ROUTES ==========
 server.use("/", authRoutes);
 server.use("/recipe", recipeRoutes);
-server.use("/", bookmarkRoutes);
+server.use("/", bookmarkRoutes); //this needs to be changed 
 server.use("/", categoryRoutes);
 
 // ========== DATABASE + START ==========
