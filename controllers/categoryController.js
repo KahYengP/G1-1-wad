@@ -7,7 +7,7 @@ exports.showCategory = async (req, res) => {
         const CategoryList = await Category.getAll();
         res.render("category", { CategoryList });
     } catch (error) {
-        res.send("Error reading database");
+        res.send(error.message);
     }
 };
 

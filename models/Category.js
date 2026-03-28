@@ -11,23 +11,25 @@ const categorySchema = new mongoose.Schema({
     }
 });
 
+categorySchema.statics.getAll = function() {
+  return this.find();
+};
+
+categorySchema.statics.addCategory = function(newCategory) {
+  return this.create(newCategory);
+};
+
+categorySchema.statics.getCategory = function(id) {
+  return this.findById(id);
+};
+
+categorySchema.statics.updateCategory = function(id, newName) {
+  return this.findByIdAndUpdate(id, { categoryName: newName }, { new: true });
+};
+
+categorySchema.statics.deleteCategory = function(id) {
+  return this.findByIdAndDelete(id);
+};
+
 const Category = mongoose.model('Category', categorySchema);
-
-exports.getAll = () =>{
-    return Category.find()
-}
-exports.addCategory = function(newCategory) {
-  return Category.create(newCategory);
-};
-
-exports.findById = function(id) {
-  return Category.findById(id);
-};
-
-exports.updateCategory = function(id, newName) {
-  return Category.findByIdAndUpdate(id, {categoryName: newName}, {new:true});
-};
-
-exports.deleteCategory = function(id) {
-  return Category.findByIdAndDelete(id);
-};
+module.exports = Category;
