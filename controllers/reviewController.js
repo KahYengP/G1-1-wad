@@ -45,30 +45,11 @@ exports.showRecipeDetails = async (req, res) => {
 // GET /review/add/:recipeId
 // Show the add review form
 // --------------------
-exports.showAddReview = async (req, res) => {
+exports.showAddForm = async (req, res) => {
   try {
     const recipeId = req.params.recipeId;
-
-    // Must be logged in
-    if (!req.session.userId) {
-      return res.redirect("/login");
-    }
-
-    if (!mongoose.Types.ObjectId.isValid(recipeId)) {
-      return res.send("Invalid recipe ID.");
-    }
-
-    const recipe = await Recipe.findById(recipeId);
-    if (!recipe) {
-      return res.send("Recipe not found.");
-    }
-
-    return res.render("add-review", {
-      recipe,
-      errors: [],
-    });
+    return res.render("add-review", { recipeId });
   } catch (error) {
-    console.error(error);
     return res.send("Error loading review form.");
   }
 };
@@ -79,23 +60,32 @@ exports.showAddReview = async (req, res) => {
 // --------------------
 exports.createReview = async (req, res) => {
   try {
+    // Get the recipe ID from the URL
     const recipeId = req.params.recipeId;
 
-    // Must be logged in
-    if (!req.session.userId) {
+    // Check if user is logged in
+    if (!req.user) {
       return res.redirect("/login");
     }
 
+    // Check if the recipe actually exists
     const recipe = await Recipe.findById(recipeId);
     if (!recipe) {
       return res.send("Recipe not found.");
     }
 
+    // Get the rating and convert it from text to a number
     const rating = Number(req.body.rating);
-    const content = (req.body.content ?? "").trim();
-    const errors = [];
 
-    // Validation
+    // Get the review text, use empty string if nothing was typed
+    let content = req.body.content;
+    if (!content) {
+      content = "";
+    }
+    content = content.trim(); // remove extra spaces before and after
+
+    // Validate the inputs
+    const errors = [];
     if (!rating || rating < 1 || rating > 5) {
       errors.push("Please select a rating between 1 and 5.");
     }
@@ -103,31 +93,27 @@ exports.createReview = async (req, res) => {
       errors.push("Review content cannot be empty.");
     }
 
+    // If there are errors, show the form again with error messages
     if (errors.length > 0) {
-      return res.render("add-review", { recipe, errors });
+      return res.render("add-review", { recipeId, errors });
     }
 
-    // Fetch the username to store alongside the review
-    const user = await User.findById(req.session.userId);
-    if (!user) {
-      return res.redirect("/login");
-    }
-
+    // Save the review to the database
     await Review.createReview({
       recipeId: recipeId,
-      userId: req.session.userId,
-      username: user.username,
+      userId: req.user._id,
+      username: req.user.username,
       rating: rating,
       content: content,
     });
 
-    return res.redirect("/recipe/" + recipeId);
+    // Go back to the recipe detail page
+    return res.redirect("/recipe/view/" + recipeId);
   } catch (error) {
     console.error(error);
     return res.send("Error submitting review.");
   }
 };
-
 // --------------------
 // GET /review/edit/:reviewId
 // Show the edit review form, pre-filled with existing data

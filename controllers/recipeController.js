@@ -1,4 +1,5 @@
 const Recipe = require("../models/Recipe");
+const Review = require("../models/Review");
 const mongoose = require("mongoose");
 
 //ill do it in the format of read, create,update, delete see? rcud not crud
@@ -12,6 +13,24 @@ exports.getRecipes = async (req, res) => {
   } catch (error) {
     console.log(error);
     return res.send("Error in loading recipes. Please try again.");
+  }
+};
+
+exports.getRecipeById = async (req, res) => {
+  try {
+    const recipe = await Recipe.findById(req.params.id);
+    if (!recipe) return res.send("Recipe not found.");
+
+    const reviews = await Review.findByRecipeId(req.params.id);
+
+    res.render("recipe-details", {
+      recipe,
+      reviews,
+      user: req.user || null,
+    });
+  } catch (error) {
+    console.error("getRecipeById error:", error);
+    res.send("Error loading recipe: " + error.message);
   }
 };
 
@@ -31,7 +50,7 @@ exports.createRecipes = async (req, res) => {
     const instructions = req.body.instructions;
     //
     const createdBy = req.user.email;
-    
+
     const data = {
       title: title,
       ingredients: ingredients,
@@ -99,12 +118,12 @@ exports.updateRecipes = async (req, res) => {
     const title = req.body.title;
     const ingredients = req.body.ingredients;
     const instructions = req.body.instructions;
-    
+
     // declare data properly
     const data = {
       title: title,
       ingredients: ingredients,
-      instructions: instructions
+      instructions: instructions,
     };
 
     //update using mongoose funciton
