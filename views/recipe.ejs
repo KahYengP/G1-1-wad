@@ -18,13 +18,12 @@
 
     <h3><a href="/recipe/view/<%= recipe._id %>"><%= recipe.title %></a></h3>
 
-    <img src="<%= recipe.image %>" width="150">
-
     <p><strong>Ingredients:</strong> <%= recipe.ingredients %></p>
     <p><strong>Instructions:</strong> <%= recipe.instructions %></p>
 
 
     <p>Created by: <%= recipe.createdBy %></p>
+    <p>Published on: <%= new Date(recipe.createdAt).toLocaleDateString() %></p>
 
 
     <a href="/recipe/edit/<%= recipe._id %>">Edit</a>

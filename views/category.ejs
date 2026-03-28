@@ -3,6 +3,7 @@
   <title>Category List</title> <!-- Title displayed in the browser tab -->
 </head>
 <body>
+  <a href="/add-category">Add Category</a> &nbsp;&nbsp;&nbsp; <a href="/edit-category">Edit Category</a>
 
   <!-- EJS conditional block: Check if there are any category list -->
   <% if (CategoryList.length === 0) { %>
@@ -17,8 +18,5 @@
     <% }); %>
   <% } %>
   <br>
-  <a href="/add-category">Add Category</a>
-  <br>
-  <a href="/edit-category">Edit Category</a>
 </body>
 </html>
