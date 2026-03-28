@@ -8,13 +8,14 @@
         <form action="/update-category" method="POST">
         <input type="hidden" name="id" value="<%= result._id %>">
         <input type="text" name="category" value="<%= result.categoryName %>">
+        <br><br>
         <button type="submit">Update Category</button>
         </form>
-        <br><br>
         <form action="/delete-category" method="POST">
         <input type="hidden" name="id" value="<%= result._id %>">
         <button type="submit">Delete Category</button>
         </form>
+        <br><br>
         <a href="/edit-category">Back to Category List</a>
 </body>
 </html>
