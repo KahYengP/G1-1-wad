@@ -9,7 +9,7 @@ const recipeRoutes = require("./routes/recipeRoutes");
 const bookmarkRoutes = require("./routes/bookmarkRoutes");
 // const categoryRoutes = require("./routes/categoryRoutes");
 // const reviewRoutes = require("./routes/reviewRoutes");
-// const dashboardRoutes = require("./routes/dashboardRoutes");
+const collectionsRoutes = require("./routes/collectionsRoutes");
 
 dotenv.config({ path: "./config.env" });
 
@@ -38,6 +38,7 @@ server.set("view engine", "ejs");
 server.use("/", authRoutes);
 server.use("/recipe", recipeRoutes);
 server.use("/", bookmarkRoutes);
+server.use("/collections", collectionsRoutes);
 
 // ========== DATABASE + START ==========
 async function connectDataBase() {

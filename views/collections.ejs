@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>My Collections</title>
+</head>
+<body>
+
+    <h1>My Collections</h1>
+
+    <a href="/collections/add">Create New Collection</a>
+    <br><br>
+
+    <% if (collections.length === 0) { %>
+        <p>No collections found.</p>
+    <% } %>
+
+    <% collections.forEach(collection => { %>
+        <hr>
+        <h2><%= collection.name %></h2>
+        <p><%= collection.description %></p>
+
+        <h3>Recipes in this collection:</h3>
+        <% if (collection.recipes.length === 0) { %>
+            <p>No recipes added yet.</p>
+        <% } else { %>
+            <ul>
+                <% collection.recipes.forEach(recipe => { %>
+                    <li>
+                        <!-- Link to recipe details -->
+                        <a href="/recipe/view/<%= recipe._id %>"><%= recipe.title %></a>
+
+                        <!-- REMOVE recipe -->
+                        <form action="/collections/remove-recipe" method="POST" style="display:inline;">
+                            <input type="hidden" name="collectionId" value="<%= collection._id %>">
+                            <input type="hidden" name="recipeId" value="<%= recipe._id %>">
+                            <button type="submit">Remove</button>
+                        </form>
+                    </li>
+                <% }) %>
+            </ul>
+        <% } %>
+
+        <br>
+        <!-- EDIT -->
+        <a href="/collections/edit/<%= collection._id %>">Edit</a>
+
+        <!-- DELETE -->
+        <form action="/collections/delete/<%= collection._id %>" method="POST">
+            <button type="submit">Delete</button>
+        </form>
+
+        <br><br>
+        <!-- ADD RECIPE TO COLLECTION -->
+        <form action="/collections/add-recipe" method="POST">
+            <input type="hidden" name="collectionId" value="<%= collection._id %>">
+
+            <label>Add Recipe Title:</label>
+            <input type="text" name="recipetitle" required>
+
+            <button type="submit">Add Recipe</button>
+        </form>
+    <% }) %>
+
+</body>
+</html>

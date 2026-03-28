@@ -1,0 +1,17 @@
+<h1>Edit Collection</h1>
+
+<form action="/collections/update/<%= collection._id %>" method="POST">
+
+    <label>Name:</label>
+    <input type="text" name="name" value="<%= collection.name %>" required>
+
+    <br><br>
+
+    <label>Description:</label>
+    <input type="text" name="description" value="<%= collection.description %>">
+
+    <br><br>
+
+    <button type="submit">Update</button>
+
+</form>
