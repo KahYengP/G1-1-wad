@@ -153,20 +153,21 @@ exports.removeRecipe = async (req, res) => {
 
   try {
     const { collectionId, recipeId } = req.body;
-    const collection = await Collection.findById(collectionId);
+    console.log("Removing recipe:", recipeId, "from collection:", collectionId);
 
+    const collection = await Collection.findById(collectionId);
     if (!collection) return res.send("Collection not found");
     if (collection.createdBy !== user.email) return res.send("Not allowed");
 
-    collection.recipes = collection.recipes.filter(r => {
-    const id = r._id ? r._id.toString() : r.toString();
-    return id !== recipeId;
-    });
-
-    await collection.save();
+   
+    await Collection.updateOne(
+      { _id: collectionId },
+      { $pull: { recipes: recipeId } }
+    );
 
     return res.redirect("/collections");
   } catch (error) {
+    console.error("Error in removeRecipe:", error);
     return res.send("Error removing recipe");
   }
 };
