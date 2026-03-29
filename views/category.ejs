@@ -3,6 +3,7 @@
   <title>Category List</title> <!-- Title displayed in the browser tab -->
 </head>
 <body>
+  <a href="/add-category">Add Category</a> &nbsp;&nbsp;&nbsp; <a href="/edit-category">Edit Category</a>
 
   <!-- EJS conditional block: Check if there are any category list -->
   <% if (CategoryList.length === 0) { %>
@@ -12,10 +13,10 @@
     <h2>Category List</h2>
     <!-- EJS loop to render each category -->
     <% CategoryList.forEach(i => { %>
-        <p><strong>Category: <%= i.categoryName %></strong></p> 
+        <p><strong><%= i.categoryName %></strong></p> 
       <hr>
     <% }); %>
   <% } %>
-     
+  <br>
 </body>
 </html>

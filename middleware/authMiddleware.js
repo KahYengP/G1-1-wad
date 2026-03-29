@@ -1,11 +1,21 @@
 const User = require('../models/User'); // adjust path if needed
 
 // Check if user is logged in (session exists)
-exports.isAuthenticated = (req, res, next) => {
-  if (req.session && req.session.userId) {
-    return next();
+exports.isAuthenticated = async(req, res, next) => {
+  if (!req.session || !req.session.userId) {
+    return res.redirect('/login')
   }
-  res.redirect('/login');
+  try {
+    const user=await User.findById(req.session.userId)
+    if (!user) {
+      return res.redirect('/login')
+    }
+    req.user=user
+    next()
+  } catch(error) {
+    console.error(error)
+    res.status(500).send('Server error')
+  }
 };
 
 // Redirect logged-in users away from login/register pages

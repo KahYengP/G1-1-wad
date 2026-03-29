@@ -2,22 +2,96 @@
 <html>
 <head>
   <title>Recipe Details</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+  <style>
+    .star { color: gold; font-size: 1.2rem; }
+    .review-card { background: #f0f0f0; border-radius: 10px; padding: 15px; margin-bottom: 15px; }
+  </style>
 </head>
 <body>
 
-<h1><%= recipe.title %></h1>
+<!-- ========== NAVBAR ========== -->
+<nav class="navbar navbar-expand-lg navbar-light border-bottom px-4">
+  <a class="navbar-brand fw-bold" href="#">Logo & Name</a>
+  <div class="collapse navbar-collapse">
+    <ul class="navbar-nav ms-auto gap-3">
+      <li class="nav-item"><a class="nav-link" href="/recipe">All Recipes</a></li>
+      <li class="nav-item"><a class="nav-link" href="/recipe/add">Create</a></li>
+      <li class="nav-item"><a class="nav-link" href="/category">Category</a></li>
+      <li class="nav-item"><a class="nav-link" href="/bookmark">Bookmark</a></li>
+      <li class="nav-item"><a class="nav-link" href="/profile">Profile</a></li>
+      <li class="nav-item"><a class="nav-link" href="/logout">Logout</a></li>
+    </ul>
+  </div>
+</nav>
 
-<img src="<%= recipe.image %>" width="200">
+<!-- ========== RECIPE DETAIL ========== -->
+<div class="container my-4">
 
-<p>Created by: <%= recipe.createdBy %></p>
+  <!-- Save to Bookmark button -->
+  <div class="d-flex justify-content-end mb-3">
+    <form action="/bookmark/save" method="POST">
+      <input type="hidden" name="recipeId" value="<%= recipe._id %>">
+      <button type="submit" class="btn btn-secondary">Save to bookmark</button>
+    </form>
+  </div>
 
-<h3>Ingredients</h3>
-<p><%= recipe.ingredients %></p>
+  <!-- Recipe Info -->
+  <div class="row mb-5">
+    <!-- Image -->
+    <div class="col-md-5">
+      <img src="<%= recipe.image || '/images/default.jpg' %>" class="img-fluid rounded" alt="Recipe Image">
+    </div>
 
-<h3>Instructions</h3>
-<p><%= recipe.instructions %></p>
+    <!-- Details -->
+    <div class="col-md-7">
+      <h2><%= recipe.title %></h2>
+      <p><strong>Ingredient:</strong> <%= recipe.ingredients %></p>
+      <div class="p-3 bg-light rounded mb-3">
+        <p class="mb-0"><%= recipe.instructions %></p>
+      </div>
+      <p><strong>Created by:</strong> <%= recipe.createdBy %></p>
+    </div>
+  </div>
 
-<a href="/recipes">Back</a>
+  <!-- ========== REVIEWS SECTION ========== -->
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h3>Review</h3>
+    <a href="/review/add/<%= recipe._id %>" class="btn btn-secondary">write a review</a>
+  </div>
+
+  <!-- Review Cards -->
+  <% if (reviews && reviews.length > 0) { %>
+    <% reviews.forEach(review => { %>
+      <div class="review-card">
+        <div class="d-flex justify-content-between">
+          <div>
+            <strong><%= review.username %></strong>
+            <!-- show edit/delete only for review owner -->
+            <% if (user && user.email === review.userEmail) { %>
+              <span class="ms-3 text-muted">
+                <a href="/review/edit/<%= review._id %>">Edit</a> |
+                <form action="/review/delete/<%= review._id %>" method="POST" class="d-inline">
+                  <button type="submit" class="btn btn-link p-0 text-danger">Delete</button>
+                </form>
+              </span>
+            <% } %>
+          </div>
+        </div>
+        <!-- Star Rating -->
+        <div class="my-1">
+          <% for (let i = 1; i <= 5; i++) { %>
+            <span class="star"><%= i <= review.rating ? '★' : '☆' %></span>
+          <% } %>
+        </div>
+        <p class="mb-0"><%= review.content %></p>
+      </div>
+    <% }) %>
+  <% } else { %>
+    <p class="text-muted">No reviews yet. Be the first to write one!</p>
+  <% } %>
+
+</div>
 
 </body>
 </html>

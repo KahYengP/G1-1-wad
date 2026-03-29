@@ -9,21 +9,21 @@
 
 <!-- FIXED: /recipes → /recipe -->
 <a href="/recipe/add">Add Recipe</a> <br>
+<a href="/bookmarks">⭐View Bookmarks</a><br>
 <a href = "/dashboard">Go back</a>
 
 <% recipes.forEach(recipe => { %>
 
   <div style="border:1px solid black; margin:10px; padding:10px;"><!--cuz im cool at css like that-->
 
-    <h3><%= recipe.title %></h3>
-
-    <img src="<%= recipe.image %>" width="150">
+    <h3><a href="/recipe/view/<%= recipe._id %>"><%= recipe.title %></a></h3>
 
     <p><strong>Ingredients:</strong> <%= recipe.ingredients %></p>
     <p><strong>Instructions:</strong> <%= recipe.instructions %></p>
 
 
     <p>Created by: <%= recipe.createdBy %></p>
+    <p>Published on: <%= new Date(recipe.createdAt).toLocaleDateString() %></p>
 
 
     <a href="/recipe/edit/<%= recipe._id %>">Edit</a>

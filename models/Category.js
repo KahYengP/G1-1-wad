@@ -1,33 +1,32 @@
 const mongoose = require('mongoose');
 
 const categorySchema = new mongoose.Schema({
-    categoryName:{
-        type: String,
-        required: true,
-        unique: true,
-        trim: true,
-        minlength: [2, "Category name must be at least 2 characters"],
-        maxlength: [10, "Category name cannot exceed 10 characters"]
-    }
+  categoryName: {
+    type: String,
+    required: true,
+    unique: true,
+    trim: true,
+    minlength: 2,
+    maxlength: 10
+  }
 });
 
-module.exports = mongoose.model('Category', categorySchema);
+const Category = mongoose.model('Category', categorySchema);
 
-exports.getAll = () =>{
-    return Category.find()
-}
-exports.addCategory = function(newCategory) {
+Category.getAll = function() {
+  return Category.find();
+};
+
+Category.addCategory = function(newCategory) {
   return Category.create(newCategory);
 };
 
-exports.findByName = function(category) {
-  return Category.findOne({ category:category });
+Category.updateCategory = function(id, newName) {
+  return Category.findByIdAndUpdate(id, { categoryName: newName }, { new: true });
 };
 
-exports.updateCategory = function(oldName, newName) {
-  return Category.updateOne({categoryName: oldName}, {categoryName: newName});
+Category.deleteCategory = function(id) {
+  return Category.findByIdAndDelete(id);
 };
 
-exports.deleteCategory = function(DeleteCategory) {
-  return Category.deleteOne({categoryName: DeleteCategory});
-};
+module.exports = Category;

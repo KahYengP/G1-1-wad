@@ -6,9 +6,9 @@
     <input type="hidden" name="bookmarkId" value="<%= bookmark._id %>">
     <label>Category:</label>
         <input type="text" name="category" value="<%= bookmark.category %>">
-    <br>
-    <label>Note:</label>
-    <textarea name="note" cols="50" rows="5"><%= bookmark.note %></textarea>
-    <br>
+    <br><br>
+    <label>Note:</label><br>
+    <textarea name="note" cols="80" rows="5"><%= bookmark.note %></textarea>
+    <br><br>
     <button type="submit">Update Bookmark</button>
 </form>

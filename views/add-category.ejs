@@ -1,22 +1,22 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Add a New Book</title>
+    <title>Add Category</title>
 </head>
 <body>
-    <h3>Add a new Book</h3>
+    <h3>Add Category</h3>
     <form action="/add-category" method="POST">
-        <table border="1">
+        <table>
             <tr>
-                <th>Category:</th><td><input type="text" name="category"></td>
+                <th>New Category:</th><td><input type="text" name="category" required></td>
             </tr>
         </table>
+        <br><br>
         <button type="submit">Add Category</button> 
     </form>
+    <br><br>
+    <a href="/category">Back to Category List</a>
 <br><br>
-    <% if(msg==""){%>
-        <p>All Fields are required.</p>
-    <% } %>
     <% if(msg==="Failure"){%>
         <p>Error adding category</p>
     <%} else if(result && result.categoryName){ %>

@@ -8,8 +8,9 @@ const recipeSchema = new mongoose.Schema({
     //if no image is shown then depict default.jpg(its a placeholder)    //we really need this because it gives reference on user who created it hence id
     createdBy: {
     type: String,//reserverd for the email
-    required: true,
-  },
+    required: true},
+    createdAt:{ type: Date,
+        default: Date.now}   
 });
 
 const Recipe = mongoose.model("Recipe", recipeSchema);

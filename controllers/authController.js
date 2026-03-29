@@ -82,6 +82,7 @@ exports.registerUser = async (req, res) => {
       username,
       email,
       password: hashedPassword,
+      role: req.body.role,
       security_questions: selectedQuestions,
       security_answers: hashedAnswers
     });

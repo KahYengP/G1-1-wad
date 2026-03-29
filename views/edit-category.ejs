@@ -9,13 +9,12 @@
   <% } else { %>
     <h2>Category List</h2>
     <% CategoryList.forEach(i => { %>
-        <p><strong>Category: <%= i.categoryName %></strong></p>      <!-- Display the book title -->
-        <a href="/update-category?category=<%= i.categoryName %>">Edit</a> |
-      <a href="/delete-category?category=<%= i.categoryName %>">Delete</a>
+        <p><strong><%= i.categoryName %></strong></p>     
+        <a href="/update-category?id=<%= i._id %>">Edit</a> 
       <hr>
     <% }); %>
     
   <% } %>
-     
+  <a href="/category">Back to Category List</a>
 </body>
 </html>
