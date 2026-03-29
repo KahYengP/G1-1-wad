@@ -6,6 +6,13 @@ const recipeSchema = new mongoose.Schema({
     ingredients: { type: String, required: true },
     instructions: { type: String, required: true },
     //if no image is shown then depict default.jpg(its a placeholder)    //we really need this because it gives reference on user who created it hence id
+
+    category: { 
+       type: mongoose.Schema.Types.ObjectId,
+       ref: 'Category', // reference your Category model
+       required: true
+   },
+
     createdBy: {
     type: String,//reserverd for the email
     required: true},
@@ -20,7 +27,7 @@ const Recipe = mongoose.model("Recipe", recipeSchema);
 
 //get all recipes,
 exports.getAll = () =>{
-    return Recipe.find()
+    return Recipe.find().populate('category') 
 }
 
 //create new recipe 

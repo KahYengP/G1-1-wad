@@ -20,7 +20,7 @@
         <% bookmarks.forEach(bookmark => { %>
         <tr>
             <td><%= bookmark.recipeId.title %></td>
-            <td><%= bookmark.category || "None" %></td>
+            <td><%= bookmark.category.categoryName || "None" %></td>
             <td><%= bookmark.note || "No note" %></td>
             <td>
                 <form action="/recipe/view" method="POST">

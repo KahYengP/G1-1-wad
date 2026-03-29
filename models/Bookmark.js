@@ -12,8 +12,9 @@ const bookmarkSchema = new mongoose.Schema({
         required: true 
     }, 
     category:{
-        type: String,
-        default:""
+        type: mongoose.Schema.Types.ObjectId, 
+        ref: 'Category',
+        required: true
     }, 
     note:{
         type: String, 

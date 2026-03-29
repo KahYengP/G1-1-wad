@@ -1,5 +1,6 @@
 const Recipe = require("../models/Recipe");
 const Review = require("../models/Review");
+const Category = require('../models/Category'); // 
 const mongoose = require("mongoose");
 
 //ill do it in the format of read, create,update, delete see? rcud not crud
@@ -18,7 +19,7 @@ exports.getRecipes = async (req, res) => {
 
 exports.getRecipeById = async (req, res) => {
   try {
-    const recipe = await Recipe.findById(req.params.id);
+    const recipe = await Recipe.findById(req.params.id).populate('category'); 
     if (!recipe) return res.send("Recipe not found.");
 
     const reviews = await Review.findByRecipeId(req.params.id);
@@ -34,9 +35,10 @@ exports.getRecipeById = async (req, res) => {
   }
 };
 
-exports.showAddform = (req, res) => {
+exports.showAddform = async (req, res) => {
   try {
-    return res.render("add-recipe");
+    const CategoryList = await Category.find(); //
+    return res.render("add-recipe", {CategoryList}); //
   } catch (error) {
     return res.send("Error in add form");
   }
@@ -56,6 +58,7 @@ exports.createRecipes = async (req, res) => {
       ingredients: ingredients,
       instructions: instructions,
       createdBy: createdBy,
+      category: req.body.category
     };
 
     //okay this part creates a new recipe to be added
@@ -77,13 +80,14 @@ exports.showEditForm = async (req, res) => {
   try {
     // fetch recipe so form can be pre-filled
     const recipe = await Recipe.findById(req.params.id);
+    const CategoryList = await Category.find(); 
 
     if (!recipe) {
       return res.send("Recipe not found");
     }
 
     //  pass recipe to EJS
-    return res.render("edit-recipe", { recipe });
+    return res.render("edit-recipe", { recipe, CategoryList });
   } catch (error) {
     return res.send("There has been an error rendering edit recipe ");
   }
@@ -118,12 +122,14 @@ exports.updateRecipes = async (req, res) => {
     const title = req.body.title;
     const ingredients = req.body.ingredients;
     const instructions = req.body.instructions;
+    const category = req.body.category
 
     // declare data properly
     const data = {
       title: title,
       ingredients: ingredients,
       instructions: instructions,
+      category: category 
     };
 
     //update using mongoose funciton

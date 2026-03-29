@@ -15,6 +15,20 @@
 
   <textarea name="instructions"><%= recipe.instructions %></textarea><br><br>
 
+ <% if (CategoryList.length === 0) { %>
+   <p>No categories yet.</p> <!-- Message when there is no category -->
+ <% } else { %>
+   <!-- EJS loop to render each category -->
+   <label for="category">Category: </label>
+   <select name="category" required>
+     <% CategoryList.forEach(cat => { %>
+       <option value="<%= cat._id %>"<%= recipe.category.toString() === cat._id.toString() ? 'selected' : '' %>>
+         <%= cat.categoryName %>
+       </option>
+     <% }) %>
+   </select>
+ <% } %>
+
   <button type="submit">Update</button>
 
 </form>

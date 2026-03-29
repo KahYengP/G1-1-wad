@@ -18,6 +18,7 @@
 
     <h3><a href="/recipe/view/<%= recipe._id %>"><%= recipe.title %></a></h3>
 
+    <p><strong>Category: </strong><%= recipe.category.categoryName %></p>
     <p><strong>Ingredients:</strong> <%= recipe.ingredients %></p>
     <p><strong>Instructions:</strong> <%= recipe.instructions %></p>
 

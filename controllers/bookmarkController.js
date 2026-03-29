@@ -1,5 +1,6 @@
 const Bookmark = require("../models/Bookmark")
 const Recipe = require("../models/Recipe")
+const Category = require('../models/Category');
 
 exports.createBookmark = async(req,res) => {
     try {
@@ -15,7 +16,7 @@ exports.createBookmark = async(req,res) => {
         if (!existingRecipe) {
             return res.send('Recipe not found.')
         }
-        const existing = await Bookmark.findOne({userId:userId, recipeId: recipeId})
+        const existing = await Bookmark.findOne({userId:userId, recipeId: recipeId}).populate('recipeId').populate('category')
         if (existing) {
             return res.send('Recipe already bookmarked.')
         }
@@ -24,13 +25,13 @@ exports.createBookmark = async(req,res) => {
             userId: userId, 
             recipeId: recipeId,
             note: note || "",
-            category: category || ""
+            category: existingRecipe.category._id
         })
         await bookmark.save()
         res.redirect('/bookmarks')
     } catch(error) {
         console.error(error)
-        res.send('Error creating bookmarks.')
+        res.send(error.message)
     }
 }
 
@@ -41,7 +42,7 @@ exports.readBookmarks = async(req,res) => {
             return res.redirect('/login')
         }
 
-        const bookmarks = await Bookmark.find({userId: userId}).populate('recipeId') 
+        const bookmarks = await Bookmark.find({userId: userId}).populate('recipeId').populate('category')
         res.render("bookmarks", {bookmarks: bookmarks})
     } catch(error) {
         console.error(error)
@@ -105,7 +106,7 @@ exports.showEditBookmarkForm = async(req,res) => {
             return res.redirect("/login")
         }
         
-        const bookmark= await Bookmark.findOne({_id: bookmarkId, userId: userId}).populate('recipeId')
+        const bookmark= await Bookmark.findOne({_id: bookmarkId, userId: userId}).populate('recipeId').populate('category')
         if (!bookmark) {
             return res.send('Bookmark not found.')
         }

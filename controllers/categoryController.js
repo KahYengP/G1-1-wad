@@ -1,6 +1,5 @@
 const fs = require('fs/promises');
 const Category = require('../models/Category');
-
 // use session in routes
 exports.showCategory = async (req, res) => {
     try {

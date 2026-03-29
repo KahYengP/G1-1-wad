@@ -15,6 +15,14 @@
 
   <textarea name="instructions" placeholder="Instructions" required></textarea><br><br>
 
+  <label for="category">Category:</label>
+  <select name="category" id="category" required>
+    <option value="">--Select a Category--</option>
+    <% CategoryList.forEach(category => { %>
+      <option value="<%= category._id %>" aria-required="true"><%= category.categoryName %></option>
+    <% }) %>
+  </select><br><br>
+
   <button type="submit">Add</button>
 
 </form>
