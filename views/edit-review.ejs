@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Write a Review</title>
+  <title>Edit Review</title>
   <style>
     body { margin-left: 80px; margin-right: 80px; }
     nav { border-bottom: 1px solid black; padding: 10px; margin-bottom: 0; }
@@ -23,37 +23,39 @@
   </div>
 </nav>
 
-<h1>Write a Review</h1>
+<h1>Edit Review - <%= recipe.title %></h1>
 
 <!-- Show errors if any -->
-<% if (typeof errors !== 'undefined' && errors.length > 0) { %>
+<% if (errors && errors.length > 0) { %>
   <% errors.forEach(error => { %>
     <p style="color: red;"><%= error %></p>
   <% }) %>
 <% } %>
 
-<form action="/review/add/<%= recipeId %>" method="POST">
+<form action="/review/edit/<%= review._id %>" method="POST">
 
   <label>Rating:</label><br>
   <select name="rating" required>
     <option value="">-- Select Rating --</option>
-    <option value="1">★ 1</option>
-    <option value="2">★★ 2</option>
-    <option value="3">★★★ 3</option>
-    <option value="4">★★★★ 4</option>
-    <option value="5">★★★★★ 5</option>
+    <option value="1" <%= review.rating === 1 ? 'selected' : '' %>>★ 1</option>
+    <option value="2" <%= review.rating === 2 ? 'selected' : '' %>>★★ 2</option>
+    <option value="3" <%= review.rating === 3 ? 'selected' : '' %>>★★★ 3</option>
+    <option value="4" <%= review.rating === 4 ? 'selected' : '' %>>★★★★ 4</option>
+    <option value="5" <%= review.rating === 5 ? 'selected' : '' %>>★★★★★ 5</option>
   </select><br><br>
 
   <label>Review:</label><br>
-  <textarea name="content" placeholder="Write your review here..." required style="width: 100%;height:100px"></textarea><br><br>
+  <textarea name="content" placeholder="Write your review here..." required
+    style="width: 100%; height: 100px;"><%= review.content %></textarea><br><br>
 
   <div style="display: flex; justify-content: flex-end; gap: 10px; align-items: center;">
-    <a href="/recipe/view/<%= recipeId %>">Back</a>
-    <button type="submit">Submit</button>
+    <a href="/recipe/view/<%= review.recipeId %>">Back</a>
+    <a href="/review/delete/<%= review._id %>"
+      onclick="return confirm('Delete this review?')" style="color: red;">Delete</a>
+    <button type="submit">Update</button>
   </div>
 
 </form>
-
 
 </body>
 </html>

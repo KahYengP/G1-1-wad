@@ -66,6 +66,5 @@ router.post("/view", async (req, res) => {
   }
 });
 
-router.get("/view/:id", recipeController.getRecipeById);
-
+router.get("/view/:id", authMiddleware.setUser, recipeController.getRecipeById);
 module.exports = router;

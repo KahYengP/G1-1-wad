@@ -5,10 +5,7 @@ const Recipe = require("../models/Recipe");
 const User = require("../models/User");
 const mongoose = require("mongoose");
 
-// --------------------
-// GET /recipe/:id
 // Show recipe details + all its reviews
-// --------------------
 exports.showRecipeDetails = async (req, res) => {
   try {
     const recipeId = req.params.id;
@@ -41,10 +38,7 @@ exports.showRecipeDetails = async (req, res) => {
   }
 };
 
-// --------------------
-// GET /review/add/:recipeId
 // Show the add review form
-// --------------------
 exports.showAddForm = async (req, res) => {
   try {
     const recipeId = req.params.recipeId;
@@ -54,10 +48,7 @@ exports.showAddForm = async (req, res) => {
   }
 };
 
-// --------------------
-// POST /review/add/:recipeId
-// Save a new review
-// --------------------
+// Create a new review
 exports.createReview = async (req, res) => {
   try {
     // Get the recipe ID from the URL
@@ -82,7 +73,8 @@ exports.createReview = async (req, res) => {
     if (!content) {
       content = "";
     }
-    content = content.trim(); // remove extra spaces before and after
+    // remove extra spaces
+    content = content.trim();
 
     // Validate the inputs
     const errors = [];
@@ -114,127 +106,91 @@ exports.createReview = async (req, res) => {
     return res.send("Error submitting review.");
   }
 };
-// --------------------
-// GET /review/edit/:reviewId
+
 // Show the edit review form, pre-filled with existing data
-// --------------------
 exports.showEditReview = async (req, res) => {
   try {
     const reviewId = req.params.reviewId;
 
-    if (!req.session.userId) {
-      return res.redirect("/login");
-    }
+    if (!req.user) return res.redirect("/login");
 
-    if (!mongoose.Types.ObjectId.isValid(reviewId)) {
+    if (!mongoose.Types.ObjectId.isValid(reviewId))
       return res.send("Invalid review ID.");
-    }
 
     const review = await Review.findById(reviewId);
-    if (!review) {
-      return res.send("Review not found.");
-    }
+    if (!review) return res.send("Review not found.");
 
-    // Only the owner can edit
-    if (review.userId.toString() !== req.session.userId.toString()) {
+    if (review.userId.toString() !== req.user._id.toString())
       return res.send("Not allowed.");
-    }
 
     const recipe = await Recipe.findById(review.recipeId);
-
-    return res.render("edit-review", {
-      review,
-      recipe,
-      errors: [],
-    });
+    return res.render("edit-review", { review, recipe, errors: [] });
   } catch (error) {
     console.error(error);
     return res.send("Error loading edit form.");
   }
 };
 
-// --------------------
-// POST /review/edit/:reviewId
-// Update an existing review
-// --------------------
 exports.updateReview = async (req, res) => {
   try {
     const reviewId = req.params.reviewId;
 
-    if (!req.session.userId) {
-      return res.redirect("/login");
-    }
+    if (!req.user) return res.redirect("/login");
 
-    if (!mongoose.Types.ObjectId.isValid(reviewId)) {
+    if (!mongoose.Types.ObjectId.isValid(reviewId))
       return res.send("Invalid review ID.");
-    }
 
     const review = await Review.findById(reviewId);
-    if (!review) {
-      return res.send("Review not found.");
-    }
+    if (!review) return res.send("Review not found.");
 
-    // Only the owner can update
-    if (review.userId.toString() !== req.session.userId.toString()) {
+    if (review.userId.toString() !== req.user._id.toString())
       return res.send("Not allowed.");
-    }
 
     const rating = Number(req.body.rating);
-    const content = (req.body.content ?? "").trim();
-    const errors = [];
+    let content = req.body.content;
+    if (!content) content = "";
+    content = content.trim();
 
-    // Validation
-    if (!rating || rating < 1 || rating > 5) {
+    const errors = [];
+    if (!rating || rating < 1 || rating > 5)
       errors.push("Please select a rating between 1 and 5.");
-    }
-    if (!content) {
-      errors.push("Review content cannot be empty.");
-    }
+    if (!content) errors.push("Review content cannot be empty.");
 
     if (errors.length > 0) {
       const recipe = await Recipe.findById(review.recipeId);
       return res.render("edit-review", { review, recipe, errors });
     }
 
-    await Review.updateById(reviewId, { rating, content });
-
-    return res.redirect("/recipe/" + review.recipeId);
+    await Review.updateById(reviewId, {
+      rating,
+      content,
+      updatedAt: new Date(),
+    });
+    return res.redirect("/recipe/view/" + review.recipeId);
   } catch (error) {
     console.error(error);
     return res.send("Error updating review.");
   }
 };
 
-// --------------------
-// POST /review/delete/:reviewId
-// Delete a review
-// --------------------
 exports.deleteReview = async (req, res) => {
   try {
     const reviewId = req.params.reviewId;
 
-    if (!req.session.userId) {
-      return res.redirect("/login");
-    }
+    if (!req.user) return res.redirect("/login");
 
-    if (!mongoose.Types.ObjectId.isValid(reviewId)) {
+    if (!mongoose.Types.ObjectId.isValid(reviewId))
       return res.send("Invalid review ID.");
-    }
 
     const review = await Review.findById(reviewId);
-    if (!review) {
-      return res.send("Review not found.");
-    }
+    if (!review) return res.send("Review not found.");
 
-    // Only the owner can delete
-    if (review.userId.toString() !== req.session.userId.toString()) {
+    if (review.userId.toString() !== req.user._id.toString())
       return res.send("Not allowed.");
-    }
 
     const recipeId = review.recipeId;
     await Review.deleteById(reviewId);
-
-    return res.redirect("/recipe/" + recipeId);
+    return res.redirect("/recipe/view/" + recipeId);
   } catch (error) {
     console.error(error);
     return res.send("Error deleting review.");

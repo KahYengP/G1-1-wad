@@ -43,7 +43,8 @@ server.set("view engine", "ejs");
 server.use("/", authRoutes);
 server.use("/recipe", recipeRoutes);
 server.use("/", bookmarkRoutes);
-server.use('/', categoryRoutes)
+server.use("/", categoryRoutes);
+server.use("/review", reviewRoutes);
 
 // ========== DATABASE + START ==========
 async function connectDataBase() {
