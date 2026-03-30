@@ -1,22 +1,51 @@
+<!DOCTYPE html>
 <html>
 <head>
-  <title>Category List</title> <!-- Title displayed in the browser tab -->
+  <title>Categories</title>
+  <style>
+    body { margin-left: 80px; margin-right: 80px; }
+    nav { border-bottom: 1px solid black; padding: 10px; margin-bottom: 0; }
+    nav a { margin-right: 15px; text-decoration: none; color: black; }
+    .review-card { border: 1px solid #ccc; padding: 10px; margin-bottom: 10px; }
+    .star { color: gold; }
+  </style>
 </head>
 <body>
-  <a href="/add-category">Add Category</a> &nbsp;&nbsp;&nbsp; <a href="/edit-category">Edit Category</a>
 
-  <!-- EJS conditional block: Check if there are any category list -->
+<!-- NAVBAR -->
+<nav style="display: flex; justify-content: space-between;">
+  <strong>G1-1</strong>
+  <div>
+    <a href="/recipe">All Recipes</a>
+    <a href="/recipe/add">Create</a>
+    <a href="/category">Category</a>
+    <a href="/bookmark">Bookmark</a>
+    <a href="/profile">Profile</a>
+    <a href="/logout">Logout</a>
+  </div>
+</nav>
+<!-- CATEGORY LIST -->
+<div></div>
+  <h2>Category List</h2>
   <% if (CategoryList.length === 0) { %>
-    <p>No categories yet.</p> <!-- Message when there is no category -->
+    <p>No categories yet.</p>
   <% } else { %>
-
-    <h2>Category List</h2>
-    <!-- EJS loop to render each category -->
-    <% CategoryList.forEach(i => { %>
-        <p><strong><%= i.categoryName %></strong></p> 
-      <hr>
+    <a href="/add-category" style="color: rgb(57, 57, 57);">Add Category</a><br><br>
+    <% CategoryList.forEach(category => { %>
+      <div class="category-card" style="
+          display: flex; 
+          justify-content: space-between; 
+          align-items: center; 
+          border: 1px solid #ccc; 
+          padding: 10px 15px; 
+          margin-bottom: 10px; 
+          border-radius: 5px; 
+          background-color: #f9f9f9;">
+        <span><strong><%= category.categoryName %></strong></span>
+        <a href="/update-category?id=<%= category._id %>" style="color: blue;">Edit</a>
+      </div>
     <% }); %>
   <% } %>
-  <br>
+
 </body>
 </html>

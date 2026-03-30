@@ -2,26 +2,44 @@
 <html lang="en">
 <head>
     <title>Add Category</title>
+    <style>
+    body { margin-left: 80px; margin-right: 80px; }
+    nav { border-bottom: 1px solid black; padding: 10px; margin-bottom: 0; }
+    nav a { margin-right: 15px; text-decoration: none; color: black; }
+    .review-card { border: 1px solid #ccc; padding: 10px; margin-bottom: 10px; }
+    .star { color: gold; }
+    </style>
 </head>
 <body>
+    <nav style="display: flex; justify-content: space-between;">
+    <strong>G1-1</strong>
+    <div>
+        <a href="/recipe">All Recipes</a>
+        <a href="/recipe/add">Create</a>
+        <a href="/category">Category</a>
+        <a href="/bookmark">Bookmark</a>
+        <a href="/profile">Profile</a>
+        <a href="/logout">Logout</a>
+    </div>
+    </nav><br><br>
     <h3>Add Category</h3>
-    <form action="/add-category" method="POST">
+    <form action="/add-category" method="POST" style="margin-bottom: 5px; display: 10px; flex-direction: column; gap: 10px;">
         <table>
             <tr>
-                <th>New Category:</th><td><input type="text" name="category" required></td>
+                <td><input type="text" name="category" required></td>
             </tr>
         </table>
         <br><br>
-        <button type="submit">Add Category</button> 
+        <button type="submit" style="padding: 5px 8px">Add Category</button> 
     </form>
     <br><br>
-    <a href="/category">Back to Category List</a>
+    <a href="/category" style="display: inline-block; margin-top: 15px; color: rgb(57, 57, 57);">Back to Category List</a>
 <br><br>
     <% if(msg==="Failure"){%>
         <p>Error adding category</p>
     <%} else if(result && result.categoryName){ %>
-        <p> Category has been added successfully.</p>
-        Category: <%= result.categoryName %><br>
+        <p> <%= result.categoryName %> has been added successfully.</p>
+        <br>
     <%} %>
     
 </body>

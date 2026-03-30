@@ -24,7 +24,7 @@
             <td><%= bookmark.category.categoryName || "None" %></td>
             <td><%= bookmark.note || "No note" %></td>
             <td>
-                    <form action="/recipe/view" method="POST">
+                <form action="/recipe/view" method="POST">
                     <input type="hidden" name="recipeId" value="<%= bookmark.recipeId._id %>">
                     <button type="submit">View</button>
                 </form>

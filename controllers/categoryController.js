@@ -34,16 +34,6 @@ exports.createCategory = async (req, res) => {
     }
 };
 
-// edit
-exports.showEditForm = async (req, res) => {
-  try {
-    let CategoryList = await Category.getAll();
-    res.render("edit-category", { CategoryList });
-  } catch (error) {
-    res.send("Error loading categories");
-  }
-};
-
 exports.getCategory = async (req, res) => {
   const id = req.query.id;
   try {
@@ -65,7 +55,7 @@ exports.updateCategory = async (req, res) => {
 
   try {
     await Category.updateCategory(id, newName);
-    res.redirect("/edit-category"); // back to list
+    res.redirect("/category"); // back to list
   } catch (error) {
     res.send("Error updating category");
   }
@@ -77,7 +67,7 @@ exports.deleteCategory = async (req, res) => {
 
   try {
     await Category.deleteCategory(id);
-    res.redirect("/edit-category");
+    res.redirect("/category");
   } catch (error) {
     res.send("Error deleting category");
   }

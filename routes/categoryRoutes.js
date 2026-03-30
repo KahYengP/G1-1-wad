@@ -1,5 +1,4 @@
 // xin hee
-// to add/edit/update/delete category for admins only?
 const express = require("express");
 const router = express.Router();
 const categoryController = require("../controllers/categoryController");
@@ -13,7 +12,6 @@ router.get("/add-category", authMiddleware.isAuthenticated, authMiddleware.isAdm
 router.post("/add-category", authMiddleware.isAuthenticated, authMiddleware.isAdmin, categoryController.createCategory);
 
 // Define GET/POST route to display all category/edit one category and update result
-router.get("/edit-category", authMiddleware.isAuthenticated, authMiddleware.isAdmin, categoryController.showEditForm);
 router.get("/update-category", authMiddleware.isAuthenticated, authMiddleware.isAdmin, categoryController.getCategory);
 router.post("/update-category", authMiddleware.isAuthenticated, authMiddleware.isAdmin, categoryController.updateCategory);
 router.post("/delete-category", authMiddleware.isAuthenticated, authMiddleware.isAdmin, categoryController.deleteCategory);
