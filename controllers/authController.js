@@ -151,13 +151,13 @@ exports.logoutUser = (req, res) => {
   });
 };
 
-exports.showLogoutPage = (req, res) => {
-  // Optional: redirect to login if user is not logged in
-  if (!req.session.userId) {
-    return res.redirect('/login');
-  }
-  res.render('logout');
-};
+// exports.showLogoutPage = (req, res) => {
+//   // Optional: redirect to login if user is not logged in
+//   if (!req.session.userId) {
+//     return res.redirect('/login');
+//   }
+//   res.render('logout');
+// };
 
 // ==================== FORGOT PASSWORD ====================
 // GET /forgot - display email entry form
@@ -305,15 +305,15 @@ exports.deleteUser = async (req, res) => {
 
 // ==================== LOGOUT ====================
 // Direct logout (no confirmation)
-exports.logoutUser = (req, res) => {
-  req.session.destroy((err) => {
-    if (err) {
-      console.error('Error destroying session:', err);
-      return res.redirect('/dashboard'); // fallback
-    }
-    res.redirect('/login');
-  });
-};
+// exports.logoutUser = (req, res) => {
+//   req.session.destroy((err) => {
+//     if (err) {
+//       console.error('Error destroying session:', err);
+//       return res.redirect('/dashboard'); // fallback
+//     }
+//     res.redirect('/login');
+//   });
+// };
 
 
 // ==================== PROFILE ====================

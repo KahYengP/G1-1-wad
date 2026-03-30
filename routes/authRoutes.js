@@ -11,8 +11,8 @@ router.get('/login', authMiddleware.isGuest, authController.showLoginForm);
 router.post('/login', authController.loginUser);
 
 // Logout (requires session)
-router.get('/logout', authController.showLogoutPage);
-router.post('/logout', authController.logoutUser);
+// router.get('/logout', authController.showLogoutPage);
+// router.post('/logout', authController.logoutUser);
 
 // Forgot / reset (public, but no need to protect)
 router.get('/forgot', authController.showForgotForm);
