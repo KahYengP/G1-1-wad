@@ -22,12 +22,13 @@
     <a href="/recipe">All Recipes</a>
     <a href="/bookmark">Bookmark</a>
     <a href="/profile">Profile</a>
-    <% if (currentUser && currentUser.role === 'admin') { %>
-      <a href="/admin/users">Admin Profile</a>
-    <% } %>
+ <% if (user && user.role === 'admin') { %>
+  <a href="/admin/users">Admin Profile</a>
+<% } %>
     <a href="/logout">Logout</a>
   </div>
 </nav>
+
 
 <h1>Admin – User Management</h1>
 <a href="/admin/users/new">Create New User</a>

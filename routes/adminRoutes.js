@@ -15,6 +15,6 @@ router.post('/admin/users/:id', adminController.updateUser);
 router.post('/admin/users/:id/delete', adminController.deleteUser);
 
 // Admin dashboard (landing page)
-router.get('/admin', authMiddleware.isAuthenticated, authMiddleware.isAdmin, adminController.showAdminDashboard);
+router.get('/', authMiddleware.isAuthenticated, authMiddleware.isAdmin, adminController.showAdminDashboard);
 
 module.exports = router;

@@ -302,3 +302,15 @@ exports.deleteUser = async (req, res) => {
     res.status(500).send('Error deleting user: ' + err.message);
   }
 };
+
+// ==================== LOGOUT ====================
+// Direct logout (no confirmation)
+exports.logoutUser = (req, res) => {
+  req.session.destroy((err) => {
+    if (err) {
+      console.error('Error destroying session:', err);
+      return res.redirect('/dashboard'); // fallback
+    }
+    res.redirect('/login');
+  });
+};
