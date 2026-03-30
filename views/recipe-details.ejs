@@ -32,7 +32,7 @@
   <p><strong>Category:</strong> <%= recipe.category ? recipe.category.categoryName : 'Uncategorized' %></p>
   <p><strong>Ingredients:</strong> <%= recipe.ingredients %></p>
   <p><strong>Instructions:</strong> <%= recipe.instructions %></p>
-  <p><strong>Created by:</strong> <%= recipe.createdBy %></p>
+  <p><strong>Created by:</strong> <%= recipe.createdByUsername || recipe.createdBy %></p>
   <p><strong>Published on:</strong> <%= new Date(recipe.createdAt).toLocaleDateString() %></p>
   
 

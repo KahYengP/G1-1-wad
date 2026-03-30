@@ -44,7 +44,7 @@
       <div class="recipe-info">
         <h3 class="recipe-title" style="margin: 0 0 5px 0;"><%= recipe.title %></h3>
         <p style="margin: 3px 0;"><strong>Category:</strong> <%= recipe.category ? recipe.category.categoryName : 'Uncategorized' %></p>
-        <p style="margin: 3px 0; color: grey; font-size: 0.9em;">Created by: <%= recipe.createdBy %></p>
+        <p style="margin: 3px 0; color: grey; font-size: 0.9em;">Created by: <%= recipe.createdByUsername || recipe.createdBy %></p>
         <p style="margin: 3px 0; color: grey; font-size: 0.9em;">Published on: <%= new Date(recipe.createdAt).toLocaleDateString() %></p>
       </div>
 
