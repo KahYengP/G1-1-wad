@@ -9,7 +9,7 @@ const recipeRoutes = require("./routes/recipeRoutes");
 const bookmarkRoutes = require("./routes/bookmarkRoutes");
 const categoryRoutes = require("./routes/categoryRoutes");
 const reviewRoutes = require("./routes/reviewRoutes");
-const adminRoutes = require('./routes/adminRoutes');
+const adminRoutes = require("./routes/adminRoutes");
 
 // ===== ENV =====
 dotenv.config({ path: "./config.env" });
@@ -31,7 +31,7 @@ server.use(
     secret: "secretkey",
     resave: false,
     saveUninitialized: false,
-  })
+  }),
 );
 
 // 4. Global user middleware (makes 'user' available in all views)
@@ -39,8 +39,11 @@ server.use(async (req, res, next) => {
   if (req.session && req.session.userId) {
     try {
       const User = require("./models/User");
-      const user = await User.findById(req.session.userId).select("-password -security_answers");
+      const user = await User.findById(req.session.userId).select(
+        "-password -security_answers",
+      );
       res.locals.user = user;
+      req.user = user;
     } catch (err) {
       console.error("Error loading user in middleware:", err);
     }
@@ -57,7 +60,7 @@ server.use("/recipe", recipeRoutes);
 server.use("/", bookmarkRoutes);
 server.use("/", categoryRoutes);
 server.use("/review", reviewRoutes);
-server.use("/", adminRoutes);   // admin routes last (they contain /admin/*)
+server.use("/", adminRoutes); // admin routes last (they contain /admin/*)
 
 // ========== DATABASE CONNECTION ==========
 async function connectDataBase() {
