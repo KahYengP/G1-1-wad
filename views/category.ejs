@@ -27,10 +27,10 @@
 <!-- CATEGORY LIST -->
 <div></div>
   <h2>Category List</h2>
+  <a href="/add-category" style="color: rgb(57, 57, 57);">Add Category</a><br><br>
   <% if (CategoryList.length === 0) { %>
     <p>No categories yet.</p>
   <% } else { %>
-    <a href="/add-category" style="color: rgb(57, 57, 57);">Add Category</a><br><br>
     <% CategoryList.forEach(category => { %>
       <div class="category-card" style="
           display: flex; 
