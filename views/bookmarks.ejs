@@ -5,49 +5,56 @@
 </a>
 <br><br>
 
-<% if (bookmarks.length===0) { %>
-    <p>No bookmarks yet.</p>
-<% } else { %> 
+    <% if (bookmarks.length===0) { %>
+        <p>No bookmarks yet.</p>
+    <% } else { %> 
 
-    <table border="1">
-        <tr>
-            <th>Recipe</th>
-            <th>Category</th>
-            <th>Note</th>
-            <th>Actions</th>
-        </tr>
+        <table border="1">
+            <tr>
+                <th>Recipe</th>
+                <th>Category</th>
+                <th>Note</th>
+                <th>Actions</th>
+            </tr>
 
-        <% bookmarks.forEach(bookmark => { %>
-        <tr>
-            <% if (bookmark.recipeId) { %>
-            <td><%= bookmark.recipeId ? bookmark.recipeId.title : "Recipe deleted" %></td>
-           <td><%= bookmark.category ? bookmark.category.categoryName : "None" %></td>
+            <% bookmarks.forEach(bookmark => { %>
+            <tr>
+                <% if (bookmark.recipeId) { %>
+                <td><%= bookmark.recipeId ? bookmark.recipeId.title : "Recipe deleted" %></td>
+            <td><%= bookmark.category ? bookmark.category.categoryName : "None" %></td>
 
-            <td><%= bookmark.note || "No note" %></td>
-            <td>
-                <form action="/recipe/view" method="POST">
-                    <input type="hidden" name="recipeId" value="<%= bookmark.recipeId._id %>">
-                    <button type="submit">View</button>
-                </form>
-                <form action="/bookmark/edit" method="POST">
-                    <input type="hidden" name="bookmarkId" value="<%= bookmark._id %>">
-                    <button>Edit</button>
-                </form> 
-                <form action="/bookmark/delete" method="POST">
-                    <input type="hidden" name="bookmarkId" value="<%= bookmark._id %>">
-                    <button type="submit">Delete</button>
-                </form>
-            </td>
-            <% } else { %>
-            <td colspan ='3' >Recipe deleted </td>
-            <td>
-                <form action="/bookmark/delete" method="POST">
-                    <input type="hidden" name="bookmarkId" value="<%= bookmark._id %>">
-                    <button type="submit">Delete</button>
-                </form>
-            </td>
-            <% } %>
-        </tr>
-    <% }) %>
-    </table>
-<% } %>
+                <td><%= bookmark.note || "No note" %></td>
+                <td>
+                    <!-- <form action="/recipe/view" method="POST">
+                        <input type="hidden" name="recipeId" value="<%= bookmark.recipeId._id %>">
+                        <button type="submit">View</button>
+                    </form> -->
+                    <% if (bookmark.recipeId) { %>
+                        <a href="/recipe/view/<%= bookmark.recipeId._id %>">
+                            <button type="button">View</button>
+                        </a>
+                    <% } else { %>
+                        Recipe deleted
+                    <% } %>
+                    <form action="/bookmark/edit" method="POST">
+                        <input type="hidden" name="bookmarkId" value="<%= bookmark._id %>">
+                        <button>Edit</button>
+                    </form> 
+                    <form action="/bookmark/delete" method="POST">
+                        <input type="hidden" name="bookmarkId" value="<%= bookmark._id %>">
+                        <button type="submit">Delete</button>
+                    </form>
+                </td>
+                <% } else { %>
+                <td colspan ='3' >Recipe deleted </td>
+                <td>
+                    <form action="/bookmark/delete" method="POST">
+                        <input type="hidden" name="bookmarkId" value="<%= bookmark._id %>">
+                        <button type="submit">Delete</button>
+                    </form>
+                </td>
+                <% } %>
+            </tr>
+        <% }) %>
+        </table>
+    <% } %>
