@@ -1,0 +1,148 @@
+<!-- views/profile.ejs -->
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Profile</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; }
+    .container { max-width: 600px; margin: 0 auto; }
+    form { border: 1px solid #ccc; padding: 15px; margin-bottom: 20px; border-radius: 5px; }
+    input, select { width: 100%; padding: 8px; margin: 5px 0 10px; }
+    button { background-color: #5cb85c; color: white; border: none; padding: 10px; cursor: pointer; }
+    .error { color: red; }
+    .success { color: green; }
+   
+    body { margin-left: 80px; margin-right: 80px; }
+    nav { border-bottom: 1px solid black; padding: 10px; margin-bottom: 0; }
+    nav a { margin-right: 15px; text-decoration: none; color: black; }
+    .review-card { border: 1px solid #ccc; padding: 10px; margin-bottom: 10px; }
+    .star { color: gold; }
+  </style>
+</head>
+<body>
+
+<% if (user.role == 'user') { %>
+    <nav style="display: flex; justify-content: space-between;">
+  <strong>Logo & Name</strong>
+  <div>
+    <a href="/recipe">All Recipes</a>
+    <a href="/bookmark">Bookmark</a>
+    <a href="/profile">Profile</a>
+    <a href="/logout">Logout</a>
+  </div>
+</nav>
+<%}  else {%>
+    <nav style="display: flex; justify-content: space-between;">
+  <strong>G1-1</strong>
+  <div>
+    <a href="/recipe">All Recipes</a>
+    <a href="/recipe/add">Create</a>
+    <a href="/category">Category</a>
+    <a href="/bookmark">Bookmark</a>
+    <a href="/profile">Profile</a>
+    <a href="/logout">Logout</a>
+  </div>
+</nav>
+    <% }%>
+
+<div class="container">
+  <h1>Profile</h1>
+  <p>Username: <strong><%= user.username %></strong></p>
+  <p>Email: <strong><%= user.email %></strong></p>
+  <p>Role: <strong><%= user.role %></strong></p>
+
+  <% if (error) { %>
+    <div class="error"><%= error %></div>
+  <% } %>
+  <% if (success) { %>
+    <div class="success"><%= success %></div>
+  <% } %>
+
+  <!-- Change Password Form -->
+  <h2>Change Password</h2>
+  <form action="/profile/change-password" method="POST">
+    <label>Current Password</label>
+    <input type="password" name="currentPassword" required>
+
+    <label>New Password</label>
+    <input type="password" name="newPassword" required>
+
+    <label>Confirm New Password</label>
+    <input type="password" name="confirmNewPassword" required>
+
+    <button type="submit">Update Password</button>
+  </form>
+
+  <!-- Change Security Questions -->
+  <h2>Change Security Questions</h2>
+  <form action="/profile/change-security" method="POST">
+    <h3>Current Security Questions</h3>
+    <p><strong>Question 1:</strong> <%= user.security_questions[0] %></p>
+    <label>Answer 1:</label>
+    <input type="text" name="oldAnswer1" required>
+
+    <p><strong>Question 2:</strong> <%= user.security_questions[1] %></p>
+    <label>Answer 2:</label>
+    <input type="text" name="oldAnswer2" required>
+
+    <p><strong>Question 3:</strong> <%= user.security_questions[2] %></p>
+    <label>Answer 3:</label>
+    <input type="text" name="oldAnswer3" required>
+
+    <hr>
+    <h3>New Security Questions (choose 3 distinct)</h3>
+    <label>New Question 1:</label>
+    <select name="newQuestion1" required>
+      <option value="">Select a question</option>
+      <% questions.forEach(q => { %>
+        <option value="<%= q %>"><%= q %></option>
+      <% }); %>
+    </select>
+    <label>Answer 1:</label>
+    <input type="text" name="newAnswer1" required>
+
+    <label>New Question 2:</label>
+    <select name="newQuestion2" required>
+      <option value="">Select a question</option>
+      <% questions.forEach(q => { %>
+        <option value="<%= q %>"><%= q %></option>
+      <% }); %>
+    </select>
+    <label>Answer 2:</label>
+    <input type="text" name="newAnswer2" required>
+
+    <label>New Question 3:</label>
+    <select name="newQuestion3" required>
+      <option value="">Select a question</option>
+      <% questions.forEach(q => { %>
+        <option value="<%= q %>"><%= q %></option>
+      <% }); %>
+    </select>
+    <label>Answer 3:</label>
+    <input type="text" name="newAnswer3" required>
+
+    <button type="submit">Update Security Questions</button>
+  </form>
+</div>
+
+<script>
+  // Simple duplicate prevention for the new question selects (optional)
+  const selects = document.querySelectorAll('select[name^="newQuestion"]');
+  function updateSelects() {
+    const values = Array.from(selects).map(s => s.value);
+    selects.forEach(select => {
+      Array.from(select.options).forEach(opt => {
+        if (opt.value && values.includes(opt.value) && opt.value !== select.value) {
+          opt.disabled = true;
+        } else {
+          opt.disabled = false;
+        }
+      });
+    });
+  }
+  selects.forEach(select => select.addEventListener('change', updateSelects));
+  updateSelects();
+</script>
+
+</body>
+</html>

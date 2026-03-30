@@ -23,6 +23,16 @@ router.post('/reset-password', authController.resetPassword);
 router.post('/user/update', authController.updateUser);
 router.post('/user/delete', authController.deleteUser);
 
+
+// Profile page (GET)
+router.get('/profile', authMiddleware.isAuthenticated, authController.showProfile);
+
+// Change password (POST)
+router.post('/profile/change-password', authMiddleware.isAuthenticated, authController.changePassword);
+
+// Change security questions (POST)
+router.post('/profile/change-security', authMiddleware.isAuthenticated, authController.changeSecurity);
+
 //logout
 router.get('/logout', authController.logoutUser);  
 
