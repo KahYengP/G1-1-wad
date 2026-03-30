@@ -1,41 +1,34 @@
-const User = require("../models/User"); // adjust path if needed
+const User = require("../models/User");
 
-// Check if user is logged in (session exists)
-exports.isAuthenticated = async (req, res, next) => {
+// Check if user is logged in (relies on global middleware)
+exports.isAuthenticated = (req, res, next) => {
   if (!req.session || !req.session.userId) {
     return res.redirect("/login");
   }
-  try {
-    const user = await User.findById(req.session.userId);
-    if (!user) {
-      return res.redirect("/login");
-    }
-    req.user = user;
-    next();
-  } catch (error) {
-    console.error(error);
-    res.status(500).send("Server error");
+  if (!req.user) {
+    return res.redirect("/login");
   }
+  next();
 };
 
 // Redirect logged-in users away from login/register pages
 exports.isGuest = (req, res, next) => {
   if (req.session && req.session.userId) {
-    return res.redirect("/dashboard");
+    // Role-based redirection
+    if (req.user && req.user.role === 'admin') {
+      return res.redirect('/admin');      // admin dashboard
+    } else {
+      return res.redirect('/recipe');     // regular user recipe list
+    }
   }
   next();
 };
 
-// Optional: admin check
-exports.isAdmin = async (req, res, next) => {
+// Admin check – uses req.user from global middleware
+exports.isAdmin = (req, res, next) => {
   if (!req.session || !req.session.userId) return res.redirect("/login");
-  try {
-    const user = await User.findById(req.session.userId);
-    if (user && user.role === "admin") return next();
-    res.status(403).send("Access denied");
-  } catch (err) {
-    res.status(500).send("Server error");
-  }
+  if (req.user && req.user.role === "admin") return next();
+  res.status(403).send("Access denied");
 };
 
 exports.setUser = async (req, res, next) => {

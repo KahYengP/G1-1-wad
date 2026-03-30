@@ -11,7 +11,7 @@ router.post(
   recipeController.createRecipes,
 );
 //Read route(so we can display later)
-router.get("/", recipeController.getRecipes);
+router.get("/", authMiddleware.setUser, recipeController.getRecipes);
 
 //router.get("/:id", recipeController.getRecipeById);
 //above router.get can be good to show just 1  recipe

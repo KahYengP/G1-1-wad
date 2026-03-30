@@ -32,6 +32,14 @@ router.post(
 );
 
 // Delete review
+
+router.get(
+  "/delete/:reviewId",
+  authMiddleware.isAuthenticated,
+  reviewController.deleteReview,
+);
+
+
 router.post(
   "/delete/:reviewId",
   authMiddleware.isAuthenticated,

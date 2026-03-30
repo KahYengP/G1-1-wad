@@ -1,5 +1,3 @@
-const dns = require("node:dns");
-dns.setServers(["8.8.8.8", "1.1.1.1"]);
 const express = require("express");
 const mongoose = require("mongoose");
 const session = require("express-session");
@@ -10,31 +8,45 @@ const authRoutes = require("./routes/authRoutes");
 const recipeRoutes = require("./routes/recipeRoutes");
 const bookmarkRoutes = require("./routes/bookmarkRoutes");
 const categoryRoutes = require("./routes/categoryRoutes");
-// const reviewRoutes = require("./routes/reviewRoutes");
-const collectionsRoutes = require("./routes/collectionsRoutes");
 const reviewRoutes = require("./routes/reviewRoutes");
+const adminRoutes = require('./routes/adminRoutes');
 
-// const dashboardRoutes = require("./routes/dashboardRoutes");
-
+// ===== ENV =====
 dotenv.config({ path: "./config.env" });
 
+// ===== CREATE APP =====
 const server = express();
 
 // ========== MIDDLEWARE ==========
+// 1. Body parsers
 server.use(express.urlencoded({ extended: true }));
 server.use(express.json());
 
-// Serve static files (images, css, etc.) from /public
+// 2. Static files
 server.use(express.static("public"));
 
-// Session – must be before routes
+// 3. Session (must be before routes that use req.session)
 server.use(
   session({
     secret: "secretkey",
     resave: false,
     saveUninitialized: false,
-  }),
+  })
 );
+
+// 4. Global user middleware (makes 'user' available in all views)
+server.use(async (req, res, next) => {
+  if (req.session && req.session.userId) {
+    try {
+      const User = require("./models/User");
+      const user = await User.findById(req.session.userId).select("-password -security_answers");
+      res.locals.user = user;
+    } catch (err) {
+      console.error("Error loading user in middleware:", err);
+    }
+  }
+  next();
+});
 
 // ========== VIEW ENGINE ==========
 server.set("view engine", "ejs");
@@ -45,8 +57,9 @@ server.use("/recipe", recipeRoutes);
 server.use("/", bookmarkRoutes);
 server.use("/", categoryRoutes);
 server.use("/review", reviewRoutes);
+server.use("/", adminRoutes);   // admin routes last (they contain /admin/*)
 
-// ========== DATABASE + START ==========
+// ========== DATABASE CONNECTION ==========
 async function connectDataBase() {
   try {
     await mongoose.connect(process.env.DB);
@@ -56,6 +69,7 @@ async function connectDataBase() {
   }
 }
 
+// ========== START SERVER ==========
 function startserver() {
   const port = 8000;
   const hostname = "localhost";

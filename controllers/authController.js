@@ -31,7 +31,7 @@ exports.registerUser = async (req, res) => {
   try { 
     const {
       username, email, password, confirmPassword,
-      question1, answer1, question2, answer2, question3, answer3,role
+      question1, answer1, question2, answer2, question3, answer3
     } = req.body;
   
 
@@ -82,7 +82,7 @@ exports.registerUser = async (req, res) => {
       username,
       email,
       password: hashedPassword,
-      role: req.body.role,
+      role: "user",
       security_questions: selectedQuestions,
       security_answers: hashedAnswers
     });
@@ -122,8 +122,17 @@ exports.loginUser = async (req, res) => {
 
     // Save user ID in session
     req.session.userId = user._id;
-    //res.redirect('/dashboard'); dashboard doesnt work now
-    res.redirect('/dashboard')
+
+    // Redirect based on role
+    if (user.role === 'admin') {
+      const user1 = await User.findOne({ email });
+  console.log('Logged in user role:', user1.role);
+      return res.redirect('/admin/users');   
+    } else {
+      const user1 = await User.findOne({ email });
+  console.log('Logged in user role:', user1.role);
+      return res.redirect('/recipe');        // regular user sees recipe list
+    }
   } catch (err) {
     console.error(err);
     res.render('login', { error: 'Error logging in: ' + err.message });
@@ -136,7 +145,7 @@ exports.logoutUser = (req, res) => {
   req.session.destroy((err) => {
     if (err) {
       console.error(err);
-      return res.redirect('/dashboard');
+      return res.redirect('/recipe');
     }
     res.redirect('/login');
   });
@@ -265,7 +274,7 @@ exports.updateUser = async (req, res) => {
     }
 
     await User.findByIdAndUpdate(userId, { username, email });
-    res.redirect('/dashboard');
+    res.redirect('/recipe');
   } catch (err) {
     console.error(err);
     res.status(500).send('Error updating user: ' + err.message);

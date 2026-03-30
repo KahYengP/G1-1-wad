@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Admin Profile</title>
+  <style>
+    body { margin-left: 80px; margin-right: 80px; }
+    nav { border-bottom: 1px solid black; padding: 10px; margin-bottom: 0; }
+    nav a { margin-right: 15px; text-decoration: none; color: black; }
+    table { border-collapse: collapse; width: 100%; margin-top: 20px; }
+    th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+    th { background-color: #f2f2f2; }
+    .actions a { margin-right: 10px; }
+    .admin-badge { background-color: #5cb85c; color: white; padding: 2px 5px; border-radius: 3px; }
+    .user-badge { background-color: #777; color: white; padding: 2px 5px; border-radius: 3px; }
+  </style>
+</head>
+<body>
+
+<nav style="display: flex; justify-content: space-between;">
+  <strong>Logo & Name</strong>
+  <div>
+    <a href="/recipe">All Recipes</a>
+    <a href="/bookmark">Bookmark</a>
+    <a href="/profile">Profile</a>
+    <% if (currentUser && currentUser.role === 'admin') { %>
+      <a href="/admin/users">Admin Profile</a>
+    <% } %>
+    <a href="/logout">Logout</a>
+  </div>
+</nav>
+
+<h1>Admin – User Management</h1>
+<a href="/admin/users/new">Create New User</a>
+
+<table>
+  <thead>
+    <tr>
+      <th>Username</th>
+      <th>Email</th>
+      <th>Role</th>
+      <th>Created</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% users.forEach(user => { %>
+      <tr>
+        <td><%= user.username %></td>
+        <td><%= user.email %></td>
+        <td>
+          <% if (user.role === 'admin') { %>
+            <span class="admin-badge">Admin</span>
+          <% } else { %>
+            <span class="user-badge">User</span>
+          <% } %>
+        </td>
+        <td><%= new Date(user.dateCreated).toLocaleDateString() %></td>
+        <td class="actions">
+          <a href="/admin/users/<%= user._id %>/edit">Edit</a>
+          <form action="/admin/users/<%= user._id %>/delete" method="POST" style="display:inline;">
+            <button type="submit" onclick="return confirm('Delete this user?')">Delete</button>
+          </form>
+        </td>
+      </tr>
+    <% }) %>
+  </tbody>
+</table>
+
+</body>
+</html>

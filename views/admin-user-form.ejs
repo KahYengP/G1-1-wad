@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title><%= isEdit ? 'Edit User' : 'Create User' %></title>
+  <style>
+    body { margin-left: 80px; margin-right: 80px; }
+    nav { border-bottom: 1px solid black; padding: 10px; margin-bottom: 0; }
+    nav a { margin-right: 15px; text-decoration: none; color: black; }
+    form { max-width: 400px; margin-top: 20px; }
+    label { display: block; margin-top: 10px; }
+    input, select { width: 100%; padding: 5px; margin-top: 2px; }
+    button { margin-top: 15px; padding: 5px 15px; }
+    .error { color: red; }
+  </style>
+</head>
+<body>
+
+<nav style="display: flex; justify-content: space-between;">
+  <strong>Logo & Name</strong>
+  <div>
+    <a href="/recipe">All Recipes</a>
+    <a href="/bookmark">Bookmark</a>
+    <a href="/profile">Profile</a>
+    <% if (currentUser && currentUser.role === 'admin') { %>
+      <a href="/admin/users">Admin Profile</a>
+    <% } %>
+    <a href="/logout">Logout</a>
+  </div>
+</nav>
+
+<h1><%= isEdit ? 'Edit User' : 'Create New User' %></h1>
+
+<% if (error) { %>
+  <p class="error"><%= error %></p>
+<% } %>
+
+<form action="<%= isEdit ? '/admin/users/' + user._id : '/admin/users' %>" method="POST">
+  <label>Username</label>
+  <input type="text" name="username" value="<%= user ? user.username : '' %>" required>
+
+  <label>Email</label>
+  <input type="email" name="email" value="<%= user ? user.email : '' %>" required>
+
+  <label>Password (<%= isEdit ? 'leave blank to keep unchanged' : 'required' %>)</label>
+  <input type="password" name="password" <%= isEdit ? '' : 'required' %>>
+
+  <label>Role</label>
+  <select name="role" required>
+    <option value="user" <%= user && user.role === 'user' ? 'selected' : '' %>>User</option>
+    <option value="admin" <%= user && user.role === 'admin' ? 'selected' : '' %>>Admin</option>
+  </select>
+
+  <button type="submit"><%= isEdit ? 'Update' : 'Create' %> User</button>
+  <a href="/admin/users">Cancel</a>
+</form>
+
+</body>
+</html>

@@ -1,6 +1,6 @@
 const Recipe = require("../models/Recipe");
 const Review = require("../models/Review");
-const Category = require("../models/Category"); //
+const Category = require("../models/Category"); 
 const mongoose = require("mongoose");
 
 //ill do it in the format of read, create,update, delete see? rcud not crud
@@ -10,13 +10,12 @@ const mongoose = require("mongoose");
 exports.getRecipes = async (req, res) => {
   try {
     const recipes = await Recipe.getAll();
-    return res.render("recipe", { recipes: recipes });
+    return res.render("recipe", { recipes: recipes, user: req.user || null });
   } catch (error) {
     console.log(error);
     return res.send("Error in loading recipes. Please try again.");
   }
 };
-
 exports.getRecipeById = async (req, res) => {
   try {
     const recipe = await Recipe.findById(req.params.id).populate("category");
@@ -37,8 +36,8 @@ exports.getRecipeById = async (req, res) => {
 
 exports.showAddform = async (req, res) => {
   try {
-    const CategoryList = await Category.find(); //
-    return res.render("add-recipe", { CategoryList }); //
+    const CategoryList = await Category.find(); 
+    return res.render("add-recipe", { CategoryList }); 
   } catch (error) {
     return res.send("Error in add form");
   }
@@ -114,9 +113,12 @@ exports.updateRecipes = async (req, res) => {
 
     //check ownership(havent learn authentication so ill move on )
     // placeholder()
-    if (recipe.createdBy !== req.user.email) {
+    if (req.user.role !== 'admin' && recipe.createdBy !== req.user.email) {
       return res.send("Not allowed");
     }
+
+
+
 
     //take data from add recipe
     const title = req.body.title;
@@ -160,7 +162,7 @@ exports.deleteRecipes = async (req, res) => {
     }
 
     //authenticaiton placeholder
-    if (recipe.createdBy !== req.user.email) {
+    if (req.user.role !== 'admin' && recipe.createdBy !== req.user.email) {
       return res.send("Not allowed");
     }
 
