@@ -7,6 +7,7 @@
 - Npm install express
 - Npm install dotenv
 - Npm install mongoose
+- npm install multer
 
 ## Usage
 1. Run the app:
