@@ -1,0 +1,123 @@
+const MealPlanner = require("../models/MealPlanner");
+const Recipe = require("../models/Recipe");
+const User = require("../models/User");
+
+const DAYS = ["monday","tuesday","wednesday","thursday","friday","saturday","sunday"];
+
+async function getLoggedInUser(req) {
+  if (!req.session.userId) return null;
+  return await User.findById(req.session.userId);
+}
+
+async function getOrCreatePlanner(email) {
+  let planner = await MealPlanner.findOne({ createdBy: email });
+  if (!planner) {
+    planner = await MealPlanner.create({ createdBy: email });
+  }
+  // Populate recipe inside each slot for all days
+  await MealPlanner.populate(planner, { path: "monday.recipe tuesday.recipe wednesday.recipe thursday.recipe friday.recipe saturday.recipe sunday.recipe" });
+  return planner;
+}
+
+// GET /meal-planner
+exports.getMealPlanner = async (req, res) => {
+  try {
+    const user = await getLoggedInUser(req);
+    if (!user) return res.redirect("/login");
+
+    const planner = await getOrCreatePlanner(user.email);
+    const recipes = await Recipe.find().sort({ title: 1 });
+
+    return res.render("meal-planner", { planner, recipes, days: DAYS });
+  } catch (error) {
+    console.error(error);
+    return res.send("Error loading meal planner.");
+  }
+};
+
+// POST /meal-planner/add-slot  — add a new named slot (with optional recipe)
+exports.addSlot = async (req, res) => {
+  try {
+    const user = await getLoggedInUser(req);
+    if (!user) return res.redirect("/login");
+
+    const { day, slotName, recipeId } = req.body;
+    if (!DAYS.includes(day) || !slotName || !slotName.trim()) return res.redirect("/meal-planner");
+
+    const slot = { name: slotName.trim(), recipe: recipeId || null };
+
+    await MealPlanner.findOneAndUpdate(
+      { createdBy: user.email },
+      { $push: { [day]: slot } },
+      { upsert: true }
+    );
+
+    return res.redirect("/meal-planner");
+  } catch (error) {
+    console.error(error);
+    return res.send("Error adding slot.");
+  }
+};
+
+// POST /meal-planner/set-recipe  — assign a recipe to an existing slot
+exports.setSlotRecipe = async (req, res) => {
+  try {
+    const user = await getLoggedInUser(req);
+    if (!user) return res.redirect("/login");
+
+    const { day, slotId, recipeId } = req.body;
+    if (!DAYS.includes(day)) return res.redirect("/meal-planner");
+
+    await MealPlanner.findOneAndUpdate(
+      { createdBy: user.email, [`${day}._id`]: slotId },
+      { $set: { [`${day}.$.recipe`]: recipeId || null } }
+    );
+
+    return res.redirect("/meal-planner");
+  } catch (error) {
+    console.error(error);
+    return res.send("Error setting recipe.");
+  }
+};
+
+// POST /meal-planner/remove-recipe  — clear recipe from a slot (keep slot)
+exports.removeRecipe = async (req, res) => {
+  try {
+    const user = await getLoggedInUser(req);
+    if (!user) return res.redirect("/login");
+
+    const { day, slotId } = req.body;
+    if (!DAYS.includes(day)) return res.redirect("/meal-planner");
+
+    await MealPlanner.findOneAndUpdate(
+      { createdBy: user.email, [`${day}._id`]: slotId },
+      { $set: { [`${day}.$.recipe`]: null } }
+    );
+
+    return res.redirect("/meal-planner");
+  } catch (error) {
+    console.error(error);
+    return res.send("Error removing recipe.");
+  }
+};
+
+// POST /meal-planner/delete-slot  — delete the entire slot
+exports.deleteSlot = async (req, res) => {
+  try {
+    const user = await getLoggedInUser(req);
+    if (!user) return res.redirect("/login");
+
+    const { day, slotId } = req.body;
+    if (!DAYS.includes(day)) return res.redirect("/meal-planner");
+
+    await MealPlanner.findOneAndUpdate(
+      { createdBy: user.email },
+      { $pull: { [day]: { _id: slotId } } }
+    );
+
+    return res.redirect("/meal-planner");
+  } catch (error) {
+    console.error(error);
+    return res.send("Error deleting slot.");
+  }
+};

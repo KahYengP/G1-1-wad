@@ -10,6 +10,7 @@ const bookmarkRoutes = require("./routes/bookmarkRoutes");
 const categoryRoutes = require("./routes/categoryRoutes");
 const reviewRoutes = require("./routes/reviewRoutes");
 const adminRoutes = require("./routes/adminRoutes");
+const mealPlannerRoutes = require("./routes/mealPlannerRoutes");
 
 // ===== ENV =====
 dotenv.config({ path: "./config.env" });
@@ -60,6 +61,7 @@ server.use("/recipe", recipeRoutes);
 server.use("/", bookmarkRoutes);
 server.use("/", categoryRoutes);
 server.use("/review", reviewRoutes);
+server.use("/meal-planner", mealPlannerRoutes);
 server.use("/", adminRoutes); // admin routes last (they contain /admin/*)
 
 // ========== DATABASE CONNECTION ==========

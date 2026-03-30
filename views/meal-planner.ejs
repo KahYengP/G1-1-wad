@@ -1,0 +1,82 @@
+<style>
+  body { margin-left: 80px; margin-right: 80px; font-family: "Times New Roman", Times, serif; }
+</style>
+
+<h1>Meal Planner</h1>
+<a href="/recipe"><button>Back to Recipes</button></a>
+<br><br>
+
+<table border="1">
+  <% days.forEach(day => { %>
+    <% const slots = planner[day] || []; %>
+    <tr>
+      <td>
+        <h2><%= day.charAt(0).toUpperCase() + day.slice(1) %></h2>
+
+        <!-- Slots -->
+        <% slots.forEach(slot => { %>
+          <div>
+            <strong><%= slot.name %></strong>
+
+            <!-- Assign/change recipe -->
+            <form action="/meal-planner/set-recipe" method="POST" style="display:inline;">
+              <input type="hidden" name="day" value="<%= day %>">
+              <input type="hidden" name="slotId" value="<%= slot._id %>">
+              <select name="recipeId">
+                <option value="">-- <%= slot.recipe ? slot.recipe.title : 'No recipe set' %> --</option>
+                <% recipes.forEach(r => { %>
+                  <option value="<%= r._id %>"
+                    <%= (slot.recipe && slot.recipe._id.toString() === r._id.toString()) ? 'selected' : '' %>>
+                    <%= r.title %>
+                  </option>
+                <% }) %>
+              </select>
+              <button type="submit">Set</button>
+            </form>
+
+            <!-- Edit toggle -->
+            <button onclick="toggleEdit(this)">Edit</button>
+            <span style="display:none;">
+              <% if (slot.recipe) { %>
+                <form action="/meal-planner/remove-recipe" method="POST" style="display:inline;">
+                  <input type="hidden" name="day" value="<%= day %>">
+                  <input type="hidden" name="slotId" value="<%= slot._id %>">
+                  <button type="submit">Delete Recipe</button>
+                </form>
+              <% } %>
+              <form action="/meal-planner/delete-slot" method="POST" style="display:inline;">
+                <input type="hidden" name="day" value="<%= day %>">
+                <input type="hidden" name="slotId" value="<%= slot._id %>">
+                <button type="submit">Delete Slot</button>
+              </form>
+            </span>
+          </div>
+          <br>
+        <% }) %>
+
+        <!-- Add new slot -->
+        <form action="/meal-planner/add-slot" method="POST">
+          <input type="hidden" name="day" value="<%= day %>">
+          <input type="text" name="slotName" placeholder="Meal name (e.g. Breakfast)" required>
+          <select name="recipeId">
+            <option value="">No recipe yet</option>
+            <% recipes.forEach(r => { %>
+              <option value="<%= r._id %>"><%= r.title %></option>
+            <% }) %>
+          </select>
+          <button type="submit">Add</button>
+        </form>
+
+      </td>
+    </tr>
+  <% }) %>
+</table>
+
+<script>
+  function toggleEdit(btn) {
+    const span = btn.nextElementSibling;
+    const isOpen = span.style.display !== 'none';
+    span.style.display = isOpen ? 'none' : 'inline';
+    btn.textContent = isOpen ? 'Edit' : 'Cancel';
+  }
+</script>
