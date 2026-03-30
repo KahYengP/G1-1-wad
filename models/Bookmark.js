@@ -14,7 +14,7 @@ const bookmarkSchema = new mongoose.Schema({
     category:{
         type: mongoose.Schema.Types.ObjectId, 
         ref: 'Category',
-        required: true
+        default: null
     }, 
     note:{
         type: String, 

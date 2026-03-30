@@ -21,7 +21,7 @@
         <tr>
             <% if (bookmark.recipeId) { %>
             <td><%= bookmark.recipeId ? bookmark.recipeId.title : "Recipe deleted" %></td>
-            <td><%= bookmark.category.categoryName || "None" %></td>
+            <td><%= bookmark.category ? bookmark.category.categoryName : "None" %></td>
             <td><%= bookmark.note || "No note" %></td>
             <td>
                     <form action="/recipe/view" method="POST">

@@ -16,7 +16,7 @@ exports.createBookmark = async(req,res) => {
         if (!existingRecipe) {
             return res.send('Recipe not found.')
         }
-        const existing = await Bookmark.findOne({userId:userId, recipeId: recipeId}).populate('recipeId').populate('category')
+        const existing = await Bookmark.findOne({userId:userId, recipeId: recipeId})
         if (existing) {
             return res.send('Recipe already bookmarked.')
         }
@@ -25,7 +25,7 @@ exports.createBookmark = async(req,res) => {
             userId: userId, 
             recipeId: recipeId,
             note: note || "",
-            category: existingRecipe.category._id
+            category: existingRecipe.category || null
         })
         await bookmark.save()
         res.redirect('/bookmarks')
