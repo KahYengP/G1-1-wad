@@ -23,13 +23,29 @@ exports.upload = upload;
 //read
 exports.getRecipes = async (req, res) => {
   try {
-    const recipes = await Recipe.getAll();
-    return res.render("recipe", { recipes: recipes, user: req.user || null });
+    const categoryId = req.query.category; 
+    const searchQuery = req.query.search || '';
+    let filter = {};
+
+    if (categoryId) {
+      filter.category =  categoryId; // convert string -> ObjectId
+    }
+
+    if (searchQuery) {
+      filter.title = { $regex: searchQuery, $options: 'i' };
+    }
+
+    const recipes = await Recipe.find(filter).populate('category')
+    const CategoryList = await Category.find()
+    console.log("Filter:", filter);
+
+    return res.render("recipe", { recipes: recipes, user: req.user || null, CategoryList, categoryId, searchQuery });
   } catch (error) {
     console.log(error);
     return res.send("Error in loading recipes. Please try again.");
   }
 };
+
 exports.getRecipeById = async (req, res) => {
   try {
     const recipe = await Recipe.findById(req.params.id).populate("category");
@@ -81,7 +97,7 @@ exports.createRecipes = async (req, res) => {
 
     //okay this part creates a new recipe to be added
     //new recipes will have just the default image
-    await Recipe.createRecipe(data);
+    await Recipe.create(data);
 
     //
     return res.redirect("/recipe");
@@ -151,7 +167,7 @@ exports.updateRecipes = async (req, res) => {
     };
 
     //update using mongoose funciton
-    await Recipe.updateById(id, data);
+    await Recipe.findByIdAndUpdate(id, data);
 
     //redirect back to recipe in order to check if the change has been made
     return res.redirect("/recipe");
@@ -182,7 +198,7 @@ exports.deleteRecipes = async (req, res) => {
       return res.send("Not allowed");
     }
 
-    await Recipe.deleteById(id);
+    await Recipe.findByIdAndDelete(id);
 
     // redirects right back to recipe to see changes
     return res.redirect("/recipe");

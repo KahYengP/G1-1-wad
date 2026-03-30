@@ -10,7 +10,7 @@
 
 <form action="/bookmark/update" method="POST">
     <input type="hidden" name="bookmarkId" value="<%= bookmark._id %>">
-    <p>Category: <%= bookmark.category.categoryName %></p>
+    <p>Category: <%= bookmark.category ? bookmark.category.categoryName : "None" %></p>
         
     <br><br>
     <label>Note:</label><br>

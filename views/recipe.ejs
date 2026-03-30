@@ -36,6 +36,19 @@
   <% } %>
 </div>
 
+  <form action="/recipe" method="GET" style="display: flex; gap: 10px; flex-wrap: wrap;">
+    <input type="text" name="search" placeholder="Search recipes..." value="<%= searchQuery || '' %>" style="padding: 6px; border: 1px solid #ccc; border-radius: 4px; flex: 1;">
+    
+    <select name="category" style="padding: 6px; border: 1px solid #ccc; border-radius: 4px;">
+      <option value="">All Categories</option>
+      <% CategoryList.forEach(cat => { %>
+        <option value="<%= cat._id %>" <%= categoryId == cat._id ? 'selected' : '' %> ><%= cat.categoryName %></option>
+      <% }) %>
+    </select>
+    
+    <button type="submit" style="padding: 6px 12px; border: none; background-color: #4da7f1; color: white; border-radius: 4px; cursor: pointer;">Search</button>
+  </form>
+
 <% recipes.forEach(recipe => { %>
   <a href="/recipe/view/<%= recipe._id %>" style="text-decoration: none; color: inherit;">
     <div class="recipe-card">
