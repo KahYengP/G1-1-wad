@@ -302,3 +302,185 @@ exports.deleteUser = async (req, res) => {
     res.status(500).send('Error deleting user: ' + err.message);
   }
 };
+
+// ==================== LOGOUT ====================
+// Direct logout (no confirmation)
+exports.logoutUser = (req, res) => {
+  req.session.destroy((err) => {
+    if (err) {
+      console.error('Error destroying session:', err);
+      return res.redirect('/dashboard'); // fallback
+    }
+    res.redirect('/login');
+  });
+};
+
+
+// ==================== PROFILE ====================
+// GET /profile – display profile page
+exports.showProfile = (req, res) => {
+  // req.user is already attached by global middleware
+  res.render('profile', {
+    user: req.user,
+    questions: SECURITY_QUESTIONS,
+    error: null,
+    success: null
+  });
+};
+
+// POST /profile/change-password – change password after verifying current password
+exports.changePassword = async (req, res) => {
+  try {
+    const { currentPassword, newPassword, confirmNewPassword } = req.body;
+    const userId = req.session.userId;
+
+    // 1. Basic validation
+    if (!currentPassword || !newPassword || !confirmNewPassword) {
+      return res.render('profile', {
+        user: req.user,
+        questions: SECURITY_QUESTIONS,
+        error: 'All password fields are required.',
+        success: null
+      });
+    }
+
+    if (newPassword !== confirmNewPassword) {
+      return res.render('profile', {
+        user: req.user,
+        questions: SECURITY_QUESTIONS,
+        error: 'New passwords do not match.',
+        success: null
+      });
+    }
+
+    // 2. Fetch user with password (not normally selected)
+    const user = await User.findById(userId);
+    const isMatch = await bcrypt.compare(currentPassword, user.password);
+    if (!isMatch) {
+      return res.render('profile', {
+        user: req.user,
+        questions: SECURITY_QUESTIONS,
+        error: 'Current password is incorrect.',
+        success: null
+      });
+    }
+
+    // 3. Hash new password and update
+    const hashedNewPassword = await bcrypt.hash(newPassword, 10);
+    user.password = hashedNewPassword;
+    await user.save();
+
+    // 4. Re‑fetch user without password for the view (update req.user)
+    const updatedUser = await User.findById(userId).select('-password -security_answers');
+    req.user = updatedUser;   // optional – update the global user object for this request
+
+    res.render('profile', {
+      user: updatedUser,
+      questions: SECURITY_QUESTIONS,
+      error: null,
+      success: 'Password updated successfully.'
+    });
+  } catch (err) {
+    console.error(err);
+    res.render('profile', {
+      user: req.user,
+      questions: SECURITY_QUESTIONS,
+      error: 'Error changing password: ' + err.message,
+      success: null
+    });
+  }
+};
+
+// POST /profile/change-security – update security questions after verifying current answers
+exports.changeSecurity = async (req, res) => {
+  try {
+    const {
+      oldAnswer1, oldAnswer2, oldAnswer3,
+      newQuestion1, newAnswer1,
+      newQuestion2, newAnswer2,
+      newQuestion3, newAnswer3
+    } = req.body;
+    const userId = req.session.userId;
+
+    // Basic validation
+    if (!oldAnswer1 || !oldAnswer2 || !oldAnswer3 ||
+        !newQuestion1 || !newAnswer1 ||
+        !newQuestion2 || !newAnswer2 ||
+        !newQuestion3 || !newAnswer3) {
+      return res.render('profile', {
+        user: req.user,
+        questions: SECURITY_QUESTIONS,
+        error: 'All fields are required.',
+        success: null
+      });
+    }
+
+    // Validate that the three new questions are distinct
+    const newQuestions = [newQuestion1, newQuestion2, newQuestion3];
+    if (new Set(newQuestions).size !== 3) {
+      return res.render('profile', {
+        user: req.user,
+        questions: SECURITY_QUESTIONS,
+        error: 'Please select three distinct security questions.',
+        success: null
+      });
+    }
+
+    // Fetch user with security_answers
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.redirect('/login');
+    }
+
+    // Verify old answers
+    const oldAnswers = [oldAnswer1, oldAnswer2, oldAnswer3];
+    let allMatch = true;
+    for (let i = 0; i < oldAnswers.length; i++) {
+      const match = await bcrypt.compare(oldAnswers[i], user.security_answers[i]);
+      if (!match) {
+        allMatch = false;
+        break;
+      }
+    }
+
+    if (!allMatch) {
+      return res.render('profile', {
+        user: req.user,
+        questions: SECURITY_QUESTIONS,
+        error: 'One or more current answers are incorrect.',
+        success: null
+      });
+    }
+
+    // Hash new answers
+    const hashedNewAnswers = await Promise.all([
+      bcrypt.hash(newAnswer1, 10),
+      bcrypt.hash(newAnswer2, 10),
+      bcrypt.hash(newAnswer3, 10)
+    ]);
+
+    // Update user
+    user.security_questions = newQuestions;
+    user.security_answers = hashedNewAnswers;
+    await user.save();
+
+    // Update req.user with new questions (answers not needed for view)
+    const updatedUser = await User.findById(userId).select('-password -security_answers');
+    req.user = updatedUser;
+
+    res.render('profile', {
+      user: updatedUser,
+      questions: SECURITY_QUESTIONS,
+      error: null,
+      success: 'Security questions updated successfully.'
+    });
+  } catch (err) {
+    console.error(err);
+    res.render('profile', {
+      user: req.user,
+      questions: SECURITY_QUESTIONS,
+      error: 'Error updating security questions: ' + err.message,
+      success: null
+    });
+  }
+};

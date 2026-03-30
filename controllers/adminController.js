@@ -5,52 +5,49 @@ const bcrypt = require('bcrypt');
 exports.showAdminUsers = async (req, res) => {
   try {
     const users = await User.find().select('-password -security_answers');
-    res.render('admin-profile', { users, currentUser: req.user });
+    // Pass user (global) as 'user' to view
+    res.render('admin-profile', { users, user: req.user });
   } catch (err) {
     res.status(500).send('Error loading admin page');
   }
 };
 
+
 // ========== CREATE USER FORM ==========
 exports.createUserForm = (req, res) => {
-  res.render('admin-user-form', { user: null, error: null, isEdit: false });
+  res.render('admin-user-form', { editingUser: null, error: null, isEdit: false });
 };
+
 
 // ========== CREATE USER (POST) ==========
 exports.createUser = async (req, res) => {
   try {
     const { username, email, password, role } = req.body;
 
-    // Basic validation
     if (!username || !email || !password || !role) {
       return res.render('admin-user-form', {
-        user: { username, email, role },
+        editingUser: { username, email, role },
         error: 'All fields are required.',
         isEdit: false
       });
     }
 
-    // Check if user already exists
     const existing = await User.findOne({ $or: [{ email }, { username }] });
     if (existing) {
       return res.render('admin-user-form', {
-        user: { username, email, role },
+        editingUser: { username, email, role },
         error: 'Username or email already exists.',
         isEdit: false
       });
     }
 
-    // Hash password
     const hashedPassword = await bcrypt.hash(password, 10);
-
-    // Create user (we need security questions – for simplicity, we can set dummy ones for admin-created users)
-    // In a real app you might want to force the user to set them later.
     const newUser = new User({
       username,
       email,
       password: hashedPassword,
       role,
-      security_questions: ['', '', ''],  // placeholders – consider making optional
+      security_questions: ['', '', ''],
       security_answers: ['', '', '']
     });
     await newUser.save();
@@ -59,7 +56,7 @@ exports.createUser = async (req, res) => {
   } catch (err) {
     console.error(err);
     res.render('admin-user-form', {
-      user: req.body,
+      editingUser: req.body,
       error: 'Error creating user: ' + err.message,
       isEdit: false
     });
@@ -73,12 +70,11 @@ exports.editUserForm = async (req, res) => {
     if (!user) {
       return res.redirect('/admin/users');
     }
-    res.render('admin-user-form', { user, error: null, isEdit: true });
+    res.render('admin-user-form', { editingUser: user, error: null, isEdit: true });
   } catch (err) {
     res.status(500).send('Error loading edit form');
   }
 };
-
 // ========== UPDATE USER (POST) ==========
 exports.updateUser = async (req, res) => {
   try {

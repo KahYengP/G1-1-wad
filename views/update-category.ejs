@@ -2,21 +2,45 @@
 <html lang="en">
 <head>
     <title>Update & Delete Category</title>
+    <style>
+        body { margin-left: 80px; margin-right: 80px; }
+        nav { border-bottom: 1px solid black; padding: 10px; margin-bottom: 0; }
+        nav a { margin-right: 15px; text-decoration: none; color: black; }
+        .review-card { border: 1px solid #ccc; padding: 10px; margin-bottom: 10px; }
+        .star { color: gold; }
+    </style>
 </head>
 <body>
-    <h3>Update or Delete Category </h3>
-        <form action="/update-category" method="POST">
-        <input type="hidden" name="id" value="<%= result._id %>">
-        <input type="text" name="category" value="<%= result.categoryName %>">
-        <br><br>
-        <button type="submit">Update Category</button>
-        </form>
-        <br>
-        <form action="/delete-category" method="POST">
-        <input type="hidden" name="id" value="<%= result._id %>">
-        <button type="submit">Delete Category</button>
-        </form>
-        <br><br>
-        <a href="/edit-category">Back to Category List</a>
+<nav style="display: flex; justify-content: space-between;">
+  <strong>G1-1</strong>
+  <div>
+    <a href="/recipe">All Recipes</a>
+    <a href="/recipe/add">Create</a>
+    <a href="/category">Category</a>
+    <a href="/bookmarks">Bookmark</a>
+    <a href="/profile">Profile</a>
+    <a href="/logout">Logout</a>
+  </div>
+</nav><br><br>
+
+<div>
+  
+  <h3 style="margin-top: 0;">Update or Delete Category</h3>
+
+  <!-- Update Form -->
+  <form action="/update-category" method="POST" style="margin-bottom: 5px; display: 10px; flex-direction: column; gap: 10px;">
+    <input type="hidden" name="id" value="<%= result._id %>">
+    <input type="text" name="category" value="<%= result.categoryName %>" style="padding: 8px; font-size: 1em;"><br><br>
+    <button type="submit" style="padding: 5px 8px">Update Category</button>
+  </form>
+
+  <!-- Delete Form -->
+  <form action="/delete-category" method="POST" style="display: 10px; flex-direction: column; gap: 10px;">
+    <input type="hidden" name="id" value="<%= result._id %>">
+    <button type="submit" style="padding: 5px 8px">Delete Category</button>
+  </form>
+
+  <a href="/category" style="display: inline-block; margin-top: 15px; color: rgb(57, 57, 57);">Back to Category List</a>
+</div>
 </body>
 </html>

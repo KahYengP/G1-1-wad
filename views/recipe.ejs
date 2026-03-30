@@ -2,50 +2,76 @@
 <html>
 <head>
   <title>Recipes</title>
+  <style>
+    body { margin-left: 80px; margin-right: 80px; }
+    nav { border-bottom: 1px solid black; padding: 10px; margin-bottom: 0; }
+    nav a { margin-right: 15px; text-decoration: none; color: black; }
+    .recipe-card { border: 1px solid #ccc; padding: 15px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: flex-start; }
+    .recipe-card:hover { border-color: blue; }
+    .recipe-card:hover .recipe-title { color: blue; }
+    .recipe-info { flex: 1; }
+    .recipe-actions { display: flex; flex-direction: column; align-items: flex-end; gap: 8px; }
+    .recipe-title { color: black; }
+    .recipe-card:hover .recipe-title { color: blue; }
+</style>
 </head>
 <body>
 
-<h1>Recipes</h1>
-
-<!-- FIXED: /recipes → /recipe -->
-<a href="/recipe/add">Add Recipe</a> <br>
-<a href="/bookmarks">⭐View Bookmarks</a><br>
-<a href = "/dashboard">Go back</a>
-<% recipes.forEach(recipe => { %>
-
-  <div style="border:1px solid black; margin:10px; padding:10px;"><!--cuz im cool at css like that-->
-
-    <h3><a href="/recipe/view/<%= recipe._id %>"><%= recipe.title %></a></h3>
-
-    <p><strong>Category: </strong><%= recipe.category ? recipe.category.categoryName : 'Uncategorized' %></p>
-    <p><strong>Ingredients:</strong> <%= recipe.ingredients %></p>
-    <p><strong>Instructions:</strong> <%= recipe.instructions %></p>
-
-    <p>Created by: <%= recipe.createdBy %></p>
-    <p>Published on: <%= new Date(recipe.createdAt).toLocaleDateString() %></p>
-
-    <!-- Edit: only admin or recipe owner -->
-    <% if (user && (user.role === 'admin' || user.email === recipe.createdBy)) { %>
-      <a href="/recipe/edit/<%= recipe._id %>">Edit</a>
-    <% } %>
-
-    <!-- Save Bookmark -->
-    <form action="/bookmark/create" method="POST">
-      <input type="hidden" name="recipeId" value="<%= recipe._id %>">
-      <button type="submit">Save Bookmark</button>
-    </form>
-
-    <!-- Delete: only admin or recipe owner -->
-    <% if (user && (user.role === 'admin' || user.email === recipe.createdBy)) { %>
-      <form action="/recipe/delete/<%= recipe._id %>" method="POST">
-        <button onclick="return confirm('Delete this recipe?')">Delete</button>
-      </form>
-    <% } %>
-
+<!-- NAVBAR -->
+<nav style="display: flex; justify-content: space-between;">
+  <strong>Logo & Name</strong>
+  <div>
+    <a href="/recipe">All Recipes</a>
+    <a href="/bookmarks">Bookmark</a>
+    <a href="/profile">Profile</a>
+    <a href="/logout">Logout</a>
   </div>
+</nav>
 
+<!-- Header -->
+<div style="display: flex; justify-content: space-between; align-items: center;">
+  <h1>Recipes</h1>
+  <% if (user) { %>
+    <a href="/recipe/add" style="padding: 5px 10px; border: 1px solid black; text-decoration: none; color: black;">Add Recipe</a>
+  <% } %>
+</div>
+
+<% recipes.forEach(recipe => { %>
+  <a href="/recipe/view/<%= recipe._id %>" style="text-decoration: none; color: inherit;">
+    <div class="recipe-card">
+
+      <!-- Left: Recipe Info -->
+      <div class="recipe-info">
+        <h3 class="recipe-title" style="margin: 0 0 5px 0;"><%= recipe.title %></h3>
+        <p style="margin: 3px 0;"><strong>Category:</strong> <%= recipe.category ? recipe.category.categoryName : 'Uncategorized' %></p>
+        <p style="margin: 3px 0; color: grey; font-size: 0.9em;">Created by: <%= recipe.createdBy %></p>
+        <p style="margin: 3px 0; color: grey; font-size: 0.9em;">Published on: <%= new Date(recipe.createdAt).toLocaleDateString() %></p>
+      </div>
+
+      <!-- Right: Actions -->
+      <div class="recipe-actions" onclick="event.stopPropagation();">
+
+        <% if (user) { %>
+          <form action="/bookmark/create" method="POST">
+            <input type="hidden" name="recipeId" value="<%= recipe._id %>">
+            <button type="submit">Save Bookmark</button>
+          </form>
+        <% } %>
+
+        <% if (user && (user.role === 'admin' || user.email === recipe.createdBy)) { %>
+          <a href="/recipe/edit/<%= recipe._id %>" onclick="event.stopPropagation();">Edit</a>
+        <% } %>
+
+        <% if (user && (user.role === 'admin' || user.email === recipe.createdBy)) { %>
+          <form action="/recipe/delete/<%= recipe._id %>" method="POST">
+            <button onclick="event.stopPropagation(); return confirm('Delete this recipe?')" style="color: red;">Delete</button>
+          </form>
+        <% } %>
+
+      </div>
+    </div>
+  </a>
 <% }) %>
-
 
 </body>
 </html>

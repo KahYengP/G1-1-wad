@@ -1,4 +1,4 @@
-const mongoose=require("mongoose")
+const mongoose = require("mongoose");
 
 const bookmarkSchema = new mongoose.Schema({
     userId:{
@@ -28,3 +28,4 @@ const bookmarkSchema = new mongoose.Schema({
 
 module.exports = mongoose.model("Bookmark", bookmarkSchema)
 
+module.exports = mongoose.model("Bookmark", bookmarkSchema);
