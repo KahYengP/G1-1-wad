@@ -16,14 +16,13 @@
 <body>
 
 <nav style="display: flex; justify-content: space-between;">
-  <strong>Logo & Name</strong>
+  <strong>G1-1</strong>
   <div>
     <a href="/recipe">All Recipes</a>
+    <a href="/recipe/add">Create</a>
+    <a href="/category">Category</a>
     <a href="/bookmark">Bookmark</a>
     <a href="/profile">Profile</a>
-    <% if (user && user.role === 'admin') { %>   <!-- global user -->
-      <a href="/admin/users">Admin Profile</a>
-    <% } %>
     <a href="/logout">Logout</a>
   </div>
 </nav>
