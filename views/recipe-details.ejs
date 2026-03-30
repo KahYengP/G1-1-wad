@@ -28,12 +28,24 @@
   <br>
 
   <!-- Recipe Info -->
-  <h2><%= recipe.title %></h2>
-  <p><strong>Category:</strong> <%= recipe.category ? recipe.category.categoryName : 'Uncategorized' %></p>
-  <p><strong>Ingredients:</strong> <%= recipe.ingredients %></p>
-  <p><strong>Instructions:</strong> <%= recipe.instructions %></p>
-  <p><strong>Created by:</strong> <%= recipe.createdByUsername || recipe.createdBy %></p>
-  <p><strong>Published on:</strong> <%= new Date(recipe.createdAt).toLocaleDateString() %></p>
+<div style="display: flex; gap: 20px; align-items: flex-start; margin-bottom: 20px;">
+
+  <!-- Left: Image -->
+  <img src="<%= recipe.image || '/images/default.jpg' %>"
+       style="width: 200px; height: 200px; object-fit: cover; border-radius: 5px; flex-shrink: 0;"
+       alt="Recipe Image">
+
+  <!-- Right: Details -->
+  <div>
+    <h2 style="margin: 0 0 10px 0;"><%= recipe.title %></h2>
+    <p><strong>Category:</strong> <%= recipe.category ? recipe.category.categoryName : 'Uncategorized' %></p>
+    <p><strong>Ingredients:</strong> <%= recipe.ingredients %></p>
+    <p><strong>Instructions:</strong> <%= recipe.instructions %></p>
+    <p><strong>Created by:</strong> <%= recipe.createdByUsername || recipe.createdBy %></p>
+    <p><strong>Published on:</strong> <%= new Date(recipe.createdAt).toLocaleDateString() %></p>
+  </div>
+
+</div>
   
 
 

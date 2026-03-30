@@ -25,9 +25,11 @@ router.get(
   authMiddleware.isAuthenticated,
   recipeController.showAddform,
 );
+
 router.post(
   "/add",
   authMiddleware.isAuthenticated,
+  recipeController.upload.single("image"),
   recipeController.createRecipes,
 );
 

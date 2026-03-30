@@ -2,32 +2,55 @@
 <html>
 <head>
   <title>Add Recipe</title>
+  <style>
+    body { margin-left: 80px; margin-right: 80px; }
+    nav { border-bottom: 1px solid black; padding: 10px; margin-bottom: 0; }
+    nav a { margin-right: 15px; text-decoration: none; color: black; }
+  </style>
 </head>
 <body>
 
+<!-- NAVBAR -->
+<nav style="display: flex; justify-content: space-between;">
+  <strong>Logo & Name</strong>
+  <div>
+    <a href="/recipe">All Recipes</a>
+    <a href="/bookmarks">Bookmark</a>
+    <a href="/profile">Profile</a>
+    <a href="/logout">Logout</a>
+  </div>
+</nav>
+
 <h1>Add Recipe</h1>
 
-<form action="/recipe/add" method="POST">
+<form action="/recipe/add" method="POST" enctype="multipart/form-data">
 
-  <input type="text" name="title" placeholder="Title" required><br><br>
+  <label>Title:</label><br>
+  <input type="text" name="title" placeholder="Title" required style="width: 100%;"><br><br>
 
-  <textarea name="ingredients" placeholder="Ingredients" required></textarea><br><br>
+  <label>Ingredients:</label><br>
+  <textarea name="ingredients" placeholder="Ingredients" required style="width: 100%; height: 80px;"></textarea><br><br>
 
-  <textarea name="instructions" placeholder="Instructions" required></textarea><br><br>
+  <label>Instructions:</label><br>
+  <textarea name="instructions" placeholder="Instructions" required style="width: 100%; height: 100px;"></textarea><br><br>
 
-  <label for="category">Category:</label>
-  <select name="category" id="category" required>
-    <option value="">--Select a Category--</option>
+  <label>Category:</label><br>
+  <select name="category" required>
+    <option value="">-- Select a Category --</option>
     <% CategoryList.forEach(category => { %>
-      <option value="<%= category._id %>" aria-required="true"><%= category.categoryName %></option>
+      <option value="<%= category._id %>"><%= category.categoryName %></option>
     <% }) %>
   </select><br><br>
 
-  <button type="submit">Add</button>
+  <label>Recipe Image:</label><br>
+  <input type="file" name="image" accept="image/*"><br><br>
+
+  <div style="display: flex; justify-content: flex-end; gap: 10px; align-items: center;">
+    <a href="/recipe">Back</a>
+    <button type="submit">Add</button>
+  </div>
 
 </form>
-
-<a href="/recipe">Back</a>
 
 </body>
 </html>

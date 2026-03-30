@@ -3,6 +3,20 @@ const Review = require("../models/Review");
 const Category = require("../models/Category");
 const mongoose = require("mongoose");
 
+const multer = require("multer");
+const path = require("path");
+
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "public/images/");
+  },
+  filename: (req, file, cb) => {
+    cb(null, Date.now() + path.extname(file.originalname));
+  },
+});
+const upload = multer({ storage: storage });
+exports.upload = upload;
+
 //ill do it in the format of read, create,update, delete see? rcud not crud
 
 //get recipes and render it into the recipe ejs use foreach later
@@ -51,6 +65,9 @@ exports.createRecipes = async (req, res) => {
     const instructions = req.body.instructions;
     //
     const createdBy = req.user.email;
+    const image = req.file
+      ? "/images/" + req.file.filename
+      : "/images/default.jpg";
 
     const data = {
       title: title,
@@ -59,6 +76,7 @@ exports.createRecipes = async (req, res) => {
       createdBy: createdBy,
       createdByUsername: req.user.username,
       category: req.body.category,
+      image: image,
     };
 
     //okay this part creates a new recipe to be added

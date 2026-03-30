@@ -17,6 +17,7 @@ const recipeSchema = new mongoose.Schema({
     type: String, //reserverd for the email
     required: true,
   },
+  image: { type: String, default: "/images/default.jpg" },
   createdByUsername: { type: String, required: false },
   createdAt: { type: Date, default: Date.now },
 });

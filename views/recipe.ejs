@@ -40,17 +40,22 @@
   <a href="/recipe/view/<%= recipe._id %>" style="text-decoration: none; color: inherit;">
     <div class="recipe-card">
 
-      <!-- Left: Recipe Info -->
-      <div class="recipe-info">
-        <h3 class="recipe-title" style="margin: 0 0 5px 0;"><%= recipe.title %></h3>
-        <p style="margin: 3px 0;"><strong>Category:</strong> <%= recipe.category ? recipe.category.categoryName : 'Uncategorized' %></p>
-        <p style="margin: 3px 0; color: grey; font-size: 0.9em;">Created by: <%= recipe.createdByUsername || recipe.createdBy %></p>
-        <p style="margin: 3px 0; color: grey; font-size: 0.9em;">Published on: <%= new Date(recipe.createdAt).toLocaleDateString() %></p>
+      <!-- Left: Image + Info together -->
+      <div style="display: flex; align-items: flex-start; gap: 15px; flex: 1;">
+        <img src="<%= recipe.image || '/images/default.jpg' %>"
+             style="width: 100px; height: 100px; object-fit: cover; border-radius: 5px; flex-shrink: 0;"
+             alt="Recipe Image">
+
+        <div class="recipe-info">
+          <h3 class="recipe-title" style="margin: 0 0 5px 0;"><%= recipe.title %></h3>
+          <p style="margin: 3px 0;"><strong>Category:</strong> <%= recipe.category ? recipe.category.categoryName : 'Uncategorized' %></p>
+          <p style="margin: 3px 0; color: grey; font-size: 0.9em;">Created by: <%= recipe.createdByUsername || recipe.createdBy %></p>
+          <p style="margin: 3px 0; color: grey; font-size: 0.9em;">Published on: <%= new Date(recipe.createdAt).toLocaleDateString() %></p>
+        </div>
       </div>
 
       <!-- Right: Actions -->
       <div class="recipe-actions" onclick="event.stopPropagation();">
-
         <% if (user) { %>
           <form action="/bookmark/create" method="POST">
             <input type="hidden" name="recipeId" value="<%= recipe._id %>">
@@ -67,8 +72,8 @@
             <button onclick="event.stopPropagation(); return confirm('Delete this recipe?')" style="color: red;">Delete</button>
           </form>
         <% } %>
-
       </div>
+
     </div>
   </a>
 <% }) %>
