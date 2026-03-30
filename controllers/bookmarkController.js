@@ -72,7 +72,7 @@ exports.updateBookmark = async(req,res) => {
         res.redirect('/bookmarks')
     } catch(error) {
         console.error(error)
-        res.send("Error updating bookmark.")
+        res.send("Error updating bookmark." + error.message)
     }
 }
 
@@ -102,6 +102,8 @@ exports.showEditBookmarkForm = async(req,res) => {
         const userId=req.session.userId
         const bookmarkId=req.body.bookmarkId
 
+        const CategoryList = await Category.find()
+
         if (!userId) {
             return res.redirect("/login")
         }
@@ -110,7 +112,7 @@ exports.showEditBookmarkForm = async(req,res) => {
         if (!bookmark) {
             return res.send('Bookmark not found.')
         }
-        res.render('edit-bookmark', {bookmark})
+        res.render('edit-bookmark', {bookmark, CategoryList})
     } catch(error) {
         console.error(error)
         res.send('Error loading the edit page.')

@@ -5,7 +5,15 @@
 <form action="/bookmark/update" method="POST">
     <input type="hidden" name="bookmarkId" value="<%= bookmark._id %>">
     <label>Category:</label>
-        <input type="text" name="category" value="<%= bookmark.category %>">
+    <select name="category" required>
+        <% CategoryList.forEach(cat => { %>
+            <option value="<%= cat._id %>" 
+            <%= bookmark.category._id === cat._id ? 'selected' : '' %>>
+            <%= cat.categoryName %>
+            </option>
+        <% }) %>
+    </select>
+        
     <br><br>
     <label>Note:</label><br>
     <textarea name="note" cols="80" rows="5"><%= bookmark.note %></textarea>

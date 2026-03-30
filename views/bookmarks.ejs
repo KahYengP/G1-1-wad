@@ -19,11 +19,12 @@
 
         <% bookmarks.forEach(bookmark => { %>
         <tr>
-            <td><%= bookmark.recipeId.title %></td>
+            <% if (bookmark.recipeId) { %>
+            <td><%= bookmark.recipeId ? bookmark.recipeId.title : "Recipe deleted" %></td>
             <td><%= bookmark.category.categoryName || "None" %></td>
             <td><%= bookmark.note || "No note" %></td>
             <td>
-                <form action="/recipe/view" method="POST">
+                    <form action="/recipe/view" method="POST">
                     <input type="hidden" name="recipeId" value="<%= bookmark.recipeId._id %>">
                     <button type="submit">View</button>
                 </form>
@@ -36,6 +37,15 @@
                     <button type="submit">Delete</button>
                 </form>
             </td>
+            <% } else { %>
+            <td colspan ='3' >Recipe deleted </td>
+            <td>
+                <form action="/bookmark/delete" method="POST">
+                    <input type="hidden" name="bookmarkId" value="<%= bookmark._id %>">
+                    <button type="submit">Delete</button>
+                </form>
+            </td>
+            <% } %>
         </tr>
     <% }) %>
     </table>
