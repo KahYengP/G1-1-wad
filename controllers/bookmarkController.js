@@ -12,14 +12,14 @@ exports.createBookmark = async (req, res) => {
         }
         const existingRecipe = await Recipe.findById(recipeId)
         if (!existingRecipe) {
-            return res.send('Recipe not found.')
+            
+            return res.redirect(`/recipe`);
         }
         const existing = await Bookmark.findOne({userId:userId, recipeId: recipeId})
         if (existing) {
-            return res.send('Recipe already bookmarked.')
-        }
-
-        const bookmark = new Bookmark({
+            return res.redirect('/recipe?bookmarkError=Bookmark already added.')
+        } else {
+          const bookmark = new Bookmark({
         userId: userId,
         recipeId: recipeId,
         note: "",
@@ -27,6 +27,9 @@ exports.createBookmark = async (req, res) => {
         });
         await bookmark.save()
         res.redirect('/bookmarks')
+        }
+
+        
     } catch(error) {
         console.error(error)
         res.send(error.message)
@@ -37,6 +40,7 @@ exports.createBookmark = async (req, res) => {
 exports.readBookmarks = async (req, res) => {
   try {
     const userId = req.session.userId;
+    
     if (!userId) {
       return res.redirect("/login");
     }

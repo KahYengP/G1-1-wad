@@ -25,6 +25,7 @@ exports.getRecipes = async (req, res) => {
   try {
     const categoryId = req.query.category; 
     const searchQuery = req.query.search || '';
+    const bookmarkError = req.query.bookmarkError || null;
     let filter = {};
 
     if (categoryId) {
@@ -39,7 +40,7 @@ exports.getRecipes = async (req, res) => {
     const CategoryList = await Category.find()
     console.log("Filter:", filter);
 
-    return res.render("recipe", { recipes: recipes, user: req.user || null, CategoryList, categoryId, searchQuery });
+    return res.render("recipe", { recipes: recipes, user: req.user || null, CategoryList, categoryId, searchQuery, bookmarkError: bookmarkError });
   } catch (error) {
     console.log(error);
     return res.send("Error in loading recipes. Please try again.");

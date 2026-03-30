@@ -37,6 +37,12 @@
   <% } %>
 </div>
 
+<% if (typeof bookmarkError !== 'undefined' && bookmarkError) { %>
+  <div style="background-color: #f8d7da; color: #721c24; padding: 10px; margin-bottom: 20px; border-radius: 5px;">
+    <%= bookmarkError %>
+  </div>
+<% } %>
+
   <form action="/recipe" method="GET" style="display: flex; gap: 10px; flex-wrap: wrap;">
     <input type="text" name="search" placeholder="Search recipes..." value="<%= searchQuery || '' %>" style="padding: 6px; border: 1px solid #ccc; border-radius: 4px; flex: 1;">
     
