@@ -40,6 +40,12 @@ exports.getRecipes = async (req, res) => {
     const CategoryList = await Category.find();
     console.log("Filter:", filter);
 
+    const reviewCounts = {};
+    for (const recipe of recipes) {
+      const count = await Review.countByRecipeId(recipe._id);
+      reviewCounts[recipe._id.toString()] = count;
+    }
+
     return res.render("recipe", {
       recipes: recipes,
       user: req.user || null,
@@ -47,6 +53,7 @@ exports.getRecipes = async (req, res) => {
       categoryId,
       searchQuery,
       bookmarkError: bookmarkError,
+      reviewCounts
     });
   } catch (error) {
     console.log(error);

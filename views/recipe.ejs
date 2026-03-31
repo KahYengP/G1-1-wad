@@ -102,6 +102,16 @@
           <p style="margin: 3px 0;"><strong>Category:</strong> <%= recipe.category ? recipe.category.categoryName : 'Uncategorized' %></p>
           <p style="margin: 3px 0; color: grey; font-size: 0.9em;">Created by: <%= recipe.createdByUsername || recipe.createdBy %></p>
           <p style="margin: 3px 0; color: grey; font-size: 0.9em;">Published on: <%= new Date(recipe.createdAt).toLocaleDateString() %></p>
+          <% const reviewCount = reviewCounts[recipe._id.toString()] || 0; %>
+          <p style="margin: 3px 0; color: grey; font-size: 0.9em;">
+            <% if (reviewCount === 0) { %>
+              No Reviews yet
+            <% } else if (reviewCount === 1) { %>
+              1 Review
+            <% } else { %>
+              <%= reviewCount %> Reviews
+            <% } %>
+          </p>
         </div>
       </div>
 

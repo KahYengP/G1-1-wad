@@ -64,3 +64,7 @@ exports.updateById = (id, data) => {
 exports.deleteById = (id) => {
   return Review.findByIdAndDelete(id);
 };
+
+exports.countByRecipeId = (recipeId) => {
+  return Review.countDocuments({ recipeId: recipeId });
+};

@@ -69,9 +69,13 @@
   
 
   <!-- REVIEWS -->
-  <div style="display: flex; justify-content: space-between; align-items: center;">
-    <h3>Review</h3>
-    <a href="/review/add/<%= recipe._id %>" class="writeReview">Write a review</a>  </div>
+  <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 20px; margin-bottom: 15px;">
+  <div style="display: flex; align-items: center; gap: 8px;">
+    <strong style="font-size: 1.2em;">Review</strong>
+    <span style="color: grey; font-size: 0.9em;">(<%= reviews.length %> <%= reviews.length === 1 || reviews.length === 0 ? 'Review' : 'Reviews' %>)</span>
+  </div>
+  <a href="/review/add/<%= recipe._id %>" class="writeReview">Write a review</a>
+</div>
 
   <% if (reviews && reviews.length > 0) { %>
     <% reviews.forEach(review => { %>
