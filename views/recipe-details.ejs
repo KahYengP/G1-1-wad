@@ -8,11 +8,12 @@
     nav a { margin-right: 15px; text-decoration: none; color: black; }
     .review-card { border: 1px solid #ccc; padding: 10px; margin-bottom: 10px; }
     .star { color: gold; }
+    .writeReview {padding: 5px 10px; border: 1px solid black; text-decoration: none; color: black;}
+    .writeReview:hover {background-color: black; color: white;}
   </style>
 </head>
 <body>
 
-<!-- NAVBAR -->
 <!-- NAVBAR -->
 <% if (user && user.role === 'user') { %>
   <nav style="display: flex; justify-content: space-between;">
@@ -49,19 +50,13 @@
     </div>
   </nav>
 <% } %>
-<!-- RECIPE DETAIL -->
+
 <div>
   <br>
-
-  <!-- Recipe Info -->
-<div style="display: flex; gap: 20px; align-items: flex-start; margin-bottom: 20px;">
-
-  <!-- Left: Image -->
+  <div style="display: flex; gap: 20px; align-items: flex-start; margin-bottom: 20px;">
   <img src="<%= recipe.image || '/images/default.jpg' %>"
        style="width: 200px; height: 200px; object-fit: cover; border-radius: 5px; flex-shrink: 0;"
        alt="Recipe Image">
-
-  <!-- Right: Details -->
   <div>
     <h2 style="margin: 0 0 10px 0;"><%= recipe.title %></h2>
     <p><strong>Category:</strong> <%= recipe.category ? recipe.category.categoryName : 'Uncategorized' %></p>
@@ -70,15 +65,13 @@
     <p><strong>Created by:</strong> <%= recipe.createdByUsername || recipe.createdBy %></p>
     <p><strong>Published on:</strong> <%= new Date(recipe.createdAt).toLocaleDateString() %></p>
   </div>
-
 </div>
   
-
 
   <!-- REVIEWS -->
   <div style="display: flex; justify-content: space-between; align-items: center;">
     <h3>Review</h3>
-<a href="/review/add/<%= recipe._id %>" style="padding: 5px 10px; border: 1px solid black; text-decoration: none; color: black;">Write a review</a>  </div>
+    <a href="/review/add/<%= recipe._id %>" class="writeReview">Write a review</a>  </div>
 
   <% if (reviews && reviews.length > 0) { %>
     <% reviews.forEach(review => { %>
@@ -87,7 +80,7 @@
         <div style="display: flex; justify-content: space-between;">
         <div>
           <strong><%= review.username %></strong>
-          <span style="color: grey; margin-left: 10px; font-size: 0.9em;">
+          <span style="color: #808080; margin-left: 10px; font-size: 0.9em;">
           <% if (review.updatedAt) { %>
             Edited: <%= new Date(review.updatedAt).toLocaleDateString() %>
           <% } else { %>
@@ -96,17 +89,17 @@
           </span> 
         </div>
 
-        <!-- Edit/Delete only for review owner -->
-        <% if (user && user._id.toString() === review.userId.toString()) { %>
+       <% if (user && user._id.toString() === review.userId.toString()) { %>
           <span>
-            <a href="/review/edit/<%= review._id %>">Edit</a> |
+            <a href="/review/edit/<%= review._id %>" 
+              style="padding: 4px 10px; background-color: #4da7f1; color: white; text-decoration: none; border-radius: 4px; font-size: 0.9em; font-family: arial;">Edit</a>
             <a href="/review/delete/<%= review._id %>"
-              onclick="return confirm('Delete this review?')" style="color: red;">Delete</a>
+              onclick="return confirm('Delete this review?')"
+              style="padding: 4px 10px; background-color: #e74c3c; color: white; text-decoration: none; border-radius: 4px; font-size: 0.9em; margin-left: 5px; font-family: arial;">Delete</a>
           </span>
         <% } %>
       </div>
 
-        <!-- Stars -->
         <div>
           <% for (let i = 1; i <= 5; i++) { %>
             <span class="star"><%= i <= review.rating ? '★' : '☆' %></span>

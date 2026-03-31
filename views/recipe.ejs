@@ -15,8 +15,10 @@
     .recipe-card:hover .recipe-title { color: blue; }
     .btn { padding: 5px 12px; border-radius: 4px; cursor: pointer; font-size: 0.85em; border: none; }
     .btn-grey { background-color: #f0f0f0; color: black; border: 1px solid #ccc; }
-    .btn-blue { background-color: #4da7f1; color: white; }
-    .btn-red { color: #e74c3c; background: none; border: none; cursor: pointer; font-size: 0.85em; }
+    .btn-blue { background-color: #4da7f1; color: white; font-family: arial;}
+    .btn-red { background-color: #e74c3c; color: white; border: none; padding: 5px 12px; border-radius: 4px; cursor: pointer; font-size: 0.85em; }
+    .addRecipe {padding: 5px 10px; border: 1px solid black; text-decoration: none; color: black;}
+    .addRecipe:hover {background-color: black; color: white;}
 </style>
 </head>
 <body>
@@ -62,7 +64,7 @@
 <div style="display: flex; justify-content: space-between; align-items: center;">
   <h1>Recipes</h1>
   <% if (user) { %>
-    <a href="/recipe/add" style="padding: 5px 10px; border: 1px solid black; text-decoration: none; color: black;">Add Recipe</a>
+    <a href="/recipe/add" class="addRecipe">Add Recipe</a>
   <% } %>
 </div>
 
