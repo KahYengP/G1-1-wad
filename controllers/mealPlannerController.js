@@ -28,7 +28,7 @@ exports.getMealPlanner = async (req, res) => {
     const planner = await getOrCreatePlanner(user.email);
     const recipes = await Recipe.find().sort({ title: 1 });
 
-    return res.render("meal-planner", { planner, recipes, days: DAYS });
+    return res.render("meal-planner", { planner, recipes, days: DAYS, user: req.user});
   } catch (error) {
     console.error(error);
     return res.send("Error loading meal planner.");

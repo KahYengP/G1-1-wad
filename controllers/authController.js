@@ -320,11 +320,14 @@ exports.deleteUser = async (req, res) => {
 // GET /profile – display profile page
 exports.showProfile = (req, res) => {
   // req.user is already attached by global middleware
+  const user = req.user;
+  console.log(user.role)
   res.render('profile', {
     user: req.user,
     questions: SECURITY_QUESTIONS,
     error: null,
-    success: null
+    success: null,
+    
   });
 };
 

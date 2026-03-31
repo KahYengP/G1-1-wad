@@ -48,7 +48,7 @@ exports.readBookmarks = async (req, res) => {
     const bookmarks = await Bookmark.find({ userId: userId })
       .populate("recipeId")
       .populate("category");
-    res.render("bookmarks", { bookmarks: bookmarks });
+    res.render("bookmarks", { bookmarks: bookmarks, user: req.user });
   } catch (error) {
     console.error(error);
     res.send("Error loading bookmarks.");

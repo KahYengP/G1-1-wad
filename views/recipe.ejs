@@ -18,8 +18,9 @@
 <body>
 
 <!-- NAVBAR -->
-<nav style="display: flex; justify-content: space-between;">
-  <strong>Logo & Name</strong>
+<% if (user && user.role === 'user') { %>
+    <nav style="display: flex; justify-content: space-between;">
+  <strong>G1-1</strong>
   <div>
     <a href="/recipe">All Recipes</a>
     <a href="/bookmarks">Bookmark</a>
@@ -28,6 +29,21 @@
     <a href="/logout">Logout</a>
   </div>
 </nav>
+<%}  else if (user && user.role==='admin') {%>
+    <nav style="display: flex; justify-content: space-between;">
+  <strong>G1-1</strong>
+  <div>
+    <a href="/recipe">All Recipes</a>
+    <a href="/recipe/add">Create</a>
+    <a href="/category">Category</a>
+    <a href="/bookmarks">Bookmark</a>
+    <a href="/meal-planner">Meal Planner</a>
+    <a href="/admin/users">Admin User Management</a>
+    <a href="/profile">Profile</a>
+    <a href="/logout">Logout</a>
+  </div>
+</nav>
+    <% }%>
 
 <!-- Header -->
 <div style="display: flex; justify-content: space-between; align-items: center;">
