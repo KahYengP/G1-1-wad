@@ -13,37 +13,50 @@
     .recipe-actions { display: flex; flex-direction: column; align-items: flex-end; gap: 8px; }
     .recipe-title { color: black; }
     .recipe-card:hover .recipe-title { color: blue; }
+    .btn { padding: 5px 12px; border-radius: 4px; cursor: pointer; font-size: 0.85em; border: none; }
+    .btn-grey { background-color: #f0f0f0; color: black; border: 1px solid #ccc; }
+    .btn-blue { background-color: #4da7f1; color: white; }
+    .btn-red { color: #e74c3c; background: none; border: none; cursor: pointer; font-size: 0.85em; }
 </style>
 </head>
 <body>
 
 <!-- NAVBAR -->
 <% if (user && user.role === 'user') { %>
-    <nav style="display: flex; justify-content: space-between;">
-  <strong>G1-1</strong>
-  <div>
-    <a href="/recipe">All Recipes</a>
-    <a href="/bookmarks">Bookmark</a>
-    <a href="/meal-planner">Meal Planner</a>
-    <a href="/profile">Profile</a>
-    <a href="/logout">Logout</a>
-  </div>
-</nav>
-<%}  else if (user && user.role==='admin') {%>
-    <nav style="display: flex; justify-content: space-between;">
-  <strong>G1-1</strong>
-  <div>
-    <a href="/recipe">All Recipes</a>
-    <a href="/recipe/add">Create</a>
-    <a href="/category">Category</a>
-    <a href="/bookmarks">Bookmark</a>
-    <a href="/meal-planner">Meal Planner</a>
-    <a href="/admin/users">Admin User Management</a>
-    <a href="/profile">Profile</a>
-    <a href="/logout">Logout</a>
-  </div>
-</nav>
-    <% }%>
+  <nav style="display: flex; justify-content: space-between;">
+    <strong>G1-1</strong>
+    <div>
+      <a href="/recipe">All Recipes</a>
+      <a href="/bookmarks">Bookmark</a>
+      <a href="/meal-planner">Meal Planner</a>
+      <a href="/profile">Profile</a>
+      <a href="/logout">Logout</a>
+    </div>
+  </nav>
+<% } else if (user && user.role === 'admin') { %>
+  <nav style="display: flex; justify-content: space-between;">
+    <strong>G1-1</strong>
+    <div>
+      <a href="/recipe">All Recipes</a>
+      <a href="/recipe/add">Create</a>
+      <a href="/category">Category</a>
+      <a href="/bookmarks">Bookmark</a>
+      <a href="/meal-planner">Meal Planner</a>
+      <a href="/admin/users">Admin User Management</a>
+      <a href="/profile">Profile</a>
+      <a href="/logout">Logout</a>
+    </div>
+  </nav>
+<% } else { %>
+  <nav style="display: flex; justify-content: space-between;">
+    <strong>G1-1</strong>
+    <div>
+      <a href="/recipe">All Recipes</a>
+      <a href="/login">Login</a>
+      <a href="/register">Register</a>
+    </div>
+  </nav>
+<% } %>
 
 <!-- Header -->
 <div style="display: flex; justify-content: space-between; align-items: center;">
@@ -59,7 +72,7 @@
   </div>
 <% } %>
 
-  <form action="/recipe" method="GET" style="display: flex; gap: 10px; flex-wrap: wrap;">
+  <form action="/recipe" method="GET" style="display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 20px;">
     <input type="text" name="search" placeholder="Search recipes..." value="<%= searchQuery || '' %>" style="padding: 6px; border: 1px solid #ccc; border-radius: 4px; flex: 1;">
     
     <select name="category" style="padding: 6px; border: 1px solid #ccc; border-radius: 4px;">
@@ -92,22 +105,24 @@
 
       <!-- Right: Actions -->
       <div class="recipe-actions" onclick="event.stopPropagation();">
+
         <% if (user) { %>
           <form action="/bookmark/create" method="POST">
             <input type="hidden" name="recipeId" value="<%= recipe._id %>">
-            <button type="submit">Save Bookmark</button>
+            <button type="submit" class="btn btn-grey">Save Bookmark</button>
           </form>
         <% } %>
 
         <% if (user && (user.role === 'admin' || user.email === recipe.createdBy)) { %>
-          <a href="/recipe/edit/<%= recipe._id %>" onclick="event.stopPropagation();">Edit</a>
+          <a href="/recipe/edit/<%= recipe._id %>" class="btn btn-blue" onclick="event.stopPropagation();" style="text-decoration: none; text-align: center;">Edit</a>
         <% } %>
 
         <% if (user && (user.role === 'admin' || user.email === recipe.createdBy)) { %>
           <form action="/recipe/delete/<%= recipe._id %>" method="POST">
-            <button onclick="event.stopPropagation(); return confirm('Delete this recipe?')" style="color: red;">Delete</button>
+            <button onclick="event.stopPropagation(); return confirm('Delete this recipe?')" class="btn btn-red">Delete</button>
           </form>
         <% } %>
+
       </div>
 
     </div>
