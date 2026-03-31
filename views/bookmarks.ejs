@@ -12,6 +12,8 @@
     td { padding: 10px; border-bottom: 1px solid #eee; }
     .btn-blue { background-color: #4da7f1; color: white; border: none; padding: 4px 10px; border-radius: 4px; cursor: pointer; text-decoration: none; font-size: 0.9em; font-family: arial; }
     .btn-red { background-color: #e74c3c; color: white; border: none; padding: 4px 10px; border-radius: 4px; cursor: pointer; font-size: 0.9em; }
+    .bookmark {padding: 5px 10px; border: 1px solid black; text-decoration: none; color: black; background-color: white;font-family: "Times New Roman"}
+    .bookmark:hover {background-color: black; color: white;}
   </style>
 </head>
 <body>
@@ -54,7 +56,7 @@
 
 <div style="display: flex; justify-content: space-between; align-items: center;">
   <h1>Bookmarked Recipes</h1>
-  <a href="/recipe"><button class="btn-blue">Add Bookmark</button></a>
+  <a href="/recipe"><button class="bookmark">Add Bookmark</button></a>
 </div>
 <br><br>
 
@@ -88,15 +90,15 @@
                         <button type="submit" class="btn-red" onclick="return confirm('Delete this bookmark?')">Delete</button>
                     </form>
                 </td>
-            <% } else { %>
-                <td colspan="3" style="color: grey;">Recipe deleted</td>
-                <td>
-                    <form action="/bookmark/delete" method="POST" style="margin: 0;">
-                        <input type="hidden" name="bookmarkId" value="<%= bookmark._id %>">
-                        <button type="submit" class="btn-red" onclick="return confirm('Delete this bookmark?')">Delete</button>
-                    </form>
-                </td>
-            <% } %>
+              <% } else { %>
+                  <td colspan="3" style="color: grey;">Recipe deleted</td>
+                  <td style="text-align: right;">
+                      <form action="/bookmark/delete" method="POST" style="margin: 0;">
+                          <input type="hidden" name="bookmarkId" value="<%= bookmark._id %>">
+                          <button type="submit" class="btn-red" onclick="return confirm('Delete this bookmark?')">Delete</button>
+                      </form>
+                  </td>
+              <% } %>
         </tr>
         <% }) %>
     </table>

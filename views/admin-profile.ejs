@@ -3,38 +3,43 @@
 <head>
   <title>Admin Profile</title>
   <style>
-    body { margin-left: 80px; margin-right: 80px; 
-   
-    font-family: "Times New Roman", Times, serif;}
+    body { margin-left: 80px; margin-right: 80px; font-family: "Times New Roman", Times, serif; }
     nav { border-bottom: 1px solid black; padding: 10px; margin-bottom: 0; }
     nav a { margin-right: 15px; text-decoration: none; color: black; }
     table { border-collapse: collapse; width: 100%; margin-top: 20px; }
-    th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
-    th { background-color: #f2f2f2; }
-    .actions a { margin-right: 10px; }
-    .admin-badge { background-color: #5cb85c; color: white; padding: 2px 5px; border-radius: 3px; }
-    .user-badge { background-color: #777; color: white; padding: 2px 5px; border-radius: 3px; }
+    th, td { padding: 10px; text-align: left; border-bottom: 1px solid #eee; }
+    th { border-bottom: 2px solid #ccc; }
+    .admin-badge { background-color: #4da7f1; color: white; padding: 2px 8px; border-radius: 4px; font-size: 0.9em; font-family: arial; }
+    .user-badge { background-color: #777; color: white; padding: 2px 8px; border-radius: 4px; font-size: 0.9em; font-family: arial;}
+    .btn-blue { background-color: #4da7f1; color: white; border: none; padding: 4px 10px; border-radius: 4px; cursor: pointer; text-decoration: none; font-size: 0.9em; font-family: Arial, sans-serif; }
+    .btn-red { background-color: #e74c3c; color: white; border: none; padding: 4px 10px; border-radius: 4px; cursor: pointer; font-size: 0.9em; font-family: Arial, sans-serif; }
+    .createBtn {padding: 5px 10px; border: 1px solid black; text-decoration: none; color: black; background-color: white;font-family: "Times New Roman"}
+    .createBtn:hover {background-color: black; color: white;}
   </style>
 </head>
 <body>
 
-<nav style="display: flex; justify-content: space-between;">
-  <strong>G1-1</strong>
-  <div>
-    <a href="/recipe">All Recipes</a>
-    <a href="/recipe/add">Create</a>
-    <a href="/category">Category</a>
-    <a href="/bookmarks">Bookmark</a>
-    <a href="/meal-planner">Meal Planner</a>
-    <a href="/admin/users">Admin User Management</a>
-    <a href="/profile">Profile</a>
-    <a href="/logout">Logout</a>
-  </div>
-</nav>
+<!-- NAVBAR -->
+<% if (user && user.role === 'admin') { %>
+  <nav style="display: flex; justify-content: space-between;">
+    <strong>G1-1</strong>
+    <div>
+      <a href="/recipe">All Recipes</a>
+      <a href="/recipe/add">Create</a>
+      <a href="/category">Category</a>
+      <a href="/bookmarks">Bookmark</a>
+      <a href="/meal-planner">Meal Planner</a>
+      <a href="/admin/users">Admin User Management</a>
+      <a href="/profile">Profile</a>
+      <a href="/logout">Logout</a>
+    </div>
+  </nav>
+<% } %>
 
-
-<h1>Admin – User Management</h1>
-<a href="/admin/users/new">Create New User</a>
+<div style="display: flex; justify-content: space-between; align-items: center;">
+  <h1>Admin – User Management</h1>
+  <a href="/admin/users/new" class="createBtn">Create New User</a>
+</div>
 
 <table>
   <thead>
@@ -47,22 +52,22 @@
     </tr>
   </thead>
   <tbody>
-    <% users.forEach(user => { %>
+    <% users.forEach(u => { %>
       <tr>
-        <td><%= user.username %></td>
-        <td><%= user.email %></td>
+        <td><%= u.username %></td>
+        <td><%= u.email %></td>
         <td>
-          <% if (user.role === 'admin') { %>
+          <% if (u.role === 'admin') { %>
             <span class="admin-badge">Admin</span>
           <% } else { %>
             <span class="user-badge">User</span>
           <% } %>
         </td>
-        <td><%= new Date(user.dateCreated).toLocaleDateString() %></td>
-        <td class="actions">
-          <a href="/admin/users/<%= user._id %>/edit">Edit</a>
-          <form action="/admin/users/<%= user._id %>/delete" method="POST" style="display:inline;">
-            <button type="submit" onclick="return confirm('Delete this user?')">Delete</button>
+        <td><%= new Date(u.dateCreated).toLocaleDateString() %></td>
+        <td style="display: flex; gap: 8px; align-items: center;">
+          <a href="/admin/users/<%= u._id %>/edit" class="btn-blue">Edit</a>
+          <form action="/admin/users/<%= u._id %>/delete" method="POST" style="margin: 0;">
+            <button type="submit" class="btn-red" onclick="return confirm('Delete this user?')">Delete</button>
           </form>
         </td>
       </tr>

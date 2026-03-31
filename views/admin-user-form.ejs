@@ -3,33 +3,33 @@
 <head>
   <title><%= isEdit ? 'Edit User' : 'Create User' %></title>
   <style>
-    body { margin-left: 80px; margin-right: 80px;   
-   
-    font-family: "Times New Roman", Times, serif;}
+    body { margin-left: 80px; margin-right: 80px; font-family: "Times New Roman", Times, serif; }
     nav { border-bottom: 1px solid black; padding: 10px; margin-bottom: 0; }
     nav a { margin-right: 15px; text-decoration: none; color: black; }
     form { max-width: 400px; margin-top: 20px; }
     label { display: block; margin-top: 10px; }
-    input, select { width: 100%; padding: 5px; margin-top: 2px; }
-    button { margin-top: 15px; padding: 5px 15px; }
+    input, select { width: 100%; padding: 5px; margin-top: 2px; box-sizing: border-box; }
     .error { color: red; }
   </style>
 </head>
 <body>
 
-<nav style="display: flex; justify-content: space-between;">
-  <strong>G1-1</strong>
-  <div>
-    <a href="/recipe">All Recipes</a>
-    <a href="/recipe/add">Create</a>
-    <a href="/category">Category</a>
-    <a href="/bookmarks">Bookmark</a>
-    <a href="/meal-planner">Meal Planner</a>
-    <a href="/admin/users">Admin User Management</a>
-    <a href="/profile">Profile</a>
-    <a href="/logout">Logout</a>
-  </div>
-</nav>
+<!-- NAVBAR -->
+<% if (user && user.role === 'admin') { %>
+  <nav style="display: flex; justify-content: space-between;">
+    <strong>G1-1</strong>
+    <div>
+      <a href="/recipe">All Recipes</a>
+      <a href="/recipe/add">Create</a>
+      <a href="/category">Category</a>
+      <a href="/bookmarks">Bookmark</a>
+      <a href="/meal-planner">Meal Planner</a>
+      <a href="/admin/users">Admin User Management</a>
+      <a href="/profile">Profile</a>
+      <a href="/logout">Logout</a>
+    </div>
+  </nav>
+<% } %>
 
 <h1><%= isEdit ? 'Edit User' : 'Create New User' %></h1>
 
@@ -53,8 +53,12 @@
     <option value="admin" <%= editingUser && editingUser.role === 'admin' ? 'selected' : '' %>>Admin</option>
   </select>
 
-  <button type="submit"><%= isEdit ? 'Update' : 'Create' %> User</button>
-  <a href="/admin/users">Cancel</a>
+  <br><br>
+  <div style="display: flex; gap: 10px; align-items: center;">
+    <a href="/admin/users" style="padding: 5px 12px; border: 1px solid #ccc; border-radius: 4px; text-decoration: none; color: black; background-color: #f0f0f0; font-family: Arial, sans-serif;">Cancel</a>
+    <button type="submit" style="background-color: #4da7f1; color: white; border: none; padding: 5px 12px; border-radius: 4px; cursor: pointer; font-family: Arial, sans-serif;"><%= isEdit ? 'Update' : 'Create' %> User</button>
+  </div>
+
 </form>
 
 </body>

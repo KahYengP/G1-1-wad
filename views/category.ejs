@@ -3,53 +3,68 @@
 <head>
   <title>Categories</title>
   <style>
-    body { margin-left: 80px; margin-right: 80px; 
-   
-    font-family: "Times New Roman", Times, serif;}
+    body { margin-left: 80px; margin-right: 80px; font-family: "Times New Roman", Times, serif; }
     nav { border-bottom: 1px solid black; padding: 10px; margin-bottom: 0; }
     nav a { margin-right: 15px; text-decoration: none; color: black; }
-    .review-card { border: 1px solid #ccc; padding: 10px; margin-bottom: 10px; }
-    .star { color: gold; }
+    .btn { padding: 5px 10px; border: 1px solid black; text-decoration: none; color: black; background-color: white; }
+    .btn:hover { background-color: black; color: white; }
   </style>
 </head>
 <body>
 
 <!-- NAVBAR -->
-<nav style="display: flex; justify-content: space-between;">
-  <strong>G1-1</strong>
-  <div>
-    <a href="/recipe">All Recipes</a>
-    <a href="/recipe/add">Create</a>
-    <a href="/category">Category</a>
-    <a href="/bookmarks">Bookmark</a>
-    <a href="/meal-planner">Meal Planner</a>
-    <a href="/admin/users">Admin User Management</a>
-    <a href="/profile">Profile</a>
-    <a href="/logout">Logout</a>
-  </div>
-</nav>
-<!-- CATEGORY LIST -->
-<div></div>
+<!-- NAVBAR -->
+<% if (user && user.role === 'user') { %>
+  <nav style="display: flex; justify-content: space-between;">
+    <strong>G1-1</strong>
+    <div>
+      <a href="/recipe">All Recipes</a>
+      <a href="/bookmarks">Bookmark</a>
+      <a href="/meal-planner">Meal Planner</a>
+      <a href="/profile">Profile</a>
+      <a href="/logout">Logout</a>
+    </div>
+  </nav>
+<% } else if (user && user.role === 'admin') { %>
+  <nav style="display: flex; justify-content: space-between;">
+    <strong>G1-1</strong>
+    <div>
+      <a href="/recipe">All Recipes</a>
+      <a href="/recipe/add">Create</a>
+      <a href="/category">Category</a>
+      <a href="/bookmarks">Bookmark</a>
+      <a href="/meal-planner">Meal Planner</a>
+      <a href="/admin/users">Admin User Management</a>
+      <a href="/profile">Profile</a>
+      <a href="/logout">Logout</a>
+    </div>
+  </nav>
+<% } else { %>
+  <nav style="display: flex; justify-content: space-between;">
+    <strong>G1-1</strong>
+    <div>
+      <a href="/recipe">All Recipes</a>
+      <a href="/login">Login</a>
+      <a href="/register">Register</a>
+    </div>
+  </nav>
+<% } %>
+
+<!-- Header -->
+<div style="display: flex; justify-content: space-between; align-items: center;">
   <h2>Category List</h2>
-  <a href="/add-category" style="color: rgb(57, 57, 57);">Add Category</a><br><br>
-  <% if (CategoryList.length === 0) { %>
-    <p>No categories yet.</p>
-  <% } else { %>
-    <% CategoryList.forEach(category => { %>
-      <div class="category-card" style="
-          display: flex; 
-          justify-content: space-between; 
-          align-items: center; 
-          border: 1px solid #ccc; 
-          padding: 10px 15px; 
-          margin-bottom: 10px; 
-          border-radius: 5px; 
-          background-color: #f9f9f9;">
-        <span><strong><%= category.categoryName %></strong></span>
-        <a href="/update-category?id=<%= category._id %>" style="color: blue;">Edit</a>
-      </div>
-    <% }); %>
-  <% } %>
+  <a href="/add-category" class="btn">Add Category</a>
+</div>
+
+<% if (CategoryList.length === 0) { %>
+  <p>No categories yet.</p>
+<% } else { %>
+  <% CategoryList.forEach(category => { %>
+    <div style="display: flex; justify-content: space-between; align-items: center; border: 1px solid #ccc; padding: 10px 15px; margin-bottom: 10px; border-radius: 5px; background-color: #f9f9f9;">
+      <span><strong><%= category.categoryName %></strong></span>
+<a href="/update-category?id=<%= category._id %>" class="btn" style="background-color: #4da7f1; color: white; border: none; padding: 5px 10px; border-radius: 4px; text-decoration: none;">Edit</a>    </div>
+  <% }); %>
+<% } %>
 
 </body>
 </html>

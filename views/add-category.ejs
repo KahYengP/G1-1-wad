@@ -1,49 +1,69 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Add Category</title>
-    <style>
-    body { margin-left: 80px; margin-right: 80px; 
-   
-    font-family: "Times New Roman", Times, serif;}
+  <title>Add Category</title>
+  <style>
+    body { margin-left: 80px; margin-right: 80px; font-family: "Times New Roman", Times, serif; }
     nav { border-bottom: 1px solid black; padding: 10px; margin-bottom: 0; }
     nav a { margin-right: 15px; text-decoration: none; color: black; }
-    .review-card { border: 1px solid #ccc; padding: 10px; margin-bottom: 10px; }
-    .star { color: gold; }
-    </style>
+  </style>
 </head>
 <body>
-    <nav style="display: flex; justify-content: space-between;">
+
+<!-- NAVBAR -->
+<% if (user && user.role === 'user') { %>
+  <nav style="display: flex; justify-content: space-between;">
     <strong>G1-1</strong>
     <div>
-        <a href="/recipe">All Recipes</a>
-        <a href="/recipe/add">Create</a>
-        <a href="/category">Category</a>
-        <a href="/bookmarks">Bookmark</a>
-    <a href="/meal-planner">Meal Planner</a>
-        <a href="/profile">Profile</a>
-        <a href="/logout">Logout</a>
+      <a href="/recipe">All Recipes</a>
+      <a href="/bookmarks">Bookmark</a>
+      <a href="/meal-planner">Meal Planner</a>
+      <a href="/profile">Profile</a>
+      <a href="/logout">Logout</a>
     </div>
-    </nav>
-    <h1>Add Category</h1>
-    <form action="/add-category" method="POST" style="margin-bottom: 5px; display: 10px; flex-direction: column; gap: 10px;">
-        <table>
-            <tr>
-                <td><input type="text" name="category" required></td>
-            </tr>
-        </table>
-        <br><br>
-        <button type="submit" style="padding: 5px 8px">Add Category</button> 
-    </form>
-    <br><br>
-    <a href="/category" style="display: inline-block; margin-top: 15px; color: rgb(57, 57, 57);">Back to Category List</a>
-<br><br>
-    <% if(msg==="Failure"){%>
-        <p>Error adding category</p>
-    <%} else if(result && result.categoryName){ %>
-        <p> <%= result.categoryName %> has been added successfully.</p>
-        <br>
-    <%} %>
-    
+  </nav>
+<% } else if (user && user.role === 'admin') { %>
+  <nav style="display: flex; justify-content: space-between;">
+    <strong>G1-1</strong>
+    <div>
+      <a href="/recipe">All Recipes</a>
+      <a href="/recipe/add">Create</a>
+      <a href="/category">Category</a>
+      <a href="/bookmarks">Bookmark</a>
+      <a href="/meal-planner">Meal Planner</a>
+      <a href="/admin/users">Admin User Management</a>
+      <a href="/profile">Profile</a>
+      <a href="/logout">Logout</a>
+    </div>
+  </nav>
+<% } else { %>
+  <nav style="display: flex; justify-content: space-between;">
+    <strong>G1-1</strong>
+    <div>
+      <a href="/recipe">All Recipes</a>
+      <a href="/login">Login</a>
+      <a href="/register">Register</a>
+    </div>
+  </nav>
+<% } %>
+
+<h1>Add Category</h1>
+
+<form action="/add-category" method="POST">
+  <input type="text" name="category" required placeholder="Category name" style="padding: 8px; font-size: 1em;"><br><br>
+
+  <div style="display: flex; gap: 10px; align-items: center;">
+    <a href="/category" style="padding: 5px 12px; border: 1px solid #ccc; border-radius: 4px; text-decoration: none; color: black; background-color: #f0f0f0; font-family: Arial, sans-serif;">Back to Category List</a>
+    <button type="submit" style="background-color: #4da7f1; color: white; border: none; padding: 5px 12px; border-radius: 4px; cursor: pointer; font-family: Arial, sans-serif;">Add Category</button>
+  </div>
+</form>
+
+<br>
+<% if (msg === "Failure") { %>
+  <p style="color: red;">Error adding category</p>
+<% } else if (result && result.categoryName) { %>
+  <p style="color: green;"><%= result.categoryName %> has been added successfully.</p>
+<% } %>
+
 </body>
 </html>

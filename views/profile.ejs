@@ -4,46 +4,53 @@
 <head>
   <title>Profile</title>
   <style>
-    body { font-family: 'Times New Roman', Times, serif; margin: 20px; }
-    .container { max-width: 600px; margin: 0 auto; }
-    form { border: 1px solid #ccc; padding: 15px; margin-bottom: 20px; border-radius: 5px; }
-    input, select { width: 100%; padding: 8px; margin: 5px 0 10px; box-sizing: border-box; }
-    button { background-color: #59a5f0; color: white; border: none; padding: 10px; cursor: pointer; }
-    .error { color: red; }
-    .success { color: #59a5f0; }
-    body { margin-left: 80px; margin-right: 80px; }
-    nav { border-bottom: 1px solid black; padding: 10px; margin-bottom: 0; }
-    nav a { margin-right: 15px; text-decoration: none; color: black; }
-
-  </style>
+  body { font-family: 'Times New Roman', Times, serif; margin: 0; margin-left: 80px; margin-right: 80px; }
+  .container { max-width: 600px; margin: 0 auto; }
+  form { border: 1px solid #ccc; padding: 15px; margin-bottom: 20px; border-radius: 5px; }
+  input, select { width: 100%; padding: 8px; margin: 5px 0 10px; box-sizing: border-box; }
+  button { background-color: #59a5f0; color: white; border: none; padding: 10px; cursor: pointer; }
+  .error { color: red; }
+  .success { color: #59a5f0; }
+  nav { border-bottom: 1px solid black; padding: 10px; margin-bottom: 0; }
+  nav a { margin-right: 15px; text-decoration: none; color: black; }
+</style>
 </head>
 <body>
 <% if (user && user.role === 'user') { %>
-    <nav style="display: flex; justify-content: space-between;">
-  <strong>G1-1</strong>
-  <div>
-    <a href="/recipe">All Recipes</a>
-    <a href="/bookmarks">Bookmark</a>
-    <a href="/meal-planner">Meal Planner</a>
-    <a href="/profile">Profile</a>
-    <a href="/logout">Logout</a>
-  </div>
-</nav>
-<%}  else if (user && user.role==='admin') {%>
-    <nav style="display: flex; justify-content: space-between;">
-  <strong>G1-1</strong>
-  <div>
-    <a href="/recipe">All Recipes</a>
-    <a href="/recipe/add">Create</a>
-    <a href="/category">Category</a>
-    <a href="/bookmarks">Bookmark</a>
-    <a href="/meal-planner">Meal Planner</a>
-    <a href="/admin/users">Admin User Management</a>
-    <a href="/profile">Profile</a>
-    <a href="/logout">Logout</a>
-  </div>
-</nav>
-    <% }%>
+  <nav style="display: flex; justify-content: space-between;">
+    <strong>G1-1</strong>
+    <div>
+      <a href="/recipe">All Recipes</a>
+      <a href="/bookmarks">Bookmark</a>
+      <a href="/meal-planner">Meal Planner</a>
+      <a href="/profile">Profile</a>
+      <a href="/logout">Logout</a>
+    </div>
+  </nav>
+<% } else if (user && user.role === 'admin') { %>
+  <nav style="display: flex; justify-content: space-between;">
+    <strong>G1-1</strong>
+    <div>
+      <a href="/recipe">All Recipes</a>
+      <a href="/recipe/add">Create</a>
+      <a href="/category">Category</a>
+      <a href="/bookmarks">Bookmark</a>
+      <a href="/meal-planner">Meal Planner</a>
+      <a href="/admin/users">Admin User Management</a>
+      <a href="/profile">Profile</a>
+      <a href="/logout">Logout</a>
+    </div>
+  </nav>
+<% } else { %>
+  <nav style="display: flex; justify-content: space-between;">
+    <strong>G1-1</strong>
+    <div>
+      <a href="/recipe">All Recipes</a>
+      <a href="/login">Login</a>
+      <a href="/register">Register</a>
+    </div>
+  </nav>
+<% } %>
 
 <div class="container">
   <h1>Profile</h1>
