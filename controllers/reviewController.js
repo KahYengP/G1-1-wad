@@ -42,7 +42,7 @@ exports.showRecipeDetails = async (req, res) => {
 exports.showAddForm = async (req, res) => {
   try {
     const recipeId = req.params.recipeId;
-    return res.render("add-review", { recipeId });
+    return res.render("add-review", { recipeId, user: req.user || null });
   } catch (error) {
     return res.send("Error loading review form.");
   }
@@ -124,7 +124,12 @@ exports.showEditReview = async (req, res) => {
       return res.send("Not allowed.");
 
     const recipe = await Recipe.findById(review.recipeId);
-    return res.render("edit-review", { review, recipe, errors: [] });
+    return res.render("edit-review", {
+      review,
+      recipe,
+      errors: [],
+      user: req.user || null,
+    });
   } catch (error) {
     console.error(error);
     return res.send("Error loading edit form.");

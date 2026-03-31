@@ -3,11 +3,7 @@
 <head>
   <title>Write a Review</title>
   <style>
-    body { margin-left: 80px; margin-right: 80px; 
-     
-   
-    font-family: "Times New Roman", Times, serif; }
-  </style>
+    body { margin-left: 80px; margin-right: 80px; font-family: "Times New Roman", Times, serif; }
     nav { border-bottom: 1px solid black; padding: 10px; margin-bottom: 0; }
     nav a { margin-right: 15px; text-decoration: none; color: black; }
   </style>
@@ -15,22 +11,44 @@
 <body>
 
 <!-- NAVBAR -->
-<nav style="display: flex; justify-content: space-between;">
-  <strong>Logo & Name</strong>
-  <div>
-    <a href="/recipe">All Recipes</a>
-    <a href="/recipe/add">Create</a>
-    <a href="/category">Category</a>
-    <a href="/bookmarks">Bookmark</a>
-    <a href="/meal-planner">Meal Planner</a>
-    <a href="/profile">Profile</a>
-    <a href="/logout">Logout</a>
-  </div>
-</nav>
+<% if (user && user.role === 'user') { %>
+  <nav style="display: flex; justify-content: space-between;">
+    <strong>G1-1</strong>
+    <div>
+      <a href="/recipe">All Recipes</a>
+      <a href="/bookmarks">Bookmark</a>
+      <a href="/meal-planner">Meal Planner</a>
+      <a href="/profile">Profile</a>
+      <a href="/logout">Logout</a>
+    </div>
+  </nav>
+<% } else if (user && user.role === 'admin') { %>
+  <nav style="display: flex; justify-content: space-between;">
+    <strong>G1-1</strong>
+    <div>
+      <a href="/recipe">All Recipes</a>
+      <a href="/recipe/add">Create</a>
+      <a href="/category">Category</a>
+      <a href="/bookmarks">Bookmark</a>
+      <a href="/meal-planner">Meal Planner</a>
+      <a href="/admin/users">Admin User Management</a>
+      <a href="/profile">Profile</a>
+      <a href="/logout">Logout</a>
+    </div>
+  </nav>
+<% } else { %>
+  <nav style="display: flex; justify-content: space-between;">
+    <strong>G1-1</strong>
+    <div>
+      <a href="/recipe">All Recipes</a>
+      <a href="/login">Login</a>
+      <a href="/register">Register</a>
+    </div>
+  </nav>
+<% } %>
 
 <h1>Write a Review</h1>
 
-<!-- Show errors if any -->
 <% if (typeof errors !== 'undefined' && errors.length > 0) { %>
   <% errors.forEach(error => { %>
     <p style="color: red;"><%= error %></p>
@@ -50,15 +68,13 @@
   </select><br><br>
 
   <label>Review:</label><br>
-  <textarea name="content" placeholder="Write your review here..." required style="width: 100%;height:100px"></textarea><br><br>
+  <textarea name="content" placeholder="Write your review here..." required style="width: 100%; height: 100px;"></textarea><br><br>
 
   <div style="display: flex; justify-content: flex-end; gap: 10px; align-items: center;">
     <a href="/recipe/view/<%= recipeId %>">Back</a>
-    <button type="submit">Submit</button>
-  </div>
+    <button type="submit" style="background-color: #4da7f1; color: white; border: none; padding: 5px 12px; border-radius: 4px; cursor: pointer;">Submit</button>  </div>
 
 </form>
-
 
 </body>
 </html>
