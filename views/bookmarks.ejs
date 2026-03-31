@@ -1,13 +1,20 @@
-<style>
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Bookmarks</title>
+  <style>
+    
     body { margin-left: 80px; margin-right: 80px; font-family: "Times New Roman", Times, serif; }
     nav { border-bottom: 1px solid black; padding: 10px; margin-bottom: 0; }
     nav a { margin-right: 15px; text-decoration: none; color: black; }
     table { width: 100%; border-collapse: collapse; }
     th { text-align: left; padding: 10px; border-bottom: 2px solid #ccc; }
     td { padding: 10px; border-bottom: 1px solid #eee; }
-    .btn-blue { background-color: #4da7f1; color: white; border: none; padding: 4px 10px; border-radius: 4px; cursor: pointer; text-decoration: none; font-size: 0.9em; }
+    .btn-blue { background-color: #4da7f1; color: white; border: none; padding: 4px 10px; border-radius: 4px; cursor: pointer; text-decoration: none; font-size: 0.9em; font-family: arial; }
     .btn-red { background-color: #e74c3c; color: white; border: none; padding: 4px 10px; border-radius: 4px; cursor: pointer; font-size: 0.9em; }
-</style>
+  </style>
+</head>
+<body>
 
 <% if (user && user.role === 'user') { %>
   <nav style="display: flex; justify-content: space-between;">
@@ -45,8 +52,10 @@
   </nav>
 <% } %>
 
-<h1>Bookmarked Recipes</h1>
-<a href="/recipe"><button class="btn-blue">Add Bookmark</button></a>
+<div style="display: flex; justify-content: space-between; align-items: center;">
+  <h1>Bookmarked Recipes</h1>
+  <a href="/recipe"><button class="btn-blue">Add Bookmark</button></a>
+</div>
 <br><br>
 
 <% if (bookmarks.length === 0) { %>
@@ -57,7 +66,7 @@
             <th>Recipe</th>
             <th>Category</th>
             <th>Note</th>
-            <th>Actions</th>
+            <th style="text-align: right;">Actions</th>
         </tr>
 
         <% bookmarks.forEach(bookmark => { %>
@@ -66,7 +75,7 @@
                 <td><%= bookmark.recipeId.title %></td>
                 <td><%= bookmark.category ? bookmark.category.categoryName : "None" %></td>
                 <td><%= bookmark.note || "No note" %></td>
-                <td style="display: flex; gap: 8px; align-items: center;">
+                <td style="display: flex; gap: 8px; align-items: center; justify-content: flex-end;">
                     <a href="/recipe/view/<%= bookmark.recipeId._id %>" class="btn-blue">View</a>
 
                     <form action="/bookmark/edit" method="POST" style="margin: 0;">
@@ -92,3 +101,7 @@
         <% }) %>
     </table>
 <% } %>
+
+
+</body>
+</html>

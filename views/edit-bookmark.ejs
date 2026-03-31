@@ -1,36 +1,58 @@
-    <style>
-      body { margin-left: 80px; margin-right: 80px; 
-      font-family: "Times New Roman", Times, serif;}
-      nav { border-bottom: 1px solid black; padding: 10px; margin-bottom: 0; }
-      nav a { margin-right: 15px; text-decoration: none; color: black; }
-      .review-card { border: 1px solid #ccc; padding: 10px; margin-bottom: 10px; }
-      .star { color: gold; }
-    </style>
+<style>
+  body {
+    margin-left: 80px;
+    margin-right: 80px;
+    font-family: "Times New Roman", Times, serif;
+  }
+  nav {
+    border-bottom: 1px solid black;
+    padding: 10px;
+    margin-bottom: 0;
+  }
+  nav a {
+    margin-right: 15px;
+    text-decoration: none;
+    color: black;
+  }
+  .review-card {
+    border: 1px solid #ccc;
+    padding: 10px;
+    margin-bottom: 10px;
+  }
+  .star {
+    color: gold;
+  }
+</style>
 
-    <nav style="display: flex; justify-content: space-between;">
-    <strong>G1-1</strong>
-    <div>
-        <a href="/recipe">All Recipes</a>
-        <a href="/recipe/add">Create</a>
-        <a href="/category">Category</a>
-        <a href="/bookmarks">Bookmark</a>
+<nav style="display: flex; justify-content: space-between">
+  <strong>G1-1</strong>
+  <div>
+    <a href="/recipe">All Recipes</a>
+    <a href="/recipe/add">Create</a>
+    <a href="/category">Category</a>
+    <a href="/bookmarks">Bookmark</a>
     <a href="/meal-planner">Meal Planner</a>
-        <a href="/profile">Profile</a>
-        <a href="/logout">Logout</a>
-    </div>
-    </nav>
-  
+    <a href="/profile">Profile</a>
+    <a href="/logout">Logout</a>
+  </div>
+</nav>
+
 <h1>Edit Bookmark</h1>
 
 <h3><%= bookmark.recipeId.title %></h3>
 
 <form action="/bookmark/update" method="POST">
-    <input type="hidden" name="bookmarkId" value="<%= bookmark._id %>">
-    <p>Category: <%= bookmark.category ? bookmark.category.categoryName : "None" %></p>
-        
-    <br><br>
-    <label>Note:</label><br>
-    <textarea name="note" cols="80" rows="5"><%= bookmark.note %></textarea>
-    <br><br>
+  <input type="hidden" name="bookmarkId" value="<%= bookmark._id %>" />
+  <p>
+    Category: <%= bookmark.category ? bookmark.category.categoryName : "None" %>
+  </p>
+
+  <br /><br />
+  <label>Note:</label><br />
+  <textarea name="note" cols="80" rows="5"><%= bookmark.note %></textarea>
+  <br /><br />
+  <div style="display: flex; gap: 10px; align-items: center">
+    <a href="/bookmarks">Back</a>
     <button type="submit">Update Bookmark</button>
+  </div>
 </form>
