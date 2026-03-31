@@ -7,20 +7,17 @@
     body { font-family: 'Times New Roman', Times, serif; margin: 20px; }
     .container { max-width: 600px; margin: 0 auto; }
     form { border: 1px solid #ccc; padding: 15px; margin-bottom: 20px; border-radius: 5px; }
-    input, select { width: 100%; padding: 8px; margin: 5px 0 10px; }
+    input, select { width: 100%; padding: 8px; margin: 5px 0 10px; box-sizing: border-box; }
     button { background-color: #59a5f0; color: white; border: none; padding: 10px; cursor: pointer; }
     .error { color: red; }
     .success { color: #59a5f0; }
-   
     body { margin-left: 80px; margin-right: 80px; }
     nav { border-bottom: 1px solid black; padding: 10px; margin-bottom: 0; }
     nav a { margin-right: 15px; text-decoration: none; color: black; }
-    .review-card { border: 1px solid #ccc; padding: 10px; margin-bottom: 10px; }
-    .star { color: gold; }
+
   </style>
 </head>
 <body>
-
 <% if (user && user.role === 'user') { %>
     <nav style="display: flex; justify-content: space-between;">
   <strong>G1-1</strong>
