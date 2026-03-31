@@ -23,24 +23,31 @@ exports.upload = upload;
 //read
 exports.getRecipes = async (req, res) => {
   try {
-    const categoryId = req.query.category; 
-    const searchQuery = req.query.search || '';
+    const categoryId = req.query.category;
+    const searchQuery = req.query.search || "";
     const bookmarkError = req.query.bookmarkError || null;
     let filter = {};
 
     if (categoryId) {
-      filter.category =  categoryId; // convert string -> ObjectId
+      filter.category = categoryId; // convert string -> ObjectId
     }
 
     if (searchQuery) {
-      filter.title = { $regex: searchQuery, $options: 'i' };
+      filter.title = { $regex: searchQuery, $options: "i" };
     }
 
-    const recipes = await Recipe.find(filter).populate('category')
-    const CategoryList = await Category.find()
+    const recipes = await Recipe.find(filter).populate("category");
+    const CategoryList = await Category.find();
     console.log("Filter:", filter);
 
-    return res.render("recipe", { recipes: recipes, user: req.user || null, CategoryList, categoryId, searchQuery, bookmarkError: bookmarkError });
+    return res.render("recipe", {
+      recipes: recipes,
+      user: req.user || null,
+      CategoryList,
+      categoryId,
+      searchQuery,
+      bookmarkError: bookmarkError,
+    });
   } catch (error) {
     console.log(error);
     return res.send("Error in loading recipes. Please try again.");
@@ -122,7 +129,11 @@ exports.showEditForm = async (req, res) => {
     }
 
     //  pass recipe to EJS
-    return res.render("edit-recipe", { recipe, CategoryList });
+    return res.render("edit-recipe", {
+      recipe,
+      CategoryList,
+      user: req.user || null,
+    });
   } catch (error) {
     return res.send("There has been an error rendering edit recipe ");
   }
@@ -158,6 +169,7 @@ exports.updateRecipes = async (req, res) => {
     const ingredients = req.body.ingredients;
     const instructions = req.body.instructions;
     const category = req.body.category;
+    const image = req.file ? "/images/" + req.file.filename : recipe.image;
 
     // declare data properly
     const data = {
@@ -165,6 +177,7 @@ exports.updateRecipes = async (req, res) => {
       ingredients: ingredients,
       instructions: instructions,
       category: category,
+      image: image,
     };
 
     //update using mongoose funciton

@@ -2,6 +2,8 @@ const express = require("express");
 const mongoose = require("mongoose");
 const session = require("express-session");
 const dotenv = require("dotenv");
+const dns = require("node:dns");
+dns.setServers(["8.8.8.8", "1.1.1.1"]);
 
 // ===== ALL ROUTES =====
 const authRoutes = require("./routes/authRoutes");

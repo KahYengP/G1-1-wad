@@ -2,43 +2,98 @@
 <html>
 <head>
   <title>Edit Recipe</title>
-   <style>
-    body { margin-left: 80px; margin-right: 80px; 
-   
-    font-family: "Times New Roman", Times, serif;}
+  <style>
+    body { margin-left: 80px; margin-right: 80px; font-family: "Times New Roman", Times, serif; }
+    nav { border-bottom: 1px solid black; padding: 10px; margin-bottom: 0; }
+    nav a { margin-right: 15px; text-decoration: none; color: black; }
   </style>
 </head>
 <body>
 
+<!-- NAVBAR -->
+<% if (user && user.role === 'user') { %>
+  <nav style="display: flex; justify-content: space-between;">
+    <strong>G1-1</strong>
+    <div>
+      <a href="/recipe">All Recipes</a>
+      <a href="/bookmarks">Bookmark</a>
+      <a href="/meal-planner">Meal Planner</a>
+      <a href="/profile">Profile</a>
+      <a href="/logout">Logout</a>
+    </div>
+  </nav>
+<% } else if (user && user.role === 'admin') { %>
+  <nav style="display: flex; justify-content: space-between;">
+    <strong>G1-1</strong>
+    <div>
+      <a href="/recipe">All Recipes</a>
+      <a href="/recipe/add">Create</a>
+      <a href="/category">Category</a>
+      <a href="/bookmarks">Bookmark</a>
+      <a href="/meal-planner">Meal Planner</a>
+      <a href="/admin/users">Admin User Management</a>
+      <a href="/profile">Profile</a>
+      <a href="/logout">Logout</a>
+    </div>
+  </nav>
+<% } else { %>
+  <nav style="display: flex; justify-content: space-between;">
+    <strong>G1-1</strong>
+    <div>
+      <a href="/recipe">All Recipes</a>
+      <a href="/login">Login</a>
+      <a href="/register">Register</a>
+    </div>
+  </nav>
+<% } %>
+
 <h1>Edit Recipe</h1>
 
-<form action="/recipe/edit/<%= recipe._id %>" method="POST">
+<div style="display: flex; gap: 30px; align-items: flex-start;">
 
-  <input type="text" name="title" value="<%= recipe.title %>" required><br><br>
+  <div>
+    <img src="<%= recipe.image || '/images/default.jpg' %>"
+         style="width: 200px; height: 200px; object-fit: cover; border-radius: 5px; border: 1px solid #ccc;"
+         alt="Current Recipe Image">
+  </div>
 
-  <textarea name="ingredients"><%= recipe.ingredients %></textarea><br><br>
+  <div style="flex: 1;">
+    <form action="/recipe/edit/<%= recipe._id %>" method="POST" enctype="multipart/form-data">
 
-  <textarea name="instructions"><%= recipe.instructions %></textarea><br><br>
+      <label>Title:</label><br>
+      <input type="text" name="title" value="<%= recipe.title %>" required style="width: 100%;"><br><br>
 
- <% if (CategoryList.length === 0) { %>
-   <p>No categories yet.</p> <!-- Message when there is no category -->
- <% } else { %>
-   <!-- EJS loop to render each category -->
-   <label for="category">Category: </label>
-   <select name="category" required>
-     <% CategoryList.forEach(cat => { %>
-       <option value="<%= cat._id %>"<%= recipe.category.toString() === cat._id.toString() ? 'selected' : '' %>>
-         <%= cat.categoryName %>
-       </option>
-     <% }) %>
-   </select>
- <% } %>
+      <label>Ingredients:</label><br>
+      <textarea name="ingredients" required style="width: 100%; height: 80px;"><%= recipe.ingredients %></textarea><br><br>
 
-  <button type="submit">Update</button>
+      <label>Instructions:</label><br>
+      <textarea name="instructions" required style="width: 100%; height: 100px;"><%= recipe.instructions %></textarea><br><br>
 
-</form>
+      <label>Category:</label><br>
+      <% if (CategoryList.length === 0) { %>
+        <p>No categories yet.</p>
+      <% } else { %>
+        <select name="category" required>
+          <% CategoryList.forEach(cat => { %>
+            <option value="<%= cat._id %>" <%= recipe.category && recipe.category.toString() === cat._id.toString() ? 'selected' : '' %>>
+              <%= cat.categoryName %>
+            </option>
+          <% }) %>
+        </select>
+      <% } %><br><br>
 
-<a href="/recipe">Back</a>
+      <label>Change Image:</label><br>
+      <input type="file" name="image" accept="image/*"><br><br>
+
+      <div style="display: flex; justify-content: flex-end; gap: 10px; align-items: center;">
+        <a href="/recipe">Back</a>
+        <button type="submit">Update</button>
+      </div>
+
+    </form>
+  </div>
+
+</div>
 
 </body>
 </html>

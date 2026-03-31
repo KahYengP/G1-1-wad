@@ -43,6 +43,7 @@ router.get(
 router.post(
   "/edit/:id",
   authMiddleware.isAuthenticated,
+  recipeController.upload.single("image"),
   recipeController.updateRecipes,
 );
 //delete, since eveyrhting is happpening in the recipe file
