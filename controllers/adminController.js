@@ -1,23 +1,22 @@
-const User = require('../models/User');
+// controllers/adminController.js
 const bcrypt = require('bcrypt');
+const { getAll, findById, createUser, updateById, deleteById, countUsers } = require('../models/User');
+const User = require('../models/User'); // needed for duplicate check with $or
 
 // ========== LIST ALL USERS ==========
 exports.showAdminUsers = async (req, res) => {
   try {
-    const users = await User.find().select('-password -security_answers');
-    // Pass user (global) as 'user' to view
+    const users = await getAll();
     res.render('admin-profile', { users, user: req.user });
   } catch (err) {
     res.status(500).send('Error loading admin page');
   }
 };
 
-
 // ========== CREATE USER FORM ==========
 exports.createUserForm = (req, res) => {
   res.render('admin-user-form', { editingUser: null, error: null, isEdit: false });
 };
-
 
 // ========== CREATE USER (POST) ==========
 exports.createUser = async (req, res) => {
@@ -32,6 +31,7 @@ exports.createUser = async (req, res) => {
       });
     }
 
+    // Check for existing user (email or username)
     const existing = await User.findOne({ $or: [{ email }, { username }] });
     if (existing) {
       return res.render('admin-user-form', {
@@ -42,7 +42,7 @@ exports.createUser = async (req, res) => {
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
-    const newUser = new User({
+    await createUser({
       username,
       email,
       password: hashedPassword,
@@ -50,7 +50,6 @@ exports.createUser = async (req, res) => {
       security_questions: ['', '', ''],
       security_answers: ['', '', '']
     });
-    await newUser.save();
 
     res.redirect('/admin/users');
   } catch (err) {
@@ -66,7 +65,7 @@ exports.createUser = async (req, res) => {
 // ========== EDIT USER FORM ==========
 exports.editUserForm = async (req, res) => {
   try {
-    const user = await User.findById(req.params.id);
+    const user = await findById(req.params.id);
     if (!user) {
       return res.redirect('/admin/users');
     }
@@ -75,6 +74,7 @@ exports.editUserForm = async (req, res) => {
     res.status(500).send('Error loading edit form');
   }
 };
+
 // ========== UPDATE USER (POST) ==========
 exports.updateUser = async (req, res) => {
   try {
@@ -86,7 +86,7 @@ exports.updateUser = async (req, res) => {
       updateData.password = await bcrypt.hash(password, 10);
     }
 
-    await User.findByIdAndUpdate(userId, updateData);
+    await updateById(userId, updateData);
     res.redirect('/admin/users');
   } catch (err) {
     console.error(err);
@@ -98,29 +98,27 @@ exports.updateUser = async (req, res) => {
 exports.deleteUser = async (req, res) => {
   try {
     const userId = req.params.id;
-    // Prevent admin from deleting themselves (optional)
+    // Prevent admin from deleting themselves
     if (userId === req.user._id.toString()) {
       return res.status(403).send('You cannot delete your own account.');
     }
-    await User.findByIdAndDelete(userId);
+    await deleteById(userId);
     res.redirect('/admin/users');
   } catch (err) {
     res.status(500).send('Error deleting user');
   }
 };
 
-// Show admin dashboard
+// ========== ADMIN DASHBOARD ==========
 exports.showAdminDashboard = async (req, res) => {
   try {
-    // Example stats – you can add more
-    const totalUsers = await User.countDocuments();
-    // If you have Recipe model, import it and count
+    const totalUsers = await countUsers();
+    // If you have Recipe model, import and count totalRecipes
     // const totalRecipes = await Recipe.countDocuments();
-
     res.render('admin-dashboard', {
       totalUsers,
       // totalRecipes,
-      user: req.user   // passed from global middleware
+      user: req.user
     });
   } catch (err) {
     console.error(err);

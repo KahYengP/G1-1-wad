@@ -1,77 +1,59 @@
+// models/User.js
 const mongoose = require("mongoose");
 
 const userSchema = new mongoose.Schema({
-  username: {
-    type: String,
-    required: true,
-    unique: true,
-  },
-  email: {
-    type: String,
-    required: true,
-    unique: true,
-  },
-  password: {
-    type: String,
-    required: true,
-  },
-  security_questions: {
-    type: [String],
-    required: true,
-  },
-  security_answers: {
-    type: [String],
-    required: true,
-  },
-  dateCreated: {
-    type: Date,
-    default: Date.now,
-  },
-  role: {
-    type: String,
-    enum: ["user", "admin"],
-    default: "user",
-  },
+  username: { type: String, required: true, unique: true },
+  email: { type: String, required: true, unique: true },
+  password: { type: String, required: true },
+  security_questions: { type: [String], required: true },
+  security_answers: { type: [String], required: true },
+  dateCreated: { type: Date, default: Date.now },
+  role: { type: String, enum: ["user", "admin"], default: "user" },
 });
 
 const User = mongoose.model("User", userSchema);
 
 // Get all users
-exports.getAll = () => {
-  return User.find().select("-password -security_answers");
-};
+exports.getAll = () => User.find().select("-password -security_answers");
 
 // Find user by ID
-exports.findById = (id) => {
-  return User.findById(id);
-};
+exports.findById = (id) => User.findById(id).select("-password -security_answers");
+
+// Find user by ID with password (for password change)
+exports.findByIdWithPassword = (id) => User.findById(id).select("+password");
+
+// Find user by ID with security answers (for security update)
+exports.findByIdWithAnswers = (id) => User.findById(id).select("+security_answers");
 
 // Find user by email
-exports.findByEmail = (email) => {
-  return User.findOne({ email: email });
-};
+exports.findByEmail = (email) => User.findOne({ email }).select("-password -security_answers");
+
+// Find user by email with password
+exports.findByEmailWithPassword = (email) => User.findOne({ email }).select("+password");
+
+// Find user by email with security answers (for reset)
+exports.findByEmailWithAnswers = (email) => User.findOne({ email }).select("+security_answers");
 
 // Find user by username
-exports.findByUsername = (username) => {
-  return User.findOne({ username: username });
-};
+exports.findByUsername = (username) => User.findOne({ username }).select("-password -security_answers");
 
 // Create a new user
-exports.createUser = (data) => {
-  return User.create(data);
-};
+exports.createUser = (data) => User.create(data);
 
 // Update user by ID
-exports.updateById = (id, data) => {
-  return User.findByIdAndUpdate(id, data, { new: true });
-};
+exports.updateById = (id, data) => User.findByIdAndUpdate(id, data, { new: true }).select("-password -security_answers");
 
 // Delete user by ID
-exports.deleteById = (id) => {
-  return User.findByIdAndDelete(id);
-};
+exports.deleteById = (id) => User.findByIdAndDelete(id);
+
+// Update password only
+exports.updatePassword = (id, hashedPassword) => User.findByIdAndUpdate(id, { password: hashedPassword });
+
+// Update security questions
+exports.updateSecurityQuestions = (id, newQuestions, hashedAnswers) => User.findByIdAndUpdate(id, {
+  security_questions: newQuestions,
+  security_answers: hashedAnswers
+});
 
 // Count total users
-exports.countUsers = () => {
-  return User.countDocuments();
-};
+exports.countUsers = () => User.countDocuments();

@@ -41,4 +41,5 @@ collectionSchema.statics.deleteById = function(id) {
   return this.findByIdAndDelete(id)
 }
 
+
 module.exports = mongoose.model("Collection", collectionSchema)
