@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Digital Recipe Box - Navigation</title>
+</head>
+<body>
+  <h1>Digital Recipe Box - Route Map</h1>
+
+  <h2>Authentication</h2>
+  <ul>
+    <li><a href="/register">Register (/register)</a></li>
+    <li><a href="/login">Login (/login)</a></li>
+    <li><a href="/forgot">Forgot Password (/forgot)</a></li>
+    <li>Reset Password (/reset-password) - only accessible via forgot password workflow</li>
+  </ul>
+
+  <h2>Profile</h2>
+  <ul>
+    <li><a href="/profile">View Profile (/profile)</a> - requires login</li>
+  </ul>
+
+  <h2>Admin</h2>
+  <ul>
+    <li><a href="/admin/users">View Users (/admin/users)</a></li>
+    <li><a href="/admin/users/new">Add User (/admin/users/new)</a></li>
+    <li>Edit User (/admin/users/:id/edit) - dynamic</li>
+  </ul>
+
+  <h2>Recipe</h2>
+  <ul>
+    <li><a href="/recipe">All Recipes (/recipe) - public</a></li>
+    <li><a href="/recipe/add">Add Recipe (/recipe/add)</a></li>
+    <li>Edit Recipe (/recipe/:id/edit) - dynamic</li>
+    <li>View Recipe (/recipe/:id/view) - dynamic</li>
+  </ul>
+
+  <h2>Bookmark</h2>
+  <ul>
+    <li><a href="/bookmarks">View Bookmarks (/bookmarks)</a></li>
+    <li>Edit Bookmark (/bookmark/:id/edit) - dynamic</li>
+  </ul>
+
+  <h2>Review</h2>
+  <ul>
+    <li>Add Review (/review/add) - dynamic</a></li>
+    <li>Edit Review (/review/:id/edit) - dynamic</li>
+  </ul>
+
+  <h2>Category</h2>
+  <ul>
+    <li><a href="/category">All Categories (/category) - public</a></li>
+    <li><a href="/add-category">Add Category (/add-category) - only admins</a></li>
+    <li>Edit Category (/edit-category/:id) - dynamic</li>
+  </ul>
+
+  <h2>Meal Planner</h2>
+  <ul>
+    <li><a href="/meal-planner">Meal Planner (/meal-planner)</a></li>
+  </ul>
+
+  <p>* Dynamic routes require an ID to access. Protected routes require login.</p>
+  <br><br><br><br>
+</body>
+</html>
