@@ -2,19 +2,6 @@ const Recipe = require("../models/Recipe");
 const Review = require("../models/Review");
 const Category = require("../models/Category");
 const mongoose = require("mongoose");
-const multer = require("multer");
-const path = require("path");
-
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, "public/images/");
-  },
-  filename: (req, file, cb) => {
-    cb(null, Date.now() + path.extname(file.originalname));
-  },
-});
-const upload = multer({ storage: storage });
-exports.upload = upload;
 
 exports.getRecipes = async (req, res) => {
   try {
@@ -79,8 +66,6 @@ exports.showAddform = async (req, res) => {
 
 exports.createRecipes = async (req, res) => {
   try {
-    const image = req.file ? "/images/" + req.file.filename : "/images/default.jpg";
-
     const data = {
       title: req.body.title,
       ingredients: req.body.ingredients,
@@ -88,7 +73,6 @@ exports.createRecipes = async (req, res) => {
       createdBy: req.user.email,
       createdByUsername: req.user.username,
       category: req.body.category,
-      image: image,
     };
 
     await Recipe.createRecipe(data);
@@ -129,14 +113,11 @@ exports.updateRecipes = async (req, res) => {
       return res.send("Not allowed");
     }
 
-    const image = req.file ? "/images/" + req.file.filename : recipe.image;
-
     const data = {
       title: req.body.title,
       ingredients: req.body.ingredients,
       instructions: req.body.instructions,
       category: req.body.category,
-      image: image,
     };
 
     await Recipe.updateById(id, data);

@@ -10,38 +10,37 @@ const recipeSchema = new mongoose.Schema({
     required: true,
   },
   createdBy: { type: String, required: true },
-  image: { type: String, default: "/images/default.jpg" },
   createdByUsername: { type: String, required: false },
   createdAt: { type: Date, default: Date.now },
 });
 
 const Recipe = mongoose.model("Recipe", recipeSchema);
 
-Recipe.getAll = function() {
+Recipe.getAll = function () {
   return Recipe.find().populate("category");
 };
 
-Recipe.createRecipe = function(data) {
+Recipe.createRecipe = function (data) {
   return Recipe.create(data);
 };
 
-Recipe.findByIdRecipe = function(id) {
+Recipe.findByIdRecipe = function (id) {
   return Recipe.findById(id);
 };
 
-Recipe.findByIdWithCategory = function(id) {
+Recipe.findByIdWithCategory = function (id) {
   return Recipe.findById(id).populate("category");
 };
 
-Recipe.updateById = function(id, data) {
+Recipe.updateById = function (id, data) {
   return Recipe.findByIdAndUpdate(id, data, { new: true });
 };
 
-Recipe.deleteById = function(id) {
+Recipe.deleteById = function (id) {
   return Recipe.findByIdAndDelete(id);
 };
 
-Recipe.searchRecipes = function(filter) {
+Recipe.searchRecipes = function (filter) {
   return Recipe.find(filter).populate("category");
 };
 

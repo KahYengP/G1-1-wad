@@ -92,27 +92,21 @@
     <div class="recipe-card">
 
       <!-- Left: Image + Info together -->
-      <div style="display: flex; align-items: flex-start; gap: 15px; flex: 1;">
-        <img src="<%= recipe.image || '/images/default.jpg' %>"
-             style="width: 100px; height: 100px; object-fit: cover; border-radius: 5px; flex-shrink: 0;"
-             alt="Recipe Image">
-
-        <div class="recipe-info">
-          <h3 class="recipe-title" style="margin: 0 0 5px 0;"><%= recipe.title %></h3>
-          <p style="margin: 3px 0;"><strong>Category:</strong> <%= recipe.category ? recipe.category.categoryName : 'Uncategorized' %></p>
-          <p style="margin: 3px 0; color: grey; font-size: 0.9em;">Created by: <%= recipe.createdByUsername || recipe.createdBy %></p>
-          <p style="margin: 3px 0; color: grey; font-size: 0.9em;">Published on: <%= new Date(recipe.createdAt).toLocaleDateString() %></p>
-          <% const reviewCount = reviewCounts[recipe._id.toString()] || 0; %>
-          <p style="margin: 3px 0; color: grey; font-size: 0.9em;">
-            <% if (reviewCount === 0) { %>
-              No Reviews yet
-            <% } else if (reviewCount === 1) { %>
-              1 Review
-            <% } else { %>
-              <%= reviewCount %> Reviews
-            <% } %>
-          </p>
-        </div>
+     <div style="flex: 1;">
+        <h3 class="recipe-title" style="margin: 0 0 5px 0;"><%= recipe.title %></h3>
+        <p style="margin: 3px 0;"><strong>Category:</strong> <%= recipe.category ? recipe.category.categoryName : 'Uncategorized' %></p>
+        <p style="margin: 3px 0; color: grey; font-size: 0.9em;">Created by: <%= recipe.createdByUsername || recipe.createdBy %></p>
+        <p style="margin: 3px 0; color: grey; font-size: 0.9em;">Published on: <%= new Date(recipe.createdAt).toLocaleDateString() %></p>
+        <% const reviewCount = reviewCounts[recipe._id.toString()] || 0; %>
+        <p style="margin: 3px 0; color: grey; font-size: 0.9em;">
+          <% if (reviewCount === 0) { %>
+            No Reviews yet
+          <% } else if (reviewCount === 1) { %>
+            1 Review
+          <% } else { %>
+            <%= reviewCount %> Reviews
+          <% } %>
+        </p>
       </div>
 
       <!-- Right: Actions -->
