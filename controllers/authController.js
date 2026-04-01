@@ -1,8 +1,9 @@
 // controllers/authController.js
-const User = require('../models/User');
-const bcrypt = require('bcrypt');
+const User = require("../models/User");
+const bcrypt = require("bcrypt");
 
-const SECURITY_QUESTIONS = [   "What was the name of your first pet?",
+const SECURITY_QUESTIONS = [
+  "What was the name of your first pet?",
   "What is your mother's maiden name?",
   "What was the model of your first car?",
   "What city were you born in?",
@@ -11,16 +12,16 @@ const SECURITY_QUESTIONS = [   "What was the name of your first pet?",
   "What was your first job?",
   "What is your favorite book?",
   "What is the name of the street you grew up on?",
-  "What was the make of your first mobile phone?"]; // unchanged
+  "What was the make of your first mobile phone?",
+]; // unchanged
 
 // registration
 exports.showRegisterForm = (req, res) => {
-  res.render('register', { questions: SECURITY_QUESTIONS, error: null });
+  res.render("register", { questions: SECURITY_QUESTIONS, error: null });
 };
 
 exports.registerUser = async (req, res) => {
   try {
-    
     const username = req.body.username;
     const email = req.body.email;
     const password = req.body.password;
@@ -33,32 +34,37 @@ exports.registerUser = async (req, res) => {
     const answer3 = req.body.answer3;
 
     if (!username || !email || !password || !confirmPassword) {
-      error =  'All fields are required.' 
-      return res.render('register', { questions: SECURITY_QUESTIONS, error});
+      error = "All fields are required.";
+      return res.render("register", { questions: SECURITY_QUESTIONS, error });
     }
     if (password !== confirmPassword) {
-      return res.render('register', { questions: SECURITY_QUESTIONS, error: 'Passwords do not match.' });
+      return res.render("register", {
+        questions: SECURITY_QUESTIONS,
+        error: "Passwords do not match.",
+      });
     }
     const selectedQuestions = [question1, question2, question3];
-    
 
-    //do not need because 
+    //do not need because
     //if (selectedQuestions.some(q => !q) || new Set(selectedQuestions).size !== 3) {
-      
+
     //   error = 'Please select three distinct security questions.'
     //   return res.render('register', { questions: SECURITY_QUESTIONS, error });
     // }
 
     const existingUser = await User.findByEmail(email);
     if (existingUser) {
-      return res.render('register', { questions: SECURITY_QUESTIONS, error: 'User already exists.' });
+      return res.render("register", {
+        questions: SECURITY_QUESTIONS,
+        error: "User already exists.",
+      });
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
     const hashedAnswers = await Promise.all([
       bcrypt.hash(answer1, 10),
       bcrypt.hash(answer2, 10),
-      bcrypt.hash(answer3, 10)
+      bcrypt.hash(answer3, 10),
     ]);
 
     await User.createUser({
@@ -67,47 +73,50 @@ exports.registerUser = async (req, res) => {
       password: hashedPassword,
       role: "user",
       security_questions: selectedQuestions,
-      security_answers: hashedAnswers
+      security_answers: hashedAnswers,
     });
 
-    return res.redirect('/login');
+    return res.redirect("/login");
   } catch (err) {
-    console.error('Registration error:', err);
-    return res.render('register', { questions: SECURITY_QUESTIONS, error: 'Error registering user: ' + err.message });
+    console.error("Registration error:", err);
+    return res.render("register", {
+      questions: SECURITY_QUESTIONS,
+      error: "Error registering user: " + err.message,
+    });
   }
 };
 
 // login page
 exports.showLoginForm = (req, res) => {
-  res.render('login', { error: null });
+  res.render("login", { error: null });
 };
 
 exports.loginUser = async (req, res) => {
   try {
     const email = req.body.email;
     const password = req.body.password;
-   
+
     const user = await User.findByEmailWithPassword(email);
     if (!user) {
-      return res.render('login', { error: 'Invalid email or password.' });
+      return res.render("login", { error: "Invalid email or password." });
     }
 
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
-      return res.render('login', { error: 'Invalid email or password.' });
+      return res.render("login", { error: "Invalid email or password." });
     }
 
-    req.session.userId = user._id; 
-    if (user.role === 'admin') {
-      console.log('Logged in user role:', user.role);
-      return res.redirect('/admin/users');
+    req.session.userId = user._id;
+    if (user.role === "admin") {
+      console.log("Logged in user role:", user.role);
+      return res.redirect("/admin/users");
     } else {
-      console.log('Logged in user role:', user.role);
-      return res.redirect('/recipe');
+      console.log("Logged in user role:", user.role);
+      return res.redirect("/recipe");
     }
   } catch (err) {
     console.error(err);
-    res.render('login', { error: 'Error logging in: ' + err.message });
+    res.render("login", { error: "Error logging in: " + err.message });
   }
 };
 
@@ -116,15 +125,15 @@ exports.logoutUser = (req, res) => {
   req.session.destroy((err) => {
     if (err) {
       console.error(err);
-      return res.redirect('/recipe');
+      return res.redirect("/recipe");
     }
-    res.redirect('/login');
+    res.redirect("/login");
   });
 };
 
 // forgot password
 exports.showForgotForm = (req, res) => {
-  res.render('forgot', { error: null, message: null });
+  res.render("forgot", { error: null, message: null });
 };
 
 //then they come here if they forgot
@@ -133,34 +142,41 @@ exports.handleForgot = async (req, res) => {
     const email = req.body.email;
     const user = await User.findByEmail(email);
     if (!user) {
-      let error = "No account found with that email."
+      let error = "No account found with that email.";
       let message = null;
-      return res.render('forgot', { error , message });
+      return res.render("forgot", { error, message });
     }
     //occurs if the user is created by the admin so no security
-    if (!user.security_questions || !Array.isArray(user.security_questions) || user.security_questions.length !== 3) {
-      let error =  'This account does not have security questions set. Please contact support.';
+    if (
+      !user.security_questions ||
+      !Array.isArray(user.security_questions) ||
+      user.security_questions.length !== 3
+    ) {
+      let error =
+        "This account does not have security questions set. Please contact support.";
       let message = null;
-      return res.render('forgot', { error, message });
+      return res.render("forgot", { error, message });
     }
     let useremail = user.email;
     let userQuestions = user.security_questions;
     let error = null;
-    res.render('reset-password', {
+    res.render("reset-password", {
       email: useremail,
       userQuestions: userQuestions,
-      error
+      error,
     });
   } catch (err) {
     console.error(err);
-    res.render('forgot', { error: 'Error processing request: ' + err.message , message: null }); 
+    res.render("forgot", {
+      error: "Error processing request: " + err.message,
+      message: null,
+    });
   }
 };
 
 // reset password
 exports.resetPassword = async (req, res) => {
   try {
-    
     const email = req.body.email;
     const newPassword = req.body.newPassword;
     const answer0 = req.body.answer0;
@@ -169,18 +185,18 @@ exports.resetPassword = async (req, res) => {
 
     if (!newPassword || !answer0 || !answer1 || !answer2) {
       const user = await User.findByEmail(email);
-      let error = 'All fields are required.';
+      let error = "All fields are required.";
 
-      return res.render('reset-password', {
+      return res.render("reset-password", {
         email,
         userQuestions: user ? user.security_questions : [],
-        error
+        error,
       });
     }
 
     const user = await User.findByEmailWithAnswers(email);
-    if (!user)  {
-      return res.redirect('/forgot')
+    if (!user) {
+      return res.redirect("/forgot");
     }
 
     const answers = [answer0, answer1, answer2];
@@ -195,27 +211,26 @@ exports.resetPassword = async (req, res) => {
     if (!allMatch) {
       let email = user.email;
       let userQuestions = user.security_questions;
-      let error = 'One or more answers are incorrect.';
-      return res.render('reset-password', {
+      let error = "One or more answers are incorrect.";
+      return res.render("reset-password", {
         email,
         userQuestions,
-        error
+        error,
       });
     }
 
     const hashedPassword = await bcrypt.hash(newPassword, 10);
     await User.updatePassword(user._id, hashedPassword);
-    let message = 'Password reset successfully. Please log in.';
+    let message = "Password reset successfully. Please log in.";
     let error = null;
-    res.render('login', { error , message});
+    res.render("login", { error, message });
   } catch (err) {
     console.error(err);
     const user = await User.findByEmail(req.body.email);
-    res.render('reset-password', {
-      email: req.body.email || '',
+    res.render("reset-password", {
+      email: req.body.email || "",
       userQuestions: user ? user.security_questions : [],
-      error: 'Error resetting password: ' + err.message 
-
+      error: "Error resetting password: " + err.message,
     });
   }
 };
@@ -224,16 +239,16 @@ exports.resetPassword = async (req, res) => {
 // exports.updateUser = async (req, res) => {
 //   try {
 //     const userId = req.session.userId;
- 
+
 //     const username = req.body.username;
 //     const email = req.body.email;
 //     if (!userId) {
 //       return res.status(401).send('Not logged in.')
 //     }
-    
+
 //     if (!username || !email) {
 //       return res.status(400).send('Username and email are required.')
-//     } 
+//     }
 
 //     await User.updateById(userId, { username, email });
 //     res.redirect('/recipe');
@@ -244,7 +259,7 @@ exports.resetPassword = async (req, res) => {
 //   }
 // };
 
-// delete user do not need 
+// delete user do not need
 // exports.deleteUser = async (req, res) => {
 //   try {
 //     const userId = req.session.userId;
@@ -269,11 +284,11 @@ exports.showProfile = (req, res) => {
   let user = req.user;
   let error = null;
   let success = null;
-  res.render('profile', {
+  res.render("profile", {
     user,
     questions: SECURITY_QUESTIONS,
     error,
-    success
+    success,
   });
 };
 
@@ -285,36 +300,36 @@ exports.changePassword = async (req, res) => {
     const userId = req.session.userId;
 
     if (!currentPassword || !newPassword || !confirmNewPassword) {
-      return res.render('profile', {
+      return res.render("profile", {
         user: req.user,
         questions: SECURITY_QUESTIONS,
-        error: 'All password fields are required.',
-        success: null
+        error: "All password fields are required.",
+        success: null,
       });
     }
     if (newPassword !== confirmNewPassword) {
-       let user = req.user
-       let error = 'New passwords do not match.';
-      return res.render('profile', {
+      let user = req.user;
+      let error = "New passwords do not match.";
+      return res.render("profile", {
         user,
         questions: SECURITY_QUESTIONS,
         error,
-        success: null
+        success: null,
       });
     }
 
     const user = await User.findByIdWithPassword(userId);
     if (!user) {
-      return res.redirect('/login')
+      return res.redirect("/login");
     }
 
     const isMatch = await bcrypt.compare(currentPassword, user.password);
     if (!isMatch) {
-      return res.render('profile', {
+      return res.render("profile", {
         user: req.user,
         questions: SECURITY_QUESTIONS,
-        error: 'Current password is incorrect.',
-        success: null
+        error: "Current password is incorrect.",
+        success: null,
       });
     }
 
@@ -323,19 +338,19 @@ exports.changePassword = async (req, res) => {
     const updatedUser = await User.findByIdUser(userId);
     req.user = updatedUser;
 
-    res.render('profile', {
+    res.render("profile", {
       user: updatedUser,
       questions: SECURITY_QUESTIONS,
       error: null,
-      success: 'Password updated successfully.'
+      success: "Password updated successfully.",
     });
   } catch (err) {
     console.error(err);
-    res.render('profile', {
+    res.render("profile", {
       user: req.user,
       questions: SECURITY_QUESTIONS,
-      error: 'Error changing password: ' + err.message,
-      success: null
+      error: "Error changing password: " + err.message,
+      success: null,
     });
   }
 };
@@ -353,72 +368,75 @@ exports.changeSecurity = async (req, res) => {
     const newAnswer3 = req.body.newAnswer3;
     const userId = req.session.userId;
 
-    if (!oldAnswer1 || !oldAnswer2 || !oldAnswer3 ||
-        !newQuestion1 || !newAnswer1 ||
-        !newQuestion2 || !newAnswer2 ||
-        !newQuestion3 || !newAnswer3) {
-      return res.render('profile', {
+    if (
+      !oldAnswer1 ||
+      !oldAnswer2 ||
+      !oldAnswer3 ||
+      !newQuestion1 ||
+      !newAnswer1 ||
+      !newQuestion2 ||
+      !newAnswer2 ||
+      !newQuestion3 ||
+      !newAnswer3
+    ) {
+      return res.render("profile", {
         user: req.user,
         questions: SECURITY_QUESTIONS,
-        error: 'All fields are required.',
-        success: null
+        error: "All fields are required.",
+        success: null,
       });
     }
 
-    // const newQuestions = [newQuestion1, newQuestion2, newQuestion3];
-    // if (new Set(newQuestions).size !== 3) {
-    //   return res.render('profile', {
-    //     user: req.user,
-    //     questions: SECURITY_QUESTIONS,
-    //     error: 'Please select three distinct security questions.',
-    //     success: null
-    //   });
-    // }
+    const newQuestions = [newQuestion1, newQuestion2, newQuestion3];
 
-    // const user = await User.findByIdWithAnswers(userId);
-    // if (!user) return res.redirect('/login');
+    const user = await User.findByIdWithAnswers(userId);
+    if (!user) return res.redirect("/login");
 
     const oldAnswers = [oldAnswer1, oldAnswer2, oldAnswer3];
     let allMatch = true;
     for (let i = 0; i < oldAnswers.length; i++) {
-      const match = await bcrypt.compare(oldAnswers[i], user.security_answers[i]);
+      const match = await bcrypt.compare(
+        oldAnswers[i],
+        user.security_answers[i],
+      );
       if (!match) {
         allMatch = false;
         break;
       }
     }
+
     if (!allMatch) {
-      return res.render('profile', {
+      return res.render("profile", {
         user: req.user,
         questions: SECURITY_QUESTIONS,
-        error: 'One or more current answers are incorrect.',
-        success: null
+        error: "One or more current answers are incorrect.",
+        success: null,
       });
     }
 
     const hashedNewAnswers = await Promise.all([
       bcrypt.hash(newAnswer1, 10),
       bcrypt.hash(newAnswer2, 10),
-      bcrypt.hash(newAnswer3, 10)
+      bcrypt.hash(newAnswer3, 10),
     ]);
 
     await User.updateSecurityQuestions(userId, newQuestions, hashedNewAnswers);
     const updatedUser = await User.findByIdUser(userId);
     req.user = updatedUser;
 
-    res.render('profile', {
+    res.render("profile", {
       user: updatedUser,
       questions: SECURITY_QUESTIONS,
       error: null,
-      success: 'Security questions updated successfully.'
+      success: "Security questions updated successfully.",
     });
   } catch (err) {
     console.error(err);
-    res.render('profile', {
+    res.render("profile", {
       user: req.user,
       questions: SECURITY_QUESTIONS,
-      error: 'Error updating security questions: ' + err.message,
-      success: null
+      error: "Error updating security questions: " + err.message,
+      success: null,
     });
   }
 };
