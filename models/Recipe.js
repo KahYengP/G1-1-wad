@@ -1,22 +1,15 @@
-//kh part
 const mongoose = require("mongoose");
-//This is how recipe looks like in the mongoose database
+
 const recipeSchema = new mongoose.Schema({
   title: { type: String, required: true },
   ingredients: { type: String, required: true },
   instructions: { type: String, required: true },
-  //if no image is shown then depict default.jpg(its a placeholder)    //we really need this because it gives reference on user who created it hence id
-
   category: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "Category", // reference your Category model
+    ref: "Category",
     required: true,
   },
-
-  createdBy: {
-    type: String, //reserverd for the email
-    required: true,
-  },
+  createdBy: { type: String, required: true },
   image: { type: String, default: "/images/default.jpg" },
   createdByUsername: { type: String, required: false },
   createdAt: { type: Date, default: Date.now },
@@ -24,37 +17,32 @@ const recipeSchema = new mongoose.Schema({
 
 const Recipe = mongoose.model("Recipe", recipeSchema);
 
-//below are my the database functions for recipe
-//imma be using short hand function cuz its cool
+Recipe.getAll = function() {
+  return Recipe.find().populate("category");
+};
 
-//get all recipes,
-// exports.getAll = () => {
-//   return Recipe.find().populate("category");
-// };
+Recipe.createRecipe = function(data) {
+  return Recipe.create(data);
+};
 
-// //create new recipe
-// exports.createRecipe = (data) => {
-//   return Recipe.create(data);
-// };
+Recipe.findByIdRecipe = function(id) {
+  return Recipe.findById(id);
+};
 
-// //find one recipe by id (this is for updating + delete  later)
-// // i will be using mongooses _id(e.g "_id": "65f1a2b3c4d5e6f7890abc12" ) for this
-// // i will be using req.params after this regarding _id anyways
-// exports.findById = (id) => {
-//   return Recipe.findById(id);
-// };
+Recipe.findByIdWithCategory = function(id) {
+  return Recipe.findById(id).populate("category");
+};
 
-// // update recipe by id
-// //findByIDAndUpdate(mongoose command) helps to find one document and update it
-// //{new: true} makes it so that the data updated are the most recent because i wanna redirect back
-// exports.updateById = (id, data) => {
-//   return Recipe.findByIdAndUpdate(id, data, { new: true });
-// };
+Recipe.updateById = function(id, data) {
+  return Recipe.findByIdAndUpdate(id, data, { new: true });
+};
 
-// // delete recipe by id
-// // same same but using findByIdAndDelete this time
-// exports.deleteById = (id) => {
-//   return Recipe.findByIdAndDelete(id);
-// };
+Recipe.deleteById = function(id) {
+  return Recipe.findByIdAndDelete(id);
+};
 
-module.exports = Recipe
+Recipe.searchRecipes = function(filter) {
+  return Recipe.find(filter).populate("category");
+};
+
+module.exports = Recipe;

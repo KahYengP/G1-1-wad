@@ -29,4 +29,4 @@ Category.deleteCategory = function(id) {
   return Category.findByIdAndDelete(id);
 };
 
-module.exports = Category;
+module.exports = Category; 

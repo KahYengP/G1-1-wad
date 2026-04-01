@@ -34,7 +34,7 @@ exports.isAdmin = (req, res, next) => {
 exports.setUser = async (req, res, next) => {
   if (req.session && req.session.userId) {
     try {
-      const user = await User.findById(req.session.userId);
+      const user = await User.findByIdUser(req.session.userId);
       req.user = user;
     } catch (e) {}
   }

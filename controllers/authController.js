@@ -13,7 +13,7 @@ const SECURITY_QUESTIONS = [   "What was the name of your first pet?",
   "What is the name of the street you grew up on?",
   "What was the make of your first mobile phone?"]; // unchanged
 
-// ========== REGISTRATION ==========
+// registration
 exports.showRegisterForm = (req, res) => {
   res.render('register', { questions: SECURITY_QUESTIONS, error: null });
 };
@@ -61,7 +61,7 @@ exports.registerUser = async (req, res) => {
   }
 };
 
-// ========== LOGIN ==========
+// login page
 exports.showLoginForm = (req, res) => {
   res.render('login', { error: null });
 };
@@ -93,7 +93,7 @@ exports.loginUser = async (req, res) => {
   }
 };
 
-// ========== LOGOUT ==========
+// logout
 exports.logoutUser = (req, res) => {
   req.session.destroy((err) => {
     if (err) {
@@ -130,7 +130,7 @@ exports.handleForgot = async (req, res) => {
   }
 };
 
-// ========== RESET PASSWORD ==========
+// reset password
 exports.resetPassword = async (req, res) => {
   try {
     const { email, newPassword, answer0, answer1, answer2 } = req.body;
@@ -177,7 +177,7 @@ exports.resetPassword = async (req, res) => {
   }
 };
 
-// ========== USER UPDATE & DELETE ==========
+// update user
 exports.updateUser = async (req, res) => {
   try {
     const userId = req.session.userId;
@@ -192,6 +192,7 @@ exports.updateUser = async (req, res) => {
   }
 };
 
+// delete user
 exports.deleteUser = async (req, res) => {
   try {
     const userId = req.session.userId;
@@ -207,7 +208,7 @@ exports.deleteUser = async (req, res) => {
   }
 };
 
-// ========== PROFILE ==========
+// profile
 exports.showProfile = (req, res) => {
   res.render('profile', {
     user: req.user,
@@ -254,7 +255,7 @@ exports.changePassword = async (req, res) => {
 
     const hashedNewPassword = await bcrypt.hash(newPassword, 10);
     await User.updatePassword(userId, hashedNewPassword);
-    const updatedUser = await User.findById(userId);
+    const updatedUser = await User.findByIdUser(userId);
     req.user = updatedUser;
 
     res.render('profile', {
@@ -329,7 +330,7 @@ exports.changeSecurity = async (req, res) => {
     ]);
 
     await User.updateSecurityQuestions(userId, newQuestions, hashedNewAnswers);
-    const updatedUser = await User.findById(userId);
+    const updatedUser = await User.findByIdUser(userId);
     req.user = updatedUser;
 
     res.render('profile', {

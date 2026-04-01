@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 const session = require("express-session");
 const dotenv = require("dotenv");
 const dns = require("node:dns");
-dns.setServers(["8.8.8.8", "1.1.1.1"]);
+dns.setServers(["8.8.8.8", "1.1.1.1"]); //to be deleted at the end 
 
 // ===== ALL ROUTES =====
 const authRoutes = require("./routes/authRoutes");
@@ -25,13 +25,14 @@ const server = express();
 server.use(express.urlencoded({ extended: true }));
 server.use(express.json());
 
-// 2. Static files
+// 2. Static files to be deleted if no image
 server.use(express.static("public"));
 
 // 3. Session (must be before routes that use req.session)
+const secret = process.env.SECRET;
 server.use(
   session({
-    secret: "secretkey",
+    secret: secret,
     resave: false,
     saveUninitialized: false,
   }),
@@ -42,9 +43,8 @@ server.use(async (req, res, next) => {
   if (req.session && req.session.userId) {
     try {
       const User = require("./models/User");
-      const user = await User.findById(req.session.userId).select(
-        "-password -security_answers",
-      );
+      const user = await User.findByIdUser(req.session.userId);
+
       res.locals.user = user;
       req.user = user;
     } catch (err) {
@@ -73,6 +73,7 @@ async function connectDataBase() {
     console.log("Successfully connected to database");
   } catch (error) {
     console.log("Failed to connect to database:", error);
+    process.exit(1);
   }
 }
 
