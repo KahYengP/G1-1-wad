@@ -78,8 +78,7 @@
                 <td><%= bookmark.category ? bookmark.category.categoryName : "None" %></td>
                 <td><%= bookmark.note || "No note" %></td>
                 <td style="display: flex; gap: 8px; align-items: center; justify-content: flex-end;">
-                    <a href="/recipe/view/<%= bookmark.recipeId._id %>" class="btn-blue">View</a>
-
+                    <a href="/recipe/view?id=<%= bookmark.recipeId._id %>" class="btn-blue">View</a>
                     <form action="/bookmark/edit" method="POST" style="margin: 0;">
                         <input type="hidden" name="bookmarkId" value="<%= bookmark._id %>">
                         <button type="submit" class="btn-blue">Edit</button>
