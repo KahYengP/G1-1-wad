@@ -55,7 +55,8 @@
   <% }) %>
 <% } %>
 
-<form action="/review/add/<%= recipeId %>" method="POST">
+<form action="/review/add" method="POST">
+  <input type="hidden" name="recipeId" value="<%= recipeId %>">
 
   <label>Rating:</label><br>
   <select name="rating" required>
@@ -71,7 +72,7 @@
   <textarea name="content" placeholder="Write your review here..." required style="width: 100%; height: 100px;"></textarea><br><br>
 
   <div style="display: flex; justify-content: flex-end; gap: 10px; align-items: center;">
-  <a href="/recipe/view/<%= recipeId %>" style="padding: 5px 12px; border: 1px solid #ccc; border-radius: 4px; text-decoration: none; color: black; background-color: #f0f0f0; font-family: arial; font-size: 1em;">Back</a>
+    <a href="/recipe/view?id=<%= recipeId %>" style="padding: 5px 12px; border: 1px solid #ccc; border-radius: 4px; text-decoration: none; color: black; background-color: #f0f0f0; font-family: arial; font-size: 1em;">Back</a>
   <button type="submit" style="background-color: #4da7f1; color: white; border: none; padding: 5px 12px; border-radius: 4px; cursor: pointer; font-family: arial; font-size: 1em;">Submit</button>
 </div>
 </form>

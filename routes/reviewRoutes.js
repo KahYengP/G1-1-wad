@@ -7,26 +7,26 @@ const authMiddleware = require("../middleware/authMiddleware"); // ✅ was missi
 
 // Show write review form
 router.get(
-  "/add/:recipeId",
+  "/add",
   authMiddleware.isAuthenticated,
   reviewController.showAddForm,
 );
 
 // Submit review
 router.post(
-  "/add/:recipeId",
+  "/add",
   authMiddleware.isAuthenticated,
   reviewController.createReview,
 );
 
 // Edit review
 router.get(
-  "/edit/:reviewId",
+  "/edit",
   authMiddleware.isAuthenticated,
   reviewController.showEditReview,
 );
 router.post(
-  "/edit/:reviewId",
+  "/edit",
   authMiddleware.isAuthenticated,
   reviewController.updateReview,
 );
@@ -34,14 +34,13 @@ router.post(
 // Delete review
 
 router.get(
-  "/delete/:reviewId",
+  "/delete",
   authMiddleware.isAuthenticated,
   reviewController.deleteReview,
 );
 
-
 router.post(
-  "/delete/:reviewId",
+  "/delete",
   authMiddleware.isAuthenticated,
   reviewController.deleteReview,
 );

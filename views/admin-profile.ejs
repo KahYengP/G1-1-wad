@@ -65,8 +65,9 @@
         </td>
         <td><%= new Date(u.dateCreated).toLocaleDateString() %></td>
         <td style="display: flex; gap: 8px; align-items: center;">
-          <a href="/admin/users/<%= u._id %>/edit" class="btn-blue">Edit</a>
-          <form action="/admin/users/<%= u._id %>/delete" method="POST" style="margin: 0;">
+          <a href="/admin/users/edit?id=<%= u._id %>" class="btn-blue">Edit</a>
+          <form action="/admin/users/delete" method="POST">
+            <input type="hidden" name="userId" value="<%= u._id %>">
             <button type="submit" class="btn-red" onclick="return confirm('Delete this user?')">Delete</button>
           </form>
         </td>

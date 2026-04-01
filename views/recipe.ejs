@@ -3,7 +3,7 @@
 <head>
   <title>Recipes</title>
   <style>
-    body { margin-left: 80px; margin-right: 80px; font-family:  'Times New Roman', Times, serif ; }
+    body { margin-left: 80px; margin-right: 80px; font-family: 'Times New Roman', Times, serif; }
     nav { border-bottom: 1px solid black; padding: 10px; margin-bottom: 0; }
     nav a { margin-right: 15px; text-decoration: none; color: black; }
     .recipe-card { border: 1px solid #ccc; padding: 15px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: flex-start; }
@@ -12,14 +12,13 @@
     .recipe-info { flex: 1; }
     .recipe-actions { display: flex; flex-direction: column; align-items: flex-end; gap: 8px; }
     .recipe-title { color: black; }
-    .recipe-card:hover .recipe-title { color: blue; }
     .btn { padding: 5px 12px; border-radius: 4px; cursor: pointer; font-size: 0.85em; border: none; }
     .btn-grey { background-color: #f0f0f0; color: black; border: 1px solid #ccc; }
-    .btn-blue { background-color: #4da7f1; color: white; font-family: arial;}
+    .btn-blue { background-color: #4da7f1; color: white; font-family: arial; }
     .btn-red { background-color: #e74c3c; color: white; border: none; padding: 5px 12px; border-radius: 4px; cursor: pointer; font-size: 0.85em; }
-    .addRecipe {padding: 5px 10px; border: 1px solid black; text-decoration: none; color: black;}
-    .addRecipe:hover {background-color: black; color: white;}
-</style>
+    .addRecipe { padding: 5px 10px; border: 1px solid black; text-decoration: none; color: black; }
+    .addRecipe:hover { background-color: black; color: white; }
+  </style>
 </head>
 <body>
 
@@ -74,25 +73,23 @@
   </div>
 <% } %>
 
-  <form action="/recipe" method="GET" style="display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 20px;">
-    <input type="text" name="search" placeholder="Search recipes..." value="<%= searchQuery || '' %>" style="padding: 6px; border: 1px solid #ccc; border-radius: 4px; flex: 1;">
-    
-    <select name="category" style="padding: 6px; border: 1px solid #ccc; border-radius: 4px;">
-      <option value="">All Categories</option>
-      <% CategoryList.forEach(cat => { %>
-        <option value="<%= cat._id %>" <%= categoryId == cat._id ? 'selected' : '' %> ><%= cat.categoryName %></option>
-      <% }) %>
-    </select>
-    
-    <button type="submit" style="padding: 6px 12px; border: none; background-color: #4da7f1; color: white; border-radius: 4px; cursor: pointer;">Search</button>
-  </form>
+<form action="/recipe" method="GET" style="display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 20px;">
+  <input type="text" name="search" placeholder="Search recipes..." value="<%= searchQuery || '' %>" style="padding: 6px; border: 1px solid #ccc; border-radius: 4px; flex: 1;">
+  <select name="category" style="padding: 6px; border: 1px solid #ccc; border-radius: 4px;">
+    <option value="">All Categories</option>
+    <% CategoryList.forEach(cat => { %>
+      <option value="<%= cat._id %>" <%= categoryId == cat._id ? 'selected' : '' %>><%= cat.categoryName %></option>
+    <% }) %>
+  </select>
+  <button type="submit" style="padding: 6px 12px; border: none; background-color: #4da7f1; color: white; border-radius: 4px; cursor: pointer;">Search</button>
+</form>
 
 <% recipes.forEach(recipe => { %>
-  <a href="/recipe/view/<%= recipe._id %>" style="text-decoration: none; color: inherit;">
+  <!-- ✅ view uses query string -->
+  <a href="/recipe/view?id=<%= recipe._id %>" style="text-decoration: none; color: inherit;">
     <div class="recipe-card">
 
-      <!-- Left: Image + Info together -->
-     <div style="flex: 1;">
+      <div style="flex: 1;">
         <h3 class="recipe-title" style="margin: 0 0 5px 0;"><%= recipe.title %></h3>
         <p style="margin: 3px 0;"><strong>Category:</strong> <%= recipe.category ? recipe.category.categoryName : 'Uncategorized' %></p>
         <p style="margin: 3px 0; color: grey; font-size: 0.9em;">Created by: <%= recipe.createdByUsername || recipe.createdBy %></p>
@@ -109,7 +106,6 @@
         </p>
       </div>
 
-      <!-- Right: Actions -->
       <div class="recipe-actions" onclick="event.stopPropagation();">
 
         <% if (user) { %>
@@ -120,11 +116,12 @@
         <% } %>
 
         <% if (user && (user.role === 'admin' || user.email === recipe.createdBy)) { %>
-          <a href="/recipe/edit/<%= recipe._id %>" class="btn btn-blue" onclick="event.stopPropagation();" style="text-decoration: none; text-align: center;">Edit</a>
+          <a href="/recipe/edit?id=<%= recipe._id %>" class="btn btn-blue" onclick="event.stopPropagation();" style="text-decoration: none; text-align: center;">Edit</a>
         <% } %>
 
         <% if (user && (user.role === 'admin' || user.email === recipe.createdBy)) { %>
-          <form action="/recipe/delete/<%= recipe._id %>" method="POST">
+          <form action="/recipe/delete" method="POST">
+            <input type="hidden" name="id" value="<%= recipe._id %>">
             <button onclick="event.stopPropagation(); return confirm('Delete this recipe?')" class="btn btn-red">Delete</button>
           </form>
         <% } %>

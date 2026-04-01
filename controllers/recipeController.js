@@ -39,10 +39,10 @@ exports.getRecipes = async (req, res) => {
 
 exports.getRecipeById = async (req, res) => {
   try {
-    const recipe = await Recipe.findByIdWithCategory(req.params.id);
+    const recipe = await Recipe.findByIdWithCategory(req.query.id);
     if (!recipe) return res.send("Recipe not found.");
 
-    const reviews = await Review.findByRecipeId(req.params.id);
+    const reviews = await Review.findByRecipeId(req.query.id);
 
     res.render("recipe-details", {
       recipe,
@@ -85,7 +85,7 @@ exports.createRecipes = async (req, res) => {
 
 exports.showEditForm = async (req, res) => {
   try {
-    const recipe = await Recipe.findByIdRecipe(req.params.id);
+    const recipe = await Recipe.findByIdRecipe(req.query.id);
     const CategoryList = await Category.getAll();
 
     if (!recipe) return res.send("Recipe not found");
@@ -102,7 +102,7 @@ exports.showEditForm = async (req, res) => {
 
 exports.updateRecipes = async (req, res) => {
   try {
-    const id = req.params.id;
+    const id = req.body.id;
 
     if (!mongoose.Types.ObjectId.isValid(id)) return res.send("Invalid ID");
 
@@ -129,7 +129,7 @@ exports.updateRecipes = async (req, res) => {
 
 exports.deleteRecipes = async (req, res) => {
   try {
-    const id = req.params.id;
+    const id = req.body.id;
 
     if (!mongoose.Types.ObjectId.isValid(id)) return res.send("Invalid ID");
 

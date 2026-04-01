@@ -83,7 +83,7 @@ exports.createUser = async (req, res) => {
 
 exports.editUserForm = async (req, res) => {
   try {
-    const editingUser = await User.findByIdUser(req.params.id);
+    const editingUser = await User.findByIdUser(req.query.id);
     if (!editingUser) {
       return res.redirect("/admin/users");
     }
@@ -104,7 +104,7 @@ exports.updateUser = async (req, res) => {
     const email = req.body.email;
     const role = req.body.role;
     const password = req.body.password;
-    const userId = req.params.id;
+    const userId = req.body.userId;
     const updateData = { username, email, role };
     if (password && password.trim() !== "") {
       updateData.password = await bcrypt.hash(password, 10);
@@ -119,7 +119,7 @@ exports.updateUser = async (req, res) => {
 
 exports.deleteUser = async (req, res) => {
   try {
-    const userId = req.params.id;
+    const userId = req.body.userId;
     if (userId === req.user._id.toString()) {
       return res.send("You cannot delete your own account.");
     }

@@ -3,13 +3,13 @@
 <head>
   <title>Recipe Details</title>
   <style>
-    body { margin-left: 80px; margin-right: 80px; font-family: 'Times New Roman', Times, serif }
+    body { margin-left: 80px; margin-right: 80px; font-family: 'Times New Roman', Times, serif; }
     nav { border-bottom: 1px solid black; padding: 10px; margin-bottom: 0; }
     nav a { margin-right: 15px; text-decoration: none; color: black; }
     .review-card { border: 1px solid #ccc; padding: 10px; margin-bottom: 10px; }
     .star { color: gold; }
-    .writeReview {padding: 5px 10px; border: 1px solid black; text-decoration: none; color: black;}
-    .writeReview:hover {background-color: black; color: white;}
+    .writeReview { padding: 5px 10px; border: 1px solid black; text-decoration: none; color: black; }
+    .writeReview:hover { background-color: black; color: white; }
   </style>
 </head>
 <body>
@@ -61,43 +61,41 @@
     <p><strong>Created by:</strong> <%= recipe.createdByUsername || recipe.createdBy %></p>
     <p><strong>Published on:</strong> <%= new Date(recipe.createdAt).toLocaleDateString() %></p>
   </div>
-  
 
   <!-- REVIEWS -->
   <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 20px; margin-bottom: 15px;">
-  <div style="display: flex; align-items: center; gap: 8px;">
-    <strong style="font-size: 1.2em;">Review</strong>
-    <span style="color: grey; font-size: 0.9em;">(<%= reviews.length %> <%= reviews.length === 1 || reviews.length === 0 ? 'Review' : 'Reviews' %>)</span>
+    <div style="display: flex; align-items: center; gap: 8px;">
+      <strong style="font-size: 1.2em;">Review</strong>
+      <span style="color: grey; font-size: 0.9em;">(<%= reviews.length %> <%= reviews.length === 1 ? 'Review' : 'Reviews' %>)</span>
+    </div>
+    <a href="/review/add?recipeId=<%= recipe._id %>" class="writeReview">Write a review</a>
   </div>
-  <a href="/review/add/<%= recipe._id %>" class="writeReview">Write a review</a>
-</div>
 
   <% if (reviews && reviews.length > 0) { %>
     <% reviews.forEach(review => { %>
       <div class="review-card">
-
         <div style="display: flex; justify-content: space-between;">
-        <div>
-          <strong><%= review.username %></strong>
-          <span style="color: #808080; margin-left: 10px; font-size: 0.9em;">
-          <% if (review.updatedAt) { %>
-            Edited: <%= new Date(review.updatedAt).toLocaleDateString() %>
-          <% } else { %>
-            Posted: <%= new Date(review.createdAt).toLocaleDateString() %>
-          <% } %>
-          </span> 
-        </div>
+          <div>
+            <strong><%= review.username %></strong>
+            <span style="color: #808080; margin-left: 10px; font-size: 0.9em;">
+              <% if (review.updatedAt) { %>
+                Edited: <%= new Date(review.updatedAt).toLocaleDateString() %>
+              <% } else { %>
+                Posted: <%= new Date(review.createdAt).toLocaleDateString() %>
+              <% } %>
+            </span>
+          </div>
 
-       <% if (user && user._id.toString() === review.userId.toString()) { %>
-          <span>
-            <a href="/review/edit/<%= review._id %>" 
-              style="padding: 4px 10px; background-color: #4da7f1; color: white; text-decoration: none; border-radius: 4px; font-size: 0.9em; font-family: arial;">Edit</a>
-            <a href="/review/delete/<%= review._id %>"
-              onclick="return confirm('Delete this review?')"
-              style="padding: 4px 10px; background-color: #e74c3c; color: white; text-decoration: none; border-radius: 4px; font-size: 0.9em; margin-left: 5px; font-family: arial;">Delete</a>
-          </span>
-        <% } %>
-      </div>
+          <% if (user && user._id.toString() === review.userId.toString()) { %>
+            <span>
+              <a href="/review/edit?reviewId=<%= review._id %>"
+                style="padding: 4px 10px; background-color: #4da7f1; color: white; text-decoration: none; border-radius: 4px; font-size: 0.9em; font-family: arial;">Edit</a>
+              <a href="/review/delete?reviewId=<%= review._id %>"
+                onclick="return confirm('Delete this review?')"
+                style="padding: 4px 10px; background-color: #e74c3c; color: white; text-decoration: none; border-radius: 4px; font-size: 0.9em; margin-left: 5px; font-family: arial;">Delete</a>
+            </span>
+          <% } %>
+        </div>
 
         <div>
           <% for (let i = 1; i <= 5; i++) { %>

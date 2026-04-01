@@ -37,7 +37,9 @@
   <p class="error"><%= error %></p>
 <% } %>
 
-<form action="<%= isEdit ? '/admin/users/' + editingUser._id : '/admin/users' %>" method="POST">
+<form action="<%= isEdit ? '/admin/users/update' : '/admin/users' %>" method="POST">  <% if (isEdit) { %>
+    <input type="hidden" name="userId" value="<%= editingUser._id %>">
+  <% } %>
   <label>Username</label>
   <input type="text" name="username" value="<%= editingUser ? editingUser.username : '' %>" required>
 

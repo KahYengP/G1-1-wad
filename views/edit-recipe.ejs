@@ -49,7 +49,8 @@
 
 <h1>Edit Recipe</h1>
 
-<form action="/recipe/edit/<%= recipe._id %>" method="POST">
+<form action="/recipe/edit" method="POST">
+  <input type="hidden" name="id" value="<%= recipe._id %>">
 
   <label>Title:</label><br>
   <input type="text" name="title" value="<%= recipe.title %>" required style="width: 100%;"><br><br>
