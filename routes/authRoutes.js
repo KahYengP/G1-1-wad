@@ -20,8 +20,8 @@ router.post('/forgot', authController.handleForgot);
 router.post('/reset-password', authController.resetPassword);
 
 // User update/delete – you can protect these with isAuthenticated if needed
-router.post('/user/update', authController.updateUser);
-router.post('/user/delete', authController.deleteUser);
+//router.post('/user/update', authController.updateUser);
+//router.post('/user/delete', authController.deleteUser);
 
 
 // Profile page (GET)

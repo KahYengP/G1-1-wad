@@ -42,7 +42,9 @@ exports.createUser = async (req, res) => {
     const existingUsername = await User.findByUsername(username);
     if (existingEmail || existingUsername) {
       let editingUser = 
-      { username, email, role }
+      { username, 
+        email, 
+        role }
       let error = 'Username or email already exists.';
       let user = req.user;
       let isEdit = false;
@@ -77,7 +79,9 @@ exports.createUser = async (req, res) => {
 exports.editUserForm = async (req, res) => {
   try {
     const editingUser = await User.findByIdUser(req.params.id); 
-    if (!editingUser)  {return res.redirect('/admin/users')};
+    if (!editingUser)  {
+      return res.redirect('/admin/users')
+    };
     res.render('admin-user-form', { editingUser, error: null, isEdit: true, user: req.user });
   } catch (err) {
     res.status(500).send('Error loading edit form');
@@ -86,7 +90,10 @@ exports.editUserForm = async (req, res) => {
 
 exports.updateUser = async (req, res) => {
   try {
-    const { username, email, role, password } = req.body;
+    const username = req.body.username;
+    const email = req.body.email;
+    const role = req.body.role;
+    const password = req.body.password;
     const userId = req.params.id;
     const updateData = { username, email, role };
     if (password && password.trim() !== '') {
@@ -104,12 +111,12 @@ exports.deleteUser = async (req, res) => {
   try {
     const userId = req.params.id;
     if (userId === req.user._id.toString()) {
-      return res.status(403).send('You cannot delete your own account.');
+      return res.send('You cannot delete your own account.');
     }
     await User.deleteById(userId); 
     res.redirect('/admin/users');
   } catch (err) {
-    res.status(500).send('Error deleting user');
+    res.send('Error deleting user');
   }
 };
 
@@ -119,6 +126,6 @@ exports.showAdminDashboard = async (req, res) => {
     res.render('admin-dashboard', { totalUsers, user: req.user });
   } catch (err) {
     console.error(err);
-    res.status(500).send('Error loading admin dashboard');
+    res.send('Error loading admin dashboard');
   }
 };
