@@ -15,7 +15,6 @@ cd G1-1-wad
 npm install express
 npm install dotenv
 npm install mongoose
-npm install multer
 ```
 
 Alternatively, install all at once:
@@ -144,5 +143,4 @@ Configure the following in `config.env`:
 - **Database**: MongoDB, Mongoose
 - **Frontend**: EJS (templating), HTML, CSS
 - **Authentication**: JWT (JSON Web Tokens)
-- **File Uploads**: Multer
 - **Environment**: dotenv
