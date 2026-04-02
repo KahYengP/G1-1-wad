@@ -390,7 +390,8 @@ exports.changeSecurity = async (req, res) => {
     const newQuestions = [newQuestion1, newQuestion2, newQuestion3];
 
     const user = await User.findByIdWithAnswers(userId);
-    if (!user) return res.redirect("/login");
+    if (!user) {
+      return res.redirect("/login")};
 
     const oldAnswers = [oldAnswer1, oldAnswer2, oldAnswer3];
     let allMatch = true;
