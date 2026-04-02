@@ -6,7 +6,7 @@ exports.showAdminUsers = async (req, res) => {
     const users = await User.getAll();
     res.render("admin-profile", { users, user: req.user });
   } catch (err) {
-    res.status(500).send("Error loading admin page");
+    res.send("Error loading admin page");
   }
 };
 
@@ -94,7 +94,7 @@ exports.editUserForm = async (req, res) => {
       user: req.user,
     });
   } catch (err) {
-    res.status(500).send("Error loading edit form");
+    res.send("Error loading edit form");
   }
 };
 
@@ -113,7 +113,7 @@ exports.updateUser = async (req, res) => {
     res.redirect("/admin/users");
   } catch (err) {
     console.error(err);
-    res.status(500).send("Error updating user");
+    resizeBy.send("Error updating user");
   }
 };
 
