@@ -96,7 +96,7 @@ exports.loginUser = async (req, res) => {
     const email = req.body.email;
     const password = req.body.password;
 
-    const user = await User.findByEmailWithPassword(email);
+    const user = await User.findByEmail(email);
     if (!user) {
       return res.render("login", { error: "Invalid email or password." });
     }
@@ -194,7 +194,7 @@ exports.resetPassword = async (req, res) => {
       });
     }
 
-    const user = await User.findByEmailWithAnswers(email);
+    const user = await User.findByEmail(email);
     if (!user) {
       return res.redirect("/forgot");
     }
@@ -318,7 +318,7 @@ exports.changePassword = async (req, res) => {
       });
     }
 
-    const user = await User.findByIdWithPassword(userId);
+    const user = await User.findByIdUser(userId);
     if (!user) {
       return res.redirect("/login");
     }
@@ -389,7 +389,7 @@ exports.changeSecurity = async (req, res) => {
 
     const newQuestions = [newQuestion1, newQuestion2, newQuestion3];
 
-    const user = await User.findByIdWithAnswers(userId);
+    const user = await User.findByIdUser(userId);
     if (!user) {
       return res.redirect("/login")};
 

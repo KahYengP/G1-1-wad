@@ -22,15 +22,15 @@ User.findByIdUser = function(id) {
   return User.findById(id);
 };
 
-// Find user by ID with password
-User.findByIdWithPassword = function(id) {
-  return User.findById(id);
-};
+// // Find user by ID with password
+// User.findByIdWithPassword = function(id) {
+//   return User.findById(id);
+// };
 
 // Find user by ID with security answers
-User.findByIdWithAnswers = function(id) {
-  return User.findById(id);
-};
+// User.findByIdWithAnswers = function(id) {
+//   return User.findById(id);
+// };
 
 // Find user by email
 User.findByEmail = function(email) {
@@ -38,14 +38,14 @@ User.findByEmail = function(email) {
 };
 
 // Find user by email with password (for login)
-User.findByEmailWithPassword = function(email) {
-  return User.findOne({ email });
-};
+// User.findByEmailWithPassword = function(email) {
+//   return User.findOne({ email });
+// };
 
 // Find user by email with security answers (for reset password)
-User.findByEmailWithAnswers = function(email) {
-  return User.findOne({ email });
-};
+// User.findByEmailWithAnswers = function(email) {
+//   return User.findOne({ email });
+// };
 
 // Find user by username
 User.findByUsername = function(username) {
