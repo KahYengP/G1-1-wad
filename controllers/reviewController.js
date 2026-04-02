@@ -2,6 +2,7 @@ const Review = require("../models/Review");
 const Recipe = require("../models/Recipe");
 const mongoose = require("mongoose");
 
+//show add review form
 exports.showAddForm = async (req, res) => {
   try {
     const recipeId = req.query.recipeId;
@@ -11,23 +12,31 @@ exports.showAddForm = async (req, res) => {
   }
 };
 
+//add review
 exports.createReview = async (req, res) => {
   try {
     const recipeId = req.body.recipeId;
 
-    if (!req.user) return res.redirect("/login");
+    if (!req.user) {
+      return res.redirect("/login");
+    }
 
     const recipe = await Recipe.findByIdRecipe(recipeId);
-    if (!recipe) return res.send("Recipe not found.");
+    if (!recipe) {
+      return res.send("Recipe not found.");
+    }
 
     const rating = Number(req.body.rating);
     let content = req.body.content || "";
     content = content.trim();
 
     const errors = [];
-    if (!rating || rating < 1 || rating > 5)
+    if (!rating || rating < 1 || rating > 5) {
       errors.push("Please select a rating between 1 and 5.");
-    if (!content) errors.push("Review content cannot be empty.");
+    }
+    if (!content) {
+      errors.push("Review content cannot be empty.");
+    }
 
     if (errors.length > 0) {
       return res.render("add-review", {
@@ -52,18 +61,25 @@ exports.createReview = async (req, res) => {
   }
 };
 
+//show edit review form
 exports.showEditReview = async (req, res) => {
   try {
     const reviewId = req.query.reviewId;
-    if (!req.user) return res.redirect("/login");
-    if (!mongoose.Types.ObjectId.isValid(reviewId))
+    if (!req.user) {
+      return res.redirect("/login");
+    }
+    if (!mongoose.Types.ObjectId.isValid(reviewId)) {
       return res.send("Invalid review ID.");
+    }
 
     const review = await Review.findByIdReview(reviewId);
-    if (!review) return res.send("Review not found.");
+    if (!review) {
+      return res.send("Review not found.");
+    }
 
-    if (review.userId.toString() !== req.user._id.toString())
+    if (review.userId.toString() !== req.user._id.toString()) {
       return res.send("Not allowed.");
+    }
 
     const recipe = await Recipe.findByIdRecipe(review.recipeId);
     return res.render("edit-review", {
@@ -78,28 +94,37 @@ exports.showEditReview = async (req, res) => {
   }
 };
 
+//update review
 exports.updateReview = async (req, res) => {
   try {
     const reviewId = req.body.reviewId;
-    if (!req.user) return res.redirect("/login");
-    if (!mongoose.Types.ObjectId.isValid(reviewId))
+    if (!req.user) {
+      return res.redirect("/login");
+    }
+    if (!mongoose.Types.ObjectId.isValid(reviewId)) {
       return res.send("Invalid review ID.");
+    }
 
     const review = await Review.findByIdReview(reviewId);
-    if (!review) return res.send("Review not found.");
+    if (!review) {
+      return res.send("Review not found.");
+    }
 
-    if (review.userId.toString() !== req.user._id.toString())
+    if (review.userId.toString() !== req.user._id.toString()) {
       return res.send("Not allowed.");
+    }
 
     const rating = Number(req.body.rating);
     let content = req.body.content || "";
     content = content.trim();
 
     const errors = [];
-    if (!rating || rating < 1 || rating > 5)
+    if (!rating || rating < 1 || rating > 5) {
       errors.push("Please select a rating between 1 and 5.");
-    if (!content) errors.push("Review content cannot be empty.");
-
+    }
+    if (!content) {
+      errors.push("Review content cannot be empty.");
+    }
     if (errors.length > 0) {
       const recipe = await Recipe.findByIdRecipe(review.recipeId);
       return res.render("edit-review", {
@@ -122,18 +147,25 @@ exports.updateReview = async (req, res) => {
   }
 };
 
+//delete review
 exports.deleteReview = async (req, res) => {
   try {
     const reviewId = req.query.reviewId;
-    if (!req.user) return res.redirect("/login");
-    if (!mongoose.Types.ObjectId.isValid(reviewId))
+    if (!req.user) {
+      return res.redirect("/login");
+    }
+    if (!mongoose.Types.ObjectId.isValid(reviewId)) {
       return res.send("Invalid review ID.");
+    }
 
     const review = await Review.findByIdReview(reviewId);
-    if (!review) return res.send("Review not found.");
+    if (!review) {
+      return res.send("Review not found.");
+    }
 
-    if (review.userId.toString() !== req.user._id.toString())
+    if (review.userId.toString() !== req.user._id.toString()) {
       return res.send("Not allowed.");
+    }
 
     const recipeId = review.recipeId;
 
