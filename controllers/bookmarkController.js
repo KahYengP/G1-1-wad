@@ -13,7 +13,8 @@ exports.createBookmark = async (req, res) => {
     if (!existingRecipe) return res.redirect("/recipe");
 
     const existing = await Bookmark.findExisting(userId, recipeId);
-    if (existing) return res.redirect('/recipe?bookmarkError=Bookmark already added.');
+    if (existing) {
+      return res.redirect('/recipe?bookmarkError=Bookmark already added.')};
 
     await Bookmark.createBookmark({
       userId,
