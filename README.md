@@ -1,80 +1,148 @@
-# G1-1-wad
+# Recipe & Meal Planner Application (G1-1-wad)
 
-# Installation
-1. clone the repo:
+A full-stack web application for managing recipes, bookmarks, meal planning, reviews, and categories with user authentication and admin dashboard.
+
+## Installation
+
+1. Clone the repository:
+```bash
+git clone <repository-url>
+cd G1-1-wad
+```
 
 2. Install dependencies:
-- Npm install express
-- Npm install dotenv
-- Npm install mongoose
-- npm install multer
+```bash
+npm install express
+npm install dotenv
+npm install mongoose
+npm install multer
+```
+
+Alternatively, install all at once:
+```bash
+npm install
+```
+
+3. Configure environment variables:
+- Create or update `config.env` with your database and server configuration
 
 ## Usage
-1. Run the app:
+
+1. Start the application:
+```bash
 npm start
+```
 
-2. Then open your browser and go to: http://127.0.0.1:8000/
+2. Open your browser and navigate to:
+```
+http://127.0.0.1:8000/
+```
 
-## Project structure
-...
-digital-recipe-box/
+## Project Structure
+
+```
+G1-1-wad/
 │
 ├── controllers/
-│   ├── authController.js        ← Member 1 (Auth CRUD)
-│   ├── recipeController.js      ← Member 2 (YOU - Recipe CRUD)
-│   ├── bookmarkController.js    ← Member 3 (Bookmark CRUD)
-│   ├── reviewController.js      ← Member 4 (Review CRUD)
-│   ├── categoryController.js    ← Member 5 (Category CRUD)
-│   └── dashboardController.js   ← Member 6 (Dashboard / Favorites / Comments)
+│   ├── authController.js          (User authentication & authorization)
+│   ├── adminController.js         (Admin operations)
+│   ├── recipeController.js        (Recipe CRUD operations)
+│   ├── bookmarkController.js      (Bookmark management)
+│   ├── reviewController.js        (Review management)
+│   ├── categoryController.js      (Category management)
+│   └── mealPlannerController.js   (Meal planning operations)
 │
 ├── models/
-│   ├── User.js
-│   ├── Recipe.js
-│   ├── Bookmark.js
-│   ├── Review.js
-│   ├── Category.js
-│   └── Comment.js
+│   ├── User.js                    (User schema)
+│   ├── Recipe.js                  (Recipe schema)
+│   ├── Bookmark.js                (Bookmark schema)
+│   ├── Review.js                  (Review schema)
+│   ├── Category.js                (Category schema)
+│   └── MealPlanner.js             (Meal planner schema)
 │
 ├── routes/
-│   ├── authRoutes.js
-│   ├── recipeRoutes.js
-│   ├── bookmarkRoutes.js
-│   ├── reviewRoutes.js
-│   ├── categoryRoutes.js
-│   └── dashboardRoutes.js
+│   ├── authRoutes.js              (Authentication endpoints)
+│   ├── adminRoutes.js             (Admin endpoints)
+│   ├── recipeRoutes.js            (Recipe endpoints)
+│   ├── bookmarkRoutes.js          (Bookmark endpoints)
+│   ├── reviewRoutes.js            (Review endpoints)
+│   ├── categoryRoutes.js          (Category endpoints)
+│   └── mealPlannerRoutes.js       (Meal planner endpoints)
 │
 ├── middleware/
-│   └── authMiddleware.js
+│   └── authMiddleware.js          (Authentication & authorization middleware)
 │
 ├── views/
-│   ├── index.ejs
-│   ├── login.ejs
-│   ├── register.ejs
-│   ├── dashboard.ejs
-│
-│   ├── recipes.ejs
-│   ├── recipe-details.ejs
-│   ├── add-recipe.ejs
-│   ├── edit-recipe.ejs
-│
-│   ├── bookmarks.ejs
-│
-│   ├── reviews.ejs
-│   ├── add-review.ejs
-│
-│   ├── categories.ejs
-│
-│   ├── comments.ejs
-│
-│   └── error.ejs
+│   ├── login.ejs                  (User login)
+│   ├── register.ejs               (User registration)
+│   ├── forgot.ejs                 (Forgot password)
+│   ├── reset-password.ejs         (Password reset)
+│   ├── profile.ejs                (User profile)
+│   │
+│   ├── recipe.ejs                 (Recipe listing)
+│   ├── recipe-details.ejs         (Recipe details view)
+│   ├── add-recipe.ejs             (Add new recipe)
+│   ├── edit-recipe.ejs            (Edit recipe)
+│   │
+│   ├── bookmarks.ejs              (Bookmarks listing)
+│   ├── edit-bookmark.ejs          (Edit bookmark)
+│   │
+│   ├── add-review.ejs             (Add review)
+│   ├── edit-review.ejs            (Edit review)
+│   │
+│   ├── category.ejs               (Category view)
+│   ├── add-category.ejs           (Add category)
+│   ├── update-category.ejs        (Update category)
+│   │
+│   ├── collections.ejs            (Collections listing)
+│   ├── add-collection.ejs         (Add collection)
+│   ├── edit-collection.ejs        (Edit collection)
+│   │
+│   ├── meal-planner.ejs           (Meal planner view)
+│   │
+│   ├── admin-dashboard.ejs        (Admin dashboard)
+│   ├── admin-profile.ejs          (Admin profile)
+│   └── admin-user-form.ejs        (Admin user management)
 │
 ├── public/
-│   └── index.html
+│   ├── index.html                 (Static HTML)
+│   └── images/                    (Image uploads directory)
 │
 ├── data/
-│   └── recipes.json
-├──config .env
-├── server.js
-├── package.json
-└── README.md
-...
+│   ├── recipes.json               (Recipe data)
+│   └── user.json                  (User data)
+│
+├── config.env                     (Environment configuration)
+├── server.js                      (Main server file)
+├── package.json                   (Dependencies & scripts)
+└── README.md                      (This file)
+```
+
+## Features
+
+- **User Authentication**: Secure login and registration with password reset
+- **Recipe Management**: Create, read, update, and delete recipes
+- **Bookmarks**: Save favorite recipes
+- **Reviews**: Add and manage recipe reviews
+- **Categories**: Organize recipes by categories
+- **Collections**: Create custom recipe collections
+- **Meal Planner**: Plan meals and organize weekly menus
+- **Admin Dashboard**: Manage users and system content
+- **User Profiles**: Manage user account information
+
+## Environment Variables
+
+Configure the following in `config.env`:
+- `PORT` - Server port (default: 8000)
+- `DATABASE_URL` - MongoDB connection string
+- `JWT_SECRET` - JWT secret key
+- Other configuration as needed
+
+## Technologies Used
+
+- **Backend**: Node.js, Express.js
+- **Database**: MongoDB, Mongoose
+- **Frontend**: EJS (templating), HTML, CSS
+- **Authentication**: JWT (JSON Web Tokens)
+- **File Uploads**: Multer
+- **Environment**: dotenv
