@@ -2,7 +2,15 @@ const MealPlanner = require("../models/MealPlanner");
 const Recipe = require("../models/Recipe");
 const User = require("../models/User");
 
-const DAYS = ["monday","tuesday","wednesday","thursday","friday","saturday","sunday"];
+const DAYS = [
+  "monday",
+  "tuesday",
+  "wednesday",
+  "thursday",
+  "friday",
+  "saturday",
+  "sunday",
+];
 
 async function getLoggedInUser(req) {
   if (!req.session.userId) return null;
@@ -15,11 +23,13 @@ async function getOrCreatePlanner(email) {
     planner = await MealPlanner.create({ createdBy: email });
   }
   // Populate recipe inside each slot for all days
-  await MealPlanner.populate(planner, { path: "monday.recipe tuesday.recipe wednesday.recipe thursday.recipe friday.recipe saturday.recipe sunday.recipe" });
+  await MealPlanner.populate(planner, {
+    path: "monday.recipe tuesday.recipe wednesday.recipe thursday.recipe friday.recipe saturday.recipe sunday.recipe",
+  });
   return planner;
 }
 
-// GET /meal-planner
+// get meal planner
 exports.getMealPlanner = async (req, res) => {
   try {
     const user = await getLoggedInUser(req);
@@ -28,28 +38,34 @@ exports.getMealPlanner = async (req, res) => {
     const planner = await getOrCreatePlanner(user.email);
     const recipes = await Recipe.find().sort({ title: 1 });
 
-    return res.render("meal-planner", { planner, recipes, days: DAYS, user: req.user});
+    return res.render("meal-planner", {
+      planner,
+      recipes,
+      days: DAYS,
+      user: req.user,
+    });
   } catch (error) {
     console.error(error);
     return res.send("Error loading meal planner.");
   }
 };
 
-// POST /meal-planner/add-slot  — add a new named slot (with optional recipe)
+// Add new named slot
 exports.addSlot = async (req, res) => {
   try {
     const user = await getLoggedInUser(req);
     if (!user) return res.redirect("/login");
 
     const { day, slotName, recipeId } = req.body;
-    if (!DAYS.includes(day) || !slotName || !slotName.trim()) return res.redirect("/meal-planner");
+    if (!DAYS.includes(day) || !slotName || !slotName.trim())
+      return res.redirect("/meal-planner");
 
     const slot = { name: slotName.trim(), recipe: recipeId || null };
 
     await MealPlanner.findOneAndUpdate(
       { createdBy: user.email },
       { $push: { [day]: slot } },
-      { upsert: true }
+      { upsert: true },
     );
 
     return res.redirect("/meal-planner");
@@ -59,7 +75,7 @@ exports.addSlot = async (req, res) => {
   }
 };
 
-// POST /meal-planner/set-recipe  — assign a recipe to an existing slot
+// set recipe
 exports.setSlotRecipe = async (req, res) => {
   try {
     const user = await getLoggedInUser(req);
@@ -70,7 +86,7 @@ exports.setSlotRecipe = async (req, res) => {
 
     await MealPlanner.findOneAndUpdate(
       { createdBy: user.email, [`${day}._id`]: slotId },
-      { $set: { [`${day}.$.recipe`]: recipeId || null } }
+      { $set: { [`${day}.$.recipe`]: recipeId || null } },
     );
 
     return res.redirect("/meal-planner");
@@ -80,7 +96,7 @@ exports.setSlotRecipe = async (req, res) => {
   }
 };
 
-// POST /meal-planner/remove-recipe  — clear recipe from a slot (keep slot)
+// remove recipe slot
 exports.removeRecipe = async (req, res) => {
   try {
     const user = await getLoggedInUser(req);
@@ -91,7 +107,7 @@ exports.removeRecipe = async (req, res) => {
 
     await MealPlanner.findOneAndUpdate(
       { createdBy: user.email, [`${day}._id`]: slotId },
-      { $set: { [`${day}.$.recipe`]: null } }
+      { $set: { [`${day}.$.recipe`]: null } },
     );
 
     return res.redirect("/meal-planner");
@@ -101,7 +117,7 @@ exports.removeRecipe = async (req, res) => {
   }
 };
 
-// POST /meal-planner/delete-slot  — delete the entire slot
+// delete the entire slot
 exports.deleteSlot = async (req, res) => {
   try {
     const user = await getLoggedInUser(req);
@@ -112,7 +128,7 @@ exports.deleteSlot = async (req, res) => {
 
     await MealPlanner.findOneAndUpdate(
       { createdBy: user.email },
-      { $pull: { [day]: { _id: slotId } } }
+      { $pull: { [day]: { _id: slotId } } },
     );
 
     return res.redirect("/meal-planner");
