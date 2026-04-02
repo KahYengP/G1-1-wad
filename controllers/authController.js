@@ -357,64 +357,76 @@ exports.changePassword = async (req, res) => {
 
 exports.changeSecurity = async (req, res) => {
   try {
-    const oldAnswer1 = req.body.oldAnswer1;
-    const oldAnswer2 = req.body.oldAnswer2;
-    const oldAnswer3 = req.body.oldAnswer3;
+    const userId = req.session.userId;
+    const user = await User.findByIdUser(userId);
+    if (!user) return res.redirect("/login");
+
+    // Check if the user was created without security questions (admin-created)
+    const hasBlankQuestions = user.security_questions.every(q => q === "") &&
+                              user.security_answers.every(a => a === "");
+
+    // Always require new questions/answers (3 each)
     const newQuestion1 = req.body.newQuestion1;
     const newAnswer1 = req.body.newAnswer1;
     const newQuestion2 = req.body.newQuestion2;
     const newAnswer2 = req.body.newAnswer2;
     const newQuestion3 = req.body.newQuestion3;
     const newAnswer3 = req.body.newAnswer3;
-    const userId = req.session.userId;
 
-    if (
-      !oldAnswer1 ||
-      !oldAnswer2 ||
-      !oldAnswer3 ||
-      !newQuestion1 ||
-      !newAnswer1 ||
-      !newQuestion2 ||
-      !newAnswer2 ||
-      !newQuestion3 ||
-      !newAnswer3
-    ) {
+    if (!newQuestion1 || !newAnswer1 || !newQuestion2 || !newAnswer2 || !newQuestion3 || !newAnswer3) {
       return res.render("profile", {
         user: req.user,
         questions: SECURITY_QUESTIONS,
-        error: "All fields are required.",
+        error: "All new security questions and answers are required.",
         success: null,
       });
     }
 
-    const newQuestions = [newQuestion1, newQuestion2, newQuestion3];
+    // Only verify old answers if the user already has security questions
+    if (!hasBlankQuestions) {
+      const oldAnswer1 = req.body.oldAnswer1;
+      const oldAnswer2 = req.body.oldAnswer2;
+      const oldAnswer3 = req.body.oldAnswer3;
 
-    const user = await User.findByIdUser(userId);
-    if (!user) {
-      return res.redirect("/login")};
+      if (!oldAnswer1 || !oldAnswer2 || !oldAnswer3) {
+        return res.render("profile", {
+          user: req.user,
+          questions: SECURITY_QUESTIONS,
+          error: "All current answers are required to change security questions.",
+          success: null,
+        });
+      }
 
-    const oldAnswers = [oldAnswer1, oldAnswer2, oldAnswer3];
-    let allMatch = true;
-    for (let i = 0; i < oldAnswers.length; i++) {
-      const match = await bcrypt.compare(
-        oldAnswers[i],
-        user.security_answers[i],
-      );
-      if (!match) {
-        allMatch = false;
-        break;
+      const oldAnswers = [oldAnswer1, oldAnswer2, oldAnswer3];
+      let allMatch = true;
+      for (let i = 0; i < oldAnswers.length; i++) {
+        // If stored answer is empty (shouldn't happen here because hasBlankQuestions is false)
+        if (!user.security_answers[i]) {
+          allMatch = false;
+          break;
+        }
+        const match = await bcrypt.compare(oldAnswers[i], user.security_answers[i]);
+        if (!match) {
+          allMatch = false;
+          break;
+        }
+      }
+
+      if (!allMatch) {
+        return res.render("profile", {
+          user: req.user,
+          questions: SECURITY_QUESTIONS,
+          error: "One or more current answers are incorrect.",
+          success: null,
+        });
       }
     }
 
-    if (!allMatch) {
-      return res.render("profile", {
-        user: req.user,
-        questions: SECURITY_QUESTIONS,
-        error: "One or more current answers are incorrect.",
-        success: null,
-      });
-    }
+    // If we reach here, either:
+    // - User had blank questions → skip old answers completely, OR
+    // - Old answers verified successfully.
 
+    const newQuestions = [newQuestion1, newQuestion2, newQuestion3];
     const hashedNewAnswers = await Promise.all([
       bcrypt.hash(newAnswer1, 10),
       bcrypt.hash(newAnswer2, 10),

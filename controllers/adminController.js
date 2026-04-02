@@ -113,7 +113,7 @@ exports.updateUser = async (req, res) => {
     res.redirect("/admin/users");
   } catch (err) {
     console.error(err);
-    resizeBy.send("Error updating user");
+    res.send("Error updating user");
   }
 };
 
