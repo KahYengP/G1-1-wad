@@ -6,7 +6,7 @@ A full-stack web application for managing recipes, bookmarks, meal planning, rev
 
 1. Clone the repository:
 ```bash
-git clone <repository-url>
+git clone https://github.com/KahYengP/G1-1-wad.git
 cd G1-1-wad
 ```
 
@@ -34,7 +34,7 @@ npm start
 
 2. Open your browser and navigate to:
 ```
-http://127.0.0.1:8000/
+http://localhost:8000/
 ```
 
 ## Project Structure
