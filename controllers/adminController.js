@@ -130,12 +130,12 @@ exports.deleteUser = async (req, res) => {
   }
 };
 
-exports.showAdminDashboard = async (req, res) => {
-  try {
-    const totalUsers = await User.countUsers();
-    res.render("admin-dashboard", { totalUsers, user: req.user });
-  } catch (err) {
-    console.error(err);
-    res.send("Error loading admin dashboard");
-  }
-};
+// exports.showAdminDashboard = async (req, res) => {
+//   try {
+//     const totalUsers = await User.countUsers();
+//     res.render("admin-dashboard", { totalUsers, user: req.user });
+//   } catch (err) {
+//     console.error(err);
+//     res.send("Error loading admin dashboard");
+//   }
+// };
