@@ -108,13 +108,13 @@
       <input type="text" name="username" placeholder="Username" required>
       <input type="email" name="email" placeholder="Email" required>
 
-      <!-- Password field with show/hide -->
+
       <div class="password-field">
         <input type="password" name="password" id="password" placeholder="Password" required>
         <span class="show-password" onclick="togglePassword('password')">show</span>
       </div>
 
-      <!-- Confirm Password field with show/hide -->
+
       <div class="password-field">
         <input type="password" name="confirmPassword" id="confirmPassword" placeholder="Confirm Password" required>
         <span class="show-password" onclick="togglePassword('confirmPassword')">show</span>
@@ -122,7 +122,7 @@
 
       <h3>Security Questions (choose 3 distinct)</h3>
       <div id="questions-container">
-        <!-- The three question groups will be injected here by JavaScript -->
+      
       </div>
 
         
@@ -136,7 +136,7 @@
   </div>
 
   <script>
-    // ==================== PASSWORD SHOW/HIDE ====================
+
     function togglePassword(fieldId) {
       const field = document.getElementById(fieldId);
       if (field.type === 'password') {
@@ -146,21 +146,19 @@
       }
     }
 
-    // ==================== SECURITY QUESTIONS ====================
-    // The questions array is passed from the server
+
     const questions = <%- JSON.stringify(questions) %>;
 
-    // Helper to create a question group with a select and answer input
     function createQuestionGroup(index, selectedValues = []) {
       const group = document.createElement('div');
       group.className = 'question-group';
       
-      // Select dropdown
+ 
       const select = document.createElement('select');
       select.name = `question${index + 1}`;
       select.required = true;
       
-      // Default empty option
+
       const defaultOption = document.createElement('option');
       defaultOption.value = '';
       defaultOption.textContent = 'Select a question';
@@ -168,7 +166,7 @@
       defaultOption.selected = true;
       select.appendChild(defaultOption);
       
-      // Add all questions
+
       questions.forEach(q => {
         const option = document.createElement('option');
         option.value = q;
@@ -191,19 +189,18 @@
       group.appendChild(select);
       group.appendChild(answerInput);
       
-      // Update disabled options based on current selected values
+     
       updateDisabledOptions(select, selectedValues);
-      
-      // When selection changes, update all groups
+
       select.addEventListener('change', () => updateAllGroups());
       
       return group;
     }
     
-    // Disable options in a select that are already selected elsewhere
+   
     function updateDisabledOptions(select, selectedValues) {
       const options = select.options;
-      // Skip the first (empty) option
+  
       for (let i = 1; i < options.length; i++) {
         const value = options[i].value;
         if (selectedValues.includes(value) && value !== select.value) {
@@ -214,7 +211,7 @@
       }
     }
     
-    // Update all dropdowns based on current selections
+
     function updateAllGroups() {
       const selects = document.querySelectorAll('#questions-container select');
       const selectedValues = Array.from(selects)
@@ -223,18 +220,18 @@
       selects.forEach(select => updateDisabledOptions(select, selectedValues));
     }
     
-    // Build the three question groups
+   
     const container = document.getElementById('questions-container');
     for (let i = 0; i < 3; i++) {
       container.appendChild(createQuestionGroup(i));
     }
     
-    // Initial update to disable any duplicate selections (none yet)
+
     updateAllGroups();
     
-    // Form validation before submission
+
     document.getElementById('registerForm').addEventListener('submit', function(e) {
-      // Password match validation
+
       const password = document.getElementById('password').value;
       const confirm = document.getElementById('confirmPassword').value;
       if (password !== confirm) {

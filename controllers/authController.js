@@ -1,4 +1,4 @@
-// controllers/authController.js
+
 const User = require("../models/User");
 const bcrypt = require("bcrypt");
 
@@ -13,7 +13,7 @@ const SECURITY_QUESTIONS = [
   "What is your favorite book?",
   "What is the name of the street you grew up on?",
   "What was the make of your first mobile phone?",
-]; // unchanged
+];
 
 // registration
 exports.showRegisterForm = (req, res) => {
@@ -45,12 +45,6 @@ exports.registerUser = async (req, res) => {
     }
     const selectedQuestions = [question1, question2, question3];
 
-    //do not need because
-    //if (selectedQuestions.some(q => !q) || new Set(selectedQuestions).size !== 3) {
-
-    //   error = 'Please select three distinct security questions.'
-    //   return res.render('register', { questions: SECURITY_QUESTIONS, error });
-    // }
 
     const existingUser = await User.findByEmail(email);
     if (existingUser) {
@@ -131,12 +125,12 @@ exports.logoutUser = (req, res) => {
   });
 };
 
-// forgot password
+
 exports.showForgotForm = (req, res) => {
   res.render("forgot", { error: null, message: null });
 };
 
-//then they come here if they forgot
+
 exports.handleForgot = async (req, res) => {
   try {
     const email = req.body.email;
@@ -146,7 +140,7 @@ exports.handleForgot = async (req, res) => {
       let message = null;
       return res.render("forgot", { error, message });
     }
-    //occurs if the user is created by the admin so no security
+ 
     if (
       !user.security_questions ||
       !Array.isArray(user.security_questions) ||
@@ -174,7 +168,7 @@ exports.handleForgot = async (req, res) => {
   }
 };
 
-// reset password
+//resest
 exports.resetPassword = async (req, res) => {
   try {
     const email = req.body.email;
@@ -235,51 +229,7 @@ exports.resetPassword = async (req, res) => {
   }
 };
 
-// update user is for what
-// exports.updateUser = async (req, res) => {
-//   try {
-//     const userId = req.session.userId;
 
-//     const username = req.body.username;
-//     const email = req.body.email;
-//     if (!userId) {
-//       return res.status(401).send('Not logged in.')
-//     }
-
-//     if (!username || !email) {
-//       return res.status(400).send('Username and email are required.')
-//     }
-
-//     await User.updateById(userId, { username, email });
-//     res.redirect('/recipe');
-
-//   } catch (err) {
-//     console.error(err);
-//     res.status(500).send('Error updating user: ' + err.message);
-//   }
-// };
-
-// delete user do not need
-// exports.deleteUser = async (req, res) => {
-//   try {
-//     const userId = req.session.userId;
-//     if (!userId) {
-//       return res.status(401).send('Not logged in.')
-//     }
-//     await User.deleteById(userId);
-//     req.session.destroy((err) => {
-//       if (err) {
-//         console.error(err)
-//         res.send('Your account has been deleted.')
-//       }
-//     });
-//   } catch (err) {
-//     console.error(err);
-//     res.status(500).send('Error deleting user: ' + err.message);
-//   }
-// };
-
-// profile
 exports.showProfile = (req, res) => {
   let user = req.user;
   let error = null;
@@ -361,11 +311,11 @@ exports.changeSecurity = async (req, res) => {
     const user = await User.findByIdUser(userId);
     if (!user) return res.redirect("/login");
 
-    // Check if the user was created without security questions (admin-created)
+
     const hasBlankQuestions = user.security_questions.every(q => q === "") &&
                               user.security_answers.every(a => a === "");
 
-    // Always require new questions/answers (3 each)
+
     const newQuestion1 = req.body.newQuestion1;
     const newAnswer1 = req.body.newAnswer1;
     const newQuestion2 = req.body.newQuestion2;
@@ -382,7 +332,7 @@ exports.changeSecurity = async (req, res) => {
       });
     }
 
-    // Only verify old answers if the user already has security questions
+
     if (!hasBlankQuestions) {
       const oldAnswer1 = req.body.oldAnswer1;
       const oldAnswer2 = req.body.oldAnswer2;
@@ -400,7 +350,7 @@ exports.changeSecurity = async (req, res) => {
       const oldAnswers = [oldAnswer1, oldAnswer2, oldAnswer3];
       let allMatch = true;
       for (let i = 0; i < oldAnswers.length; i++) {
-        // If stored answer is empty (shouldn't happen here because hasBlankQuestions is false)
+   
         if (!user.security_answers[i]) {
           allMatch = false;
           break;
@@ -422,9 +372,7 @@ exports.changeSecurity = async (req, res) => {
       }
     }
 
-    // If we reach here, either:
-    // - User had blank questions → skip old answers completely, OR
-    // - Old answers verified successfully.
+
 
     const newQuestions = [newQuestion1, newQuestion2, newQuestion3];
     const hashedNewAnswers = await Promise.all([
