@@ -148,6 +148,7 @@ Configure the following in `config.env`:
 - **authcontroller js**: debugging hints to allow password or security questions to be changed 
 - **bookmarks.ejs**: debugging hints to fix routing error with recipe-details.ejs
 - **recipeController.js**: debugging hints to fix routing error and utilising param
+- **recipe-details.ejs**: debugging hints to display the number of stars based on rating
 - **mealPlannerController.js**: debugging hints to populate recipes
 
 ##admin account
