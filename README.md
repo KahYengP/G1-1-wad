@@ -147,6 +147,7 @@ Configure the following in `config.env`:
 - **script for register**: debugging hints to remove the option when already chosen 
 - **authcontroller js**: debugging hints to allow password or security questions to be changed 
 - **bookmarks.ejs**: debugging hints to fix routing error with recipe-details.ejs
+- **recipeController.js**: debugging hints to fix routing error and utilising param
 
 ##admin account
 email: a@gmail.com
