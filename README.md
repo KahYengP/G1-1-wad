@@ -146,4 +146,4 @@ Configure the following in `config.env`:
 - **CSS**: For navigation bar, Webpage design 
 - **script for register**: debugging hints to remove the option when already chosen 
 - **authcontroller js**: debugging hints to allow password or security questions to be changed 
-- **bookmarks.ejs*: debugging hints to fix routing error with recipe-details.ejs
+- **bookmarks.ejs**: debugging hints to fix routing error with recipe-details.ejs
