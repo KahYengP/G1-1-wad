@@ -45,28 +45,28 @@ G1-1-wad/
 ├── controllers/
 │   ├── authController.js          (User authentication & authorization) [cheyenne]
 │   ├── adminController.js         (Admin operations) [cheyenne]
-│   ├── recipeController.js        (Recipe CRUD operations)
-│   ├── bookmarkController.js      (Bookmark management)
+│   ├── recipeController.js        (Recipe CRUD operations) [kia heng]
+│   ├── bookmarkController.js      (Bookmark management) [victoria]
 │   ├── reviewController.js        (Review management)
 │   ├── categoryController.js      (Category management) [xin hee]
-│   └── mealPlannerController.js   (Meal planning operations)
+│   └── mealPlannerController.js   (Meal planning operations) [kelsey]
 │
 ├── models/
 │   ├── User.js                    (User schema) [cheyenne]
-│   ├── Recipe.js                  (Recipe schema)
-│   ├── Bookmark.js                (Bookmark schema)
+│   ├── Recipe.js                  (Recipe schema) [kia heng]
+│   ├── Bookmark.js                (Bookmark schema) [victoria]
 │   ├── Review.js                  (Review schema)
 │   ├── Category.js                (Category schema) [xin hee]
-│   └── MealPlanner.js             (Meal planner schema)
+│   └── MealPlanner.js             (Meal planner schema) [kelsey]
 │
 ├── routes/
 │   ├── authRoutes.js              (Authentication endpoints) [cheyenne]
 │   ├── adminRoutes.js             (Admin endpoints)
-│   ├── recipeRoutes.js            (Recipe endpoints)
-│   ├── bookmarkRoutes.js          (Bookmark endpoints)
+│   ├── recipeRoutes.js            (Recipe endpoints) [kia heng]
+│   ├── bookmarkRoutes.js          (Bookmark endpoints) [victoria]
 │   ├── reviewRoutes.js            (Review endpoints)
 │   ├── categoryRoutes.js          (Category endpoints) [xin hee]
-│   └── mealPlannerRoutes.js       (Meal planner endpoints)
+│   └── mealPlannerRoutes.js       (Meal planner endpoints) [kelsey]
 │
 ├── middleware/
 │   └── authMiddleware.js          (Authentication & authorization middleware)
@@ -78,13 +78,13 @@ G1-1-wad/
 │   ├── reset-password.ejs         (Password reset) [cheyenne]
 │   ├── profile.ejs                (User profile) [cheyenne]
 │   │
-│   ├── recipe.ejs                 (Recipe listing)
-│   ├── recipe-details.ejs         (Recipe details view)
-│   ├── add-recipe.ejs             (Add new recipe)
-│   ├── edit-recipe.ejs            (Edit recipe)
+│   ├── recipe.ejs                 (Recipe listing) [kia heng]
+│   ├── recipe-details.ejs         (Recipe details view) [kia heng]
+│   ├── add-recipe.ejs             (Add new recipe) [kia heng]
+│   ├── edit-recipe.ejs            (Edit recipe) [kia heng]
 │   │
-│   ├── bookmarks.ejs              (Bookmarks listing)
-│   ├── edit-bookmark.ejs          (Edit bookmark)
+│   ├── bookmarks.ejs              (Bookmarks listing) [victoria]
+│   ├── edit-bookmark.ejs          (Edit bookmark) [victoria]
 │   │
 │   ├── add-review.ejs             (Add review)
 │   ├── edit-review.ejs            (Edit review)
@@ -94,7 +94,7 @@ G1-1-wad/
 │   ├── update-category.ejs        (Update category) [xin hee]
 │   │
 │   │
-│   ├── meal-planner.ejs           (Meal planner view)
+│   ├── meal-planner.ejs           (Meal planner view) [kelsey]
 │   │
 │   ├── admin-dashboard.ejs        (Admin dashboard) [cheyenne]
 │   ├── admin-profile.ejs          (Admin profile) [cheyenne]
