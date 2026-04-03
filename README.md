@@ -43,8 +43,8 @@ http://localhost:8000/
 G1-1-wad/
 │
 ├── controllers/
-│   ├── authController.js          (User authentication & authorization)
-│   ├── adminController.js         (Admin operations)
+│   ├── authController.js          (User authentication & authorization) [cheyenne]
+│   ├── adminController.js         (Admin operations) [cheyenne]
 │   ├── recipeController.js        (Recipe CRUD operations)
 │   ├── bookmarkController.js      (Bookmark management)
 │   ├── reviewController.js        (Review management)
@@ -52,7 +52,7 @@ G1-1-wad/
 │   └── mealPlannerController.js   (Meal planning operations)
 │
 ├── models/
-│   ├── User.js                    (User schema)
+│   ├── User.js                    (User schema) [cheyenne]
 │   ├── Recipe.js                  (Recipe schema)
 │   ├── Bookmark.js                (Bookmark schema)
 │   ├── Review.js                  (Review schema)
@@ -60,7 +60,7 @@ G1-1-wad/
 │   └── MealPlanner.js             (Meal planner schema)
 │
 ├── routes/
-│   ├── authRoutes.js              (Authentication endpoints)
+│   ├── authRoutes.js              (Authentication endpoints) [cheyenne]
 │   ├── adminRoutes.js             (Admin endpoints)
 │   ├── recipeRoutes.js            (Recipe endpoints)
 │   ├── bookmarkRoutes.js          (Bookmark endpoints)
@@ -72,11 +72,11 @@ G1-1-wad/
 │   └── authMiddleware.js          (Authentication & authorization middleware)
 │
 ├── views/
-│   ├── login.ejs                  (User login)
-│   ├── register.ejs               (User registration)
-│   ├── forgot.ejs                 (Forgot password)
-│   ├── reset-password.ejs         (Password reset)
-│   ├── profile.ejs                (User profile)
+│   ├── login.ejs                  (User login) [cheyenne]
+│   ├── register.ejs               (User registration) [cheyenne]
+│   ├── forgot.ejs                 (Forgot password) [cheyenne]
+│   ├── reset-password.ejs         (Password reset) [cheyenne]
+│   ├── profile.ejs                (User profile) [cheyenne]
 │   │
 │   ├── recipe.ejs                 (Recipe listing)
 │   ├── recipe-details.ejs         (Recipe details view)
@@ -99,9 +99,9 @@ G1-1-wad/
 │   │
 │   ├── meal-planner.ejs           (Meal planner view)
 │   │
-│   ├── admin-dashboard.ejs        (Admin dashboard)
-│   ├── admin-profile.ejs          (Admin profile)
-│   └── admin-user-form.ejs        (Admin user management)
+│   ├── admin-dashboard.ejs        (Admin dashboard) [cheyenne]
+│   ├── admin-profile.ejs          (Admin profile) [cheyenne]
+│   └── admin-user-form.ejs        (Admin user management) [cheyenne]
 │
 ├── public/
 │   ├── index.html                 (Static HTML)
@@ -144,3 +144,9 @@ Configure the following in `config.env`:
 - **Frontend**: EJS (templating), HTML, CSS
 - **Authentication**: JWT (JSON Web Tokens)
 - **Environment**: dotenv
+
+
+##AI Declaration: 
+- **CSS**: For navigation bar, Webpage design 
+- **script for register**: debugging hints to remove the option when already chosen 
+- **authcontroller js**: debugging hints to allow password or security questions to be changed 
