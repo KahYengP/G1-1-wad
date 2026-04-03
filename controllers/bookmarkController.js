@@ -7,10 +7,12 @@ exports.createBookmark = async (req, res) => {
     const userId = req.session.userId;
     const recipeId = req.body.recipeId;
 
-    if (!userId) return res.redirect("/login");
+    if (!userId) {
+      return res.redirect("/login")};
 
     const existingRecipe = await Recipe.findByIdRecipe(recipeId);
-    if (!existingRecipe) return res.redirect("/recipe");
+    if (!existingRecipe) {
+      return res.redirect("/recipe")};
 
     const existing = await Bookmark.findExisting(userId, recipeId);
     if (existing) {
@@ -33,7 +35,8 @@ exports.createBookmark = async (req, res) => {
 exports.readBookmarks = async (req, res) => {
   try {
     const userId = req.session.userId;
-    if (!userId) return res.redirect("/login");
+    if (!userId) {
+      return res.redirect("/login")};
 
     const bookmarks = await Bookmark.findByUserId(userId);
     res.render("bookmarks", { bookmarks, user: req.user });
@@ -48,14 +51,16 @@ exports.updateBookmark = async (req, res) => {
     const userId = req.session.userId;
     const bookmarkId = req.body.bookmarkId;
 
-    if (!userId) return res.redirect("/login");
+    if (!userId) {
+      return res.redirect("/login")};
 
     const updatedBookmark = await Bookmark.updateBookmark(bookmarkId, userId, {
       note: req.body.note,
       category: req.body.category,
     });
 
-    if (!updatedBookmark) return res.send("Bookmark not found.");
+    if (!updatedBookmark) {
+      return res.send("Bookmark not found.")};
     res.redirect("/bookmarks");
   } catch (error) {
     console.error(error);
@@ -68,10 +73,12 @@ exports.deleteBookmark = async (req, res) => {
     const userId = req.session.userId;
     const bookmarkId = req.body.bookmarkId;
 
-    if (!userId) return res.redirect("/login");
+    if (!userId) {
+      return res.redirect("/login")};
 
     const deletedBookmark = await Bookmark.deleteBookmark(bookmarkId, userId);
-    if (!deletedBookmark) return res.send("Bookmark not found.");
+    if (!deletedBookmark) {
+      return res.send("Bookmark not found.")};
 
     res.redirect("/bookmarks");
   } catch (error) {
@@ -85,12 +92,14 @@ exports.showEditBookmarkForm = async (req, res) => {
     const userId = req.session.userId;
     const bookmarkId = req.body.bookmarkId;
 
-    if (!userId) return res.redirect("/login");
+    if (!userId) {
+      return res.redirect("/login")};
 
     const CategoryList = await Category.getAll();
 
     const bookmark = await Bookmark.findByIdAndUser(bookmarkId, userId);
-    if (!bookmark) return res.send("Bookmark not found.");
+    if (!bookmark) {
+      return res.send("Bookmark not found.")};
 
     res.render("edit-bookmark", { bookmark, CategoryList });
   } catch (error) {
