@@ -10,8 +10,10 @@ exports.getRecipes = async (req, res) => {
     const bookmarkError = req.query.bookmarkError || null;
     let filter = {};
 
-    if (categoryId) filter.category = categoryId;
-    if (searchQuery) filter.title = { $regex: searchQuery, $options: "i" };
+    if (categoryId) {
+      filter.category = categoryId};
+    if (searchQuery) {
+      filter.title = { $regex: searchQuery, $options: "i" }};
 
     const recipes = await Recipe.searchRecipes(filter);
     const CategoryList = await Category.getAll();
@@ -40,7 +42,8 @@ exports.getRecipes = async (req, res) => {
 exports.getRecipeById = async (req, res) => {
   try {
     const recipe = await Recipe.findByIdWithCategory(req.query.id);
-    if (!recipe) return res.send("Recipe not found.");
+    if (!recipe) {
+      return res.send("Recipe not found.")};
 
     const reviews = await Review.findByRecipeId(req.query.id);
 
@@ -88,7 +91,8 @@ exports.showEditForm = async (req, res) => {
     const recipe = await Recipe.findByIdRecipe(req.query.id);
     const CategoryList = await Category.getAll();
 
-    if (!recipe) return res.send("Recipe not found");
+    if (!recipe) {
+      return res.send("Recipe not found")};
 
     return res.render("edit-recipe", {
       recipe,
@@ -104,10 +108,12 @@ exports.updateRecipes = async (req, res) => {
   try {
     const id = req.body.id;
 
-    if (!mongoose.Types.ObjectId.isValid(id)) return res.send("Invalid ID");
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.send("Invalid ID")};
 
     const recipe = await Recipe.findByIdRecipe(id);
-    if (!recipe) return res.send("No ID has been found");
+    if (!recipe) {
+      return res.send("No ID has been found")};
 
     if (req.user.role !== "admin" && recipe.createdBy !== req.user.email) {
       return res.send("Not allowed");
@@ -131,10 +137,12 @@ exports.deleteRecipes = async (req, res) => {
   try {
     const id = req.body.id;
 
-    if (!mongoose.Types.ObjectId.isValid(id)) return res.send("Invalid ID");
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.send("Invalid ID")};
 
     const recipe = await Recipe.findByIdRecipe(id);
-    if (!recipe) return res.send("No ID has been found");
+    if (!recipe) {
+      return res.send("No ID has been found")};
 
     if (req.user.role !== "admin" && recipe.createdBy !== req.user.email) {
       return res.send("Not allowed");
