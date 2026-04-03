@@ -48,7 +48,7 @@ G1-1-wad/
 │   ├── recipeController.js        (Recipe CRUD operations)
 │   ├── bookmarkController.js      (Bookmark management)
 │   ├── reviewController.js        (Review management)
-│   ├── categoryController.js      (Category management)
+│   ├── categoryController.js      (Category management) [xin hee]
 │   └── mealPlannerController.js   (Meal planning operations)
 │
 ├── models/
@@ -56,7 +56,7 @@ G1-1-wad/
 │   ├── Recipe.js                  (Recipe schema)
 │   ├── Bookmark.js                (Bookmark schema)
 │   ├── Review.js                  (Review schema)
-│   ├── Category.js                (Category schema)
+│   ├── Category.js                (Category schema) [xin hee]
 │   └── MealPlanner.js             (Meal planner schema)
 │
 ├── routes/
@@ -65,7 +65,7 @@ G1-1-wad/
 │   ├── recipeRoutes.js            (Recipe endpoints)
 │   ├── bookmarkRoutes.js          (Bookmark endpoints)
 │   ├── reviewRoutes.js            (Review endpoints)
-│   ├── categoryRoutes.js          (Category endpoints)
+│   ├── categoryRoutes.js          (Category endpoints) [xin hee]
 │   └── mealPlannerRoutes.js       (Meal planner endpoints)
 │
 ├── middleware/
@@ -89,13 +89,10 @@ G1-1-wad/
 │   ├── add-review.ejs             (Add review)
 │   ├── edit-review.ejs            (Edit review)
 │   │
-│   ├── category.ejs               (Category view)
-│   ├── add-category.ejs           (Add category)
-│   ├── update-category.ejs        (Update category)
+│   ├── category.ejs               (Category view) [xin hee]
+│   ├── add-category.ejs           (Add category) [xin hee]
+│   ├── update-category.ejs        (Update category) [xin hee]
 │   │
-│   ├── collections.ejs            (Collections listing)
-│   ├── add-collection.ejs         (Add collection)
-│   ├── edit-collection.ejs        (Edit collection)
 │   │
 │   ├── meal-planner.ejs           (Meal planner view)
 │   │
@@ -124,7 +121,6 @@ G1-1-wad/
 - **Bookmarks**: Save favorite recipes
 - **Reviews**: Add and manage recipe reviews
 - **Categories**: Organize recipes by categories
-- **Collections**: Create custom recipe collections
 - **Meal Planner**: Plan meals and organize weekly menus
 - **Admin Dashboard**: Manage users and system content
 - **User Profiles**: Manage user account information
